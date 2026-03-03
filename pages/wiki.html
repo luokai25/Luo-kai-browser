@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Wiki</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; display: flex; height: 100vh; }
+        .sidebar { width: 280px; background: #1e293b; padding: 20px; overflow-y: auto; }
+        .logo { font-size: 22px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        .search { background: #334155; border: none; padding: 12px 15px; border-radius: 10px; color: #f8fafc; width: 100%; margin-bottom: 20px; outline: none; }
+        .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .nav-item:hover, .nav-item.active { background: #334155; }
+        .nav-item.active { background: #6366f1; }
+        .main { flex: 1; padding: 40px; overflow-y: auto; }
+        .article h1 { font-size: 36px; margin-bottom: 20px; }
+        .article h2 { font-size: 24px; margin: 30px 0 15px; color: #6366f1; }
+        .article p { line-height: 1.8; color: #cbd5e1; margin-bottom: 15px; }
+        .article code { background: #1e293b; padding: 2px 8px; border-radius: 4px; font-family: monospace; color: #ec4899; }
+        .toc { background: #1e293b; border-radius: 15px; padding: 20px; margin-bottom: 30px; }
+        .toc h3 { margin-bottom: 15px; }
+        .toc a { color: #6366f1; text-decoration: none; display: block; padding: 8px 0; }
+        .toc a:hover { color: #8b5cf6; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">📖 Luo Wiki</div>
+        <input type="text" class="search" placeholder="Search wiki...">
+        <div class="nav-item active">🏠 Home</div>
+        <div class="nav-item">🚀 Getting Started</div>
+        <div class="nav-item">💻 Development</div>
+        <div class="nav-item">🤖 AI Agents</div>
+        <div class="nav-item">⚙️ Configuration</div>
+        <div class="nav-item">📚 Resources</div>
+        <div class="nav-item">❓ FAQ</div>
+    </div>
+    <div class="main">
+        <div class="article">
+            <h1>Welcome to Luo Wiki 📖</h1>
+            <p>The official knowledge base for Luo Browser. Everything you need to know about building and using the Luoverse.</p>
+            
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <a href="#introduction">• Introduction</a>
+                <a href="#quickstart">• Quick Start</a>
+                <a href="#sites">• Building Sites</a>
+                <a href="#agents">• AI Agents</a>
+            </div>
+            
+            <h2 id="introduction">Introduction</h2>
+            <p>Luo Browser is a revolutionary web browser designed for both humans and AI agents. It uses the custom <code>luo://</code> protocol for navigation.</p>
+            
+            <h2 id="quickstart">Quick Start</h2>
+            <p>To get started with Luo Browser, simply type a <code>luo://</code> address in the address bar. Try these:</p>
+            <p>• <code>luo://home</code> - Home page<br>
+            • <code>luo://search</code> - Search<br>
+            • <code>luo://agents</code> - AI Agents</p>
+            
+            <h2 id="sites">Building Sites</h2>
+            <p>Creating a new luo:// site is easy! Just add an HTML file to the <code>pages/</code> directory and register it in the browser.</p>
+            
+            <h2 id="agents">AI Agents</h2>
+            <p>Luo Browser comes with 8 built-in AI agents ready to help you with coding, research, content creation, and more!</p>
+        </div>
+    </div>
+</body>
+</html>

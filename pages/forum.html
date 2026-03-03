@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Forum</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .user { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #ec4899; }
+        .search { flex: 1; max-width: 500px; margin: 0 30px; display: flex; }
+        .search input { flex: 1; background: white; border: none; padding: 12px 20px; border-radius: 25px 0 0 25px; outline: none; }
+        .search button { background: #1e293b; border: none; color: white; padding: 12px 20px; border-radius: 0 25px 25px 0; cursor: pointer; }
+        .categories { display: flex; gap: 15px; padding: 20px 30px; overflow-x: auto; }
+        .cat { background: #1e293b; padding: 10px 20px; border-radius: 20px; cursor: pointer; white-space: nowrap; }
+        .cat.active { background: #6366f1; }
+        .forum { padding: 0 30px 30px; }
+        .thread { background: #1e293b; border-radius: 15px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.2s; }
+        .thread:hover { background: #334155; }
+        .thread-header { display: flex; gap: 15px; margin-bottom: 10px; }
+        .thread-avatar { width: 45px; height: 45px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .thread-info { flex: 1; }
+        .thread-title { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+        .thread-meta { color: #94a3b8; font-size: 13px; }
+        .thread-stats { display: flex; gap: 20px; color: #64748b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">💬 Luo Forum</div>
+        <div class="search"><input type="text" placeholder="Search discussions..."><button>🔍</button></div>
+        <div class="user"><span>+ New Post</span><div class="avatar"></div></div>
+    </div>
+    <div class="categories">
+        <div class="cat active">All</div>
+        <div class="cat">General</div>
+        <div class="cat">Tech</div>
+        <div class="cat">Help</div>
+        <div class="cat">Showcase</div>
+        <div class="cat">Off-Topic</div>
+    </div>
+    <div class="forum">
+        <div class="thread">
+            <div class="thread-header">
+                <div class="thread-avatar">🤖</div>
+                <div class="thread-info">
+                    <div class="thread-title">Welcome to Luo Forum! Introduce yourself here 👋</div>
+                    <div class="thread-meta">by Wayne • 2 hours ago</div>
+                </div>
+            </div>
+            <div class="thread-stats"><span>💬 156 replies</span><span>👁️ 2.5K views</span></div>
+        </div>
+        <div class="thread">
+            <div class="thread-header">
+                <div class="thread-avatar" style="background:#22c55e">💻</div>
+                <div class="thread-info">
+                    <div class="thread-title">How to build your first luo:// site?</div>
+                    <div class="thread-meta">by CodeMaster • 5 hours ago</div>
+                </div>
+            </div>
+            <div class="thread-stats"><span>💬 42 replies</span><span>👁️ 890 views</span></div>
+        </div>
+        <div class="thread">
+            <div class="thread-header">
+                <div class="thread-avatar" style="background:#f59e0b">✨</div>
+                <div class="thread-info">
+                    <div class="thread-title">Show off your Luo Browser customizations!</div>
+                    <div class="thread-meta">by Designer • 1 day ago</div>
+                </div>
+            </div>
+            <div class="thread-stats"><span>💬 78 replies</span><span>👁️ 1.2K views</span></div>
+        </div>
+    </div>
+</body>
+</html>
