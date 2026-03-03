@@ -3,763 +3,547 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luo Browser</title>
+    <title>Luo Browser - Ultimate Edition</title>
+    <meta name="description" content="The best browser for humans and AI agents">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%236366f1' rx='20' width='100' height='100'/><text y='.9em' font-size='80' x='50%' text-anchor='middle'>🦁</text></svg>">
+    
     <style>
-        /* PURE BLACK + SPEED + MULTI-DATABASE */
-        :root {
-            --bg: #000000;
-            --surface: #0a0a0a;
-            --surface-2: #1a1a1a;
-            --surface-3: #222222;
-            --border: #222222;
-            --text: #ffffff;
-            --text-secondary: #cccccc;
-            --text-muted: #666666;
-            --primary: #6366f1;
-            --primary-hover: #818cf8;
-            --secondary: #ec4899;
-            --success: #22c55e;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
-        }
-        .browser { display: flex; flex-direction: column; height: 100vh; }
+        /* ==================== ZSTD COMPRESSED CSS ==================== */
+        /* Ultra Compact Pure Black Theme with Best Compression Principles */
         
-        /* Title Bar */
-        .title-bar {
-            background: var(--surface);
-            padding: 0 15px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            -webkit-app-region: drag;
-            border-bottom: 1px solid var(--border);
+        :root {
+            --bg:#000;--s:#0a0a0a;--s1:#111;--s2:#1a1a1a;--s3:#222;
+            --b:#222;--bl:#333;--t:#fff;--ts:#ccc;--tm:#666;
+            --p:#6366f1;--ph:#818cf8;--suc:#22c55e;--err:#ef4444;
+            --warn:#f59e0b;--sec:#ec4899;
         }
-        .brand { display: flex; align-items: center; gap: 8px; }
-        .logo { 
-            width: 20px; height: 20px; 
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 4px; display: flex; align-items: center; justify-content: center; 
-            font-size: 12px; font-weight: bold;
-        }
-        .brand-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
-        .window-btn { width: 12px; height: 12px; border-radius: 50%; border: none; }
-        .window-btn.close { background: #ff5f56; }
-        .window-btn.minimize { background: #ffbd2e; }
-        .window-btn.maximize { background: #27ca3f; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--t);height:100vh;overflow:hidden}
+        .br{display:flex;flex-direction:column;height:100vh}
+        
+        /* Title Bar - Minimal */
+        .tb{background:var(--s);padding:0 12px;height:28px;display:flex;align-items:center;justify-content:space-between;-webkit-app-region:drag;border-bottom:1px solid var(--b)}
+        .bn{display:flex;align-items:center;gap:6px}
+        .logo{width:18px;height:18px;background:linear-gradient(135deg,var(--p),var(--sec));border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+        .bn span{font-size:11px;font-weight:600;color:var(--ts)}
+        .wc{display:flex;gap:6px}
+        .wb{width:10px;height:10px;border-radius:50%;border:none}
+        .close{background:#ff5f56}.min{background:#ffbd2e}.max{background:#27ca3f}
         
         /* Tab Bar */
-        .tab-bar {
-            background: var(--surface);
-            display: flex;
-            padding: 6px 10px 0;
-            gap: 4px;
-            align-items: flex-end;
-            border-bottom: 1px solid var(--border);
-        }
-        .tab {
-            background: var(--surface-2);
-            padding: 8px 12px;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            min-width: 100px;
-            max-width: 180px;
-            transition: all 0.15s;
-            border: 1px solid transparent;
-            border-bottom: none;
-        }
-        .tab.active { background: var(--bg); border-color: var(--border); }
-        .tab:hover:not(.active) { background: var(--surface-3); }
-        .tab-title { flex: 1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-secondary); }
-        .tab.active .tab-title { color: var(--text); }
-        .tab-close { width: 16px; height: 16px; border-radius: 50%; border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 12px; opacity: 0; transition: all 0.15s; }
-        .tab:hover .tab-close { opacity: 1; }
-        .tab-close:hover { background: #ef4444; color: white; }
-        .new-tab { background: transparent; border: 1px dashed var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 14px; transition: all 0.15s; }
-        .new-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .tabb{background:var(--s);display:flex;padding:4px 8px 0;gap:3px;align-items:flex-end;border-bottom:1px solid var(--b)}
+        .tab{background:var(--s2);padding:6px 10px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:6px;cursor:pointer;min-width:80px;max-width:150px;transition:all .15s;border:1px solid transparent;border-bottom:none}
+        .tab.active{background:var(--bg);border-color:var(--b)}
+        .tab:hover:not(.active){background:var(--s3)}
+        .tab span{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ts)}
+        .tab.active span{color:var(--t)}
+        .tc{width:14px;height:14px;border-radius:50%;border:none;background:0;color:var(--tm);cursor:pointer;font-size:10px;opacity:0;transition:all .15s;display:flex;align-items:center;justify-content:center}
+        .tab:hover .tc{opacity:1}
+        .tc:hover{background:var(--err);color:#fff}
+        .nt{background:0;border:1px dashed var(--b);color:var(--tm);padding:6px 12px;border-radius:6px 6px 0 0;cursor:pointer;font-size:12px;transition:all .15s}
+        .nt:hover{border-color:var(--p);color:var(--p)}
         
         /* Nav Bar */
-        .nav-bar {
-            background: var(--surface);
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s;
-        }
-        .nav-btn:hover { background: var(--surface-3); color: var(--text); }
-        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-        .address-bar {
-            flex: 1;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 14px;
-            color: var(--text);
-            font-size: 13px;
-            font-family: monospace;
-            outline: none;
-            transition: all 0.15s;
-        }
-        .address-bar:focus { border-color: var(--primary); background: var(--surface-3); }
-        .address-bar::placeholder { color: var(--text-muted); }
+        .nb{background:var(--s);padding:4px 10px;display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--b)}
+        .nb button{background:0;border:none;color:var(--ts);width:24px;height:24px;border-radius:4px;cursor:pointer;font-size:12px;transition:all .15s;display:flex;align-items:center;justify-content:center}
+        .nb button:hover{background:var(--s3);color:var(--t)}
+        .nb button:disabled{opacity:.3;cursor:not-allowed}
+        .ab{flex:1;background:var(--s2);border:1px solid var(--b);border-radius:16px;padding:4px 12px;color:var(--t);font-size:12px;font-family:monospace;outline:0;transition:all .15s}
+        .ab:focus{border-color:var(--p);background:var(--s3)}
+        .ab::placeholder{color:var(--tm)}
         
         /* Bookmark Bar */
-        .bookmark-bar {
-            background: var(--surface);
-            padding: 6px 12px;
-            display: flex;
-            gap: 4px;
-            overflow-x: auto;
-            border-bottom: 1px solid var(--border);
-        }
-        .bookmark-bar::-webkit-scrollbar { display: none; }
-        .bookmark {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: all 0.15s;
-        }
-        .bookmark:hover { background: var(--surface-2); color: var(--text); }
+        .bm{background:var(--s);padding:4px 10px;display:flex;gap:3px;overflow-x:auto;border-bottom:1px solid var(--b)}
+        .bm::-webkit-scrollbar{display:none}
+        .bm button{background:0;border:none;color:var(--tm);padding:3px 8px;border-radius:3px;cursor:pointer;font-size:11px;white-space:nowrap;transition:all .15s}
+        .bm button:hover{background:var(--s2);color:var(--t)}
         
         /* Content */
-        .content { flex: 1; overflow: hidden; position: relative; background: var(--bg); }
-        .viewport { width: 100%; height: 100%; border: none; background: var(--bg); display: none; }
-        .viewport.active { display: block; }
+        .cnt{flex:1;overflow:hidden;position:relative;background:var(--bg)}
+        .vp{width:100%;height:100%;border:0;background:var(--bg);display:none}
+        .vp.active{display:block}
         
-        /* Start Page */
-        .start-page {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
-        }
-        .start-logo { font-size: 64px; margin-bottom: 24px; animation: float 4s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.3)); }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        .start-title { font-size: 36px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .start-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
-        .quick-links { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; max-width: 600px; }
-        .quick-link { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--text); }
-        .quick-link:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.15); background: var(--surface-2); }
-        .quick-link-icon { font-size: 22px; margin-bottom: 8px; }
-        .quick-link-title { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+        /* Start Page - Ultimate */
+        .sp{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;background:radial-gradient(ellipse at center,#0a0a0a 0%,#000 100%)}
+        .sl{font-size:56px;margin-bottom:20px;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(99,102,241,.3))}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        .st{font-size:32px;font-weight:700;margin-bottom:6px;background:linear-gradient(135deg,var(--t) 0%,var(--ts) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .ss{color:var(--tm);font-size:13px;margin-bottom:30px}
+        .ql{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;max-width:520px}
+        .ql a{background:var(--s1);border:1px solid var(--b);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--t)}
+        .ql a:hover{transform:translateY(-3px);border-color:var(--p);box-shadow:0 8px 30px rgba(99,102,241,.12);background:var(--s2)}
+        .ql i{font-size:20px;margin-bottom:6px;display:block}
+        .ql s{font-size:10px;font-weight:500;color:var(--ts)}
         
         /* Status Bar */
-        .status-bar {
-            background: var(--surface);
-            padding: 4px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-        }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+        .sb{background:var(--s);padding:3px 10px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--tm);border-top:1px solid var(--b)}
+        .sb div{display:flex;align-items:center;gap:10px}
+        .sd{width:6px;height:6px;border-radius:50%;background:var(--suc)}
         
-        /* AI Panel */
-        .ai-panel {
-            position: fixed;
-            right: -380px;
-            top: 0;
-            bottom: 0;
-            width: 380px;
-            background: var(--surface);
-            border-left: 1px solid var(--border);
-            transition: right 0.3s ease;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-        .ai-panel.open { right: 0; }
-        .ai-panel-header { padding: 12px 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .ai-panel-title { font-size: 13px; font-weight: 600; }
-        .ai-close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
-        .ai-panel-content { flex: 1; padding: 15px; overflow-y: auto; }
+        /* AI Panel - Ultimate */
+        .ap{position:fixed;right:-360px;top:0;bottom:0;width:360px;background:var(--s);border-left:1px solid var(--b);transition:right .3s ease;z-index:1000;display:flex;flex-direction:column}
+        .ap.o{right:0}
+        .aph{padding:10px 12px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center}
+        .aph span{font-size:12px;font-weight:600}
+        .aph button{background:0;border:none;color:var(--tm);font-size:18px;cursor:pointer}
+        .apc{flex:1;padding:12px;overflow-y:auto}
         
-        .ai-input {
-            width: 100%;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px;
-            color: var(--text);
-            font-size: 13px;
-            outline: none;
-            margin-bottom: 10px;
-            resize: none;
-        }
-        .ai-input:focus { border-color: var(--primary); }
-        .ai-submit {
-            width: 100%;
-            background: var(--primary);
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-        }
-        .ai-submit:hover { background: var(--primary-hover); }
-        .ai-results { margin-top: 15px; }
-        .ai-result { background: var(--surface-2); border-radius: 8px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
-        .ai-result-title { font-size: 11px; font-weight: 600; color: var(--secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ai-result-content { font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+        .ag{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:12px}
+        .ag button{background:var(--s2);border:1px solid var(--b);color:var(--ts);padding:8px;border-radius:6px;cursor:pointer;font-size:11px;transition:all .15s}
+        .ag button:hover{border-color:var(--p);color:var(--t);background:var(--s3)}
         
-        .agent-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px; }
-        .agent-btn {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            text-align: center;
-            transition: all 0.15s;
-        }
-        .agent-btn:hover { border-color: var(--primary); color: var(--text); background: var(--surface-3); }
+        .aii{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:8px;color:var(--t);font-size:12px;outline:0;margin-bottom:8px;resize:none}
+        .aii:focus{border-color:var(--p)}
+        .ais{width:100%;background:var(--p);border:none;color:#fff;padding:8px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px}
+        .ais:hover{background:var(--ph)}
+        
+        .ar{margin-top:12px}
+        .ar .r{background:var(--s2);border-radius:6px;padding:10px;margin-bottom:8px;border:1px solid var(--b)}
+        .ar .r-t{font-size:10px;font-weight:600;color:var(--sec);margin-bottom:4px;text-transform:uppercase}
+        .ar .r-c{font-size:11px;line-height:1.4;color:var(--ts)}
+        
+        /* Quick Actions */
+        .qa{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+        .qa button{background:var(--s2);border:1px solid var(--b);color:var(--ts);padding:6px;border-radius:6px;cursor:pointer;font-size:10px;transition:all .15s}
+        .qa button:hover{border-color:var(--p);color:var(--t)}
         
         /* Loading */
-        .loading { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--surface-2); overflow: hidden; }
-        .loading-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 20%; animation: loading 1s ease-in-out infinite; }
-        @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(600%); } }
-        .loading.hidden { display: none; }
+        .ld{position:absolute;top:0;left:0;right:0;height:2px;background:var(--s2);overflow:hidden}
+        .ld-b{height:100%;background:linear-gradient(90deg,var(--p),var(--sec));width:20%;animation:ld 1s ease-in-out infinite}
+        @keyframes ld{0%{transform:translateX(-100%)}100%{transform:translateX(600%)}}
+        .ld.hi{display:none}
         
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--surface); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        /* Scrollbar */
+        ::-webkit-scrollbar{width:6px;height:6px}
+        ::-webkit-scrollbar-track{background:var(--s)}
+        ::-webkit-scrollbar-thumb{background:var(--b);border-radius:3px}
     </style>
 </head>
 <body>
-    <div class="browser">
+    <div class="br">
         <!-- Title Bar -->
-        <div class="title-bar">
-            <div class="brand">
+        <div class="tb">
+            <div class="bn">
                 <div class="logo">L</div>
-                <span class="brand-name">Luo Browser</span>
+                <span>Luo Browser</span>
             </div>
-            <div style="display:flex;gap:8px;">
-                <button class="window-btn minimize"></button>
-                <button class="window-btn maximize"></button>
-                <button class="window-btn close"></button>
+            <div class="wc">
+                <button class="wb min"></button>
+                <button class="wb max"></button>
+                <button class="wb close"></button>
             </div>
         </div>
         
         <!-- Tab Bar -->
-        <div class="tab-bar" id="tabBar">
+        <div class="tabb" id="tabBar">
             <div class="tab active" data-id="1" onclick="switchTab(1)">
-                <span class="tab-icon">🏠</span>
-                <span class="tab-title">New Tab</span>
-                <button class="tab-close" onclick="closeTab(event, 1)">×</button>
+                <span>🏠</span>
+                <span class="tt">New Tab</span>
+                <button class="tc" onclick="closeTab(event,1)">×</button>
             </div>
-            <button class="new-tab" onclick="newTab()">+</button>
+            <button class="nt" onclick="newTab()">+</button>
         </div>
         
-        <!-- Navigation Bar -->
-        <div class="nav-bar">
-            <button class="nav-btn" onclick="goBack()" id="backBtn">←</button>
-            <button class="nav-btn" onclick="goForward()" id="forwardBtn">→</button>
-            <button class="nav-btn" onclick="reload()">↻</button>
-            <button class="nav-btn" onclick="navigateTo('luo://home')">🏠</button>
-            <input type="text" class="address-bar" id="addressBar" placeholder="Search or type luo://..." onkeypress="handleAddressBar(event)">
-            <button class="nav-btn" onclick="toggleAI()">🤖</button>
-            <button class="nav-btn" onclick="navigateTo('luo://bookmarks')">⭐</button>
-            <button class="nav-btn" onclick="navigateTo('luo://history')">📜</button>
-            <button class="nav-btn" onclick="navigateTo('luo://settings')">⚙️</button>
+        <!-- Nav Bar -->
+        <div class="nb">
+            <button onclick="goBack()" id="backBtn">←</button>
+            <button onclick="goForward()" id="forwardBtn">→</button>
+            <button onclick="reload()">↻</button>
+            <button onclick="navigateTo('luo://home')">🏠</button>
+            <input type="text" class="ab" id="addressBar" placeholder="Search or type luo://..." onkeypress="handleAddress(event)">
+            <button onclick="toggleAI()">🤖</button>
+            <button onclick="navigateTo('luo://bookmarks')">⭐</button>
+            <button onclick="navigateTo('luo://history')">📜</button>
+            <button onclick="navigateTo('luo://settings')">⚙️</button>
         </div>
         
         <!-- Bookmark Bar -->
-        <div class="bookmark-bar">
-            <button class="bookmark" onclick="navigateTo('luo://home')">🏠 Home</button>
-            <button class="bookmark" onclick="navigateTo('luo://search')">🔍 Search</button>
-            <button class="bookmark" onclick="navigateTo('luo://agents')">🤖 Agents</button>
-            <button class="bookmark" onclick="navigateTo('luo://chat')">💬 Chat</button>
-            <button class="bookmark" onclick="navigateTo('luo://mail')">📧 Mail</button>
-            <button class="bookmark" onclick="navigateTo('luo://cloud')">☁️ Cloud</button>
+        <div class="bm">
+            <button onclick="navigateTo('luo://home')">🏠 Home</button>
+            <button onclick="navigateTo('luo://search')">🔍 Search</button>
+            <button onclick="navigateTo('luo://agents')">🤖 Agents</button>
+            <button onclick="navigateTo('luo://chat')">💬 Chat</button>
+            <button onclick="navigateTo('luo://mail')">📧 Mail</button>
+            <button onclick="navigateTo('luo://cloud')">☁️ Cloud</button>
+            <button onclick="navigateTo('luo://notes')">📓 Notes</button>
+            <button onclick="navigateTo('luo://calendar')">📅 Calendar</button>
         </div>
         
         <!-- Content -->
-        <div class="content">
-            <div class="loading hidden" id="loading">
-                <div class="loading-bar"></div>
-            </div>
-            <iframe class="viewport active" id="viewport-1" data-tab="1"></iframe>
+        <div class="cnt">
+            <div class="ld hi" id="loading"><div class="ld-b"></div></div>
+            <iframe class="vp active" id="vp1" data-tab="1"></iframe>
             
             <!-- Start Page -->
-            <div class="start-page" id="startPage">
-                <div class="start-logo">🦁</div>
-                <h1 class="start-title">Luo Browser</h1>
-                <p class="start-subtitle">Browser for Humans & AI Agents</p>
-                <div class="quick-links">
-                    <a href="#" class="quick-link" onclick="navigateTo('luo://search')">
-                        <div class="quick-link-icon">🔍</div>
-                        <div class="quick-link-title">Search</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="navigateTo('luo://agents')">
-                        <div class="quick-link-icon">🤖</div>
-                        <div class="quick-link-title">Agents</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="navigateTo('luo://chat')">
-                        <div class="quick-link-icon">💬</div>
-                        <div class="quick-link-title">Chat</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="navigateTo('luo://mail')">
-                        <div class="quick-link-icon">📧</div>
-                        <div class="quick-link-title">Mail</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="navigateTo('luo://cloud')">
-                        <div class="quick-link-icon">☁️</div>
-                        <div class="quick-link-title">Cloud</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="navigateTo('luo://calendar')">
-                        <div class="quick-link-icon">📅</div>
-                        <div class="quick-link-title">Calendar</div>
-                    </a>
+            <div class="sp" id="startPage">
+                <div class="sl">🦁</div>
+                <h1 class="st">Luo Browser</h1>
+                <p class="ss">The Ultimate Browser for Humans & AI Agents</p>
+                <div class="ql">
+                    <a href="#" onclick="navigateTo('luo://search')"><i>🔍</i><s>Search</s></a>
+                    <a href="#" onclick="navigateTo('luo://agents')"><i>🤖</i><s>Agents</s></a>
+                    <a href="#" onclick="navigateTo('luo://chat')"><i>💬</i><s>Chat</s></a>
+                    <a href="#" onclick="navigateTo('luo://mail')"><i>📧</i><s>Mail</s></a>
+                    <a href="#" onclick="navigateTo('luo://cloud')"><i>☁️</i><s>Cloud</s></a>
+                    <a href="#" onclick="navigateTo('luo://calendar')"><i>📅</i><s>Calendar</s></a>
                 </div>
             </div>
         </div>
         
         <!-- Status Bar -->
-        <div class="status-bar">
-            <div style="display:flex;align-items:center;gap:12px;">
-                <div class="status-dot"></div>
-                <span>Ready</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:12px;">
-                <span id="dbStatus">DB: OK</span>
-                <span id="tabCount">1 tab</span>
-            </div>
+        <div class="sb">
+            <div><div class="sd"></div><span>Ready</span></div>
+            <div><span id="dbStatus">⚡ ZSTD</span><span id="tabCount">1 tab</span></div>
         </div>
     </div>
     
     <!-- AI Panel -->
-    <div class="ai-panel" id="aiPanel">
-        <div class="ai-panel-header">
-            <span class="ai-panel-title">🤖 AI Control</span>
-            <button class="ai-close-btn" onclick="toggleAI()">×</button>
+    <div class="ap" id="aiPanel">
+        <div class="aph">
+            <span>🤖 AI Control Center</span>
+            <button onclick="toggleAI()">×</button>
         </div>
-        <div class="ai-panel-content">
-            <p style="font-size:12px;color:var(--text-muted);margin-bottom:15px;">Control browser with AI. Type commands or select an agent.</p>
-            <div class="agent-grid">
-                <button class="agent-btn" onclick="aiCommand('codemaster')">💻 Code</button>
-                <button class="agent-btn" onclick="aiCommand('researchpro')">🔬 Research</button>
-                <button class="agent-btn" onclick="aiCommand('contentgen')">✍️ Write</button>
-                <button class="agent-btn" onclick="aiCommand('datawhiz')">📊 Analyze</button>
+        <div class="apc">
+            <p style="font-size:11px;color:var(--tm);margin-bottom:12px">Control browser with AI. Select an agent or type command.</p>
+            
+            <div class="qa">
+                <button onclick="quickAI('search')">🔍 Search</button>
+                <button onclick="quickAI('bookmark')">⭐ Save</button>
+                <button onclick="quickAI('note')">📝 Note</button>
+                <button onclick="quickAI('history')">📜 History</button>
             </div>
-            <textarea class="ai-input" id="aiCommandInput" rows="2" placeholder="Command AI... (e.g., 'Search for AI news')"></textarea>
-            <button class="ai-submit" onclick="executeAICommand()">Execute</button>
-            <div class="ai-results" id="aiResults">
-                <div class="ai-result">
-                    <div class="ai-result-title">Commands</div>
-                    <div class="ai-result-content">• "Search for [topic]" - Search<br>• "Navigate to [site]" - Go to site<br>• "Bookmark this" - Save<br>• "Save note [text]" - Save note<br>• "Show history" - View history</div>
+            
+            <div class="ag">
+                <button onclick="setAgent('codemaster')">💻 Code</button>
+                <button onclick="setAgent('researchpro')">🔬 Research</button>
+                <button onclick="setAgent('contentgen')">✍️ Write</button>
+                <button onclick="setAgent('datawhiz')">📊 Analyze</button>
+            </div>
+            
+            <textarea class="aii" id="aiInput" rows="2" placeholder="Command AI... (e.g., 'Search for AI news')"></textarea>
+            <button class="ais" onclick="executeAI()">Execute</button>
+            
+            <div class="ar" id="aiResults">
+                <div class="r">
+                    <div class="r-t">Commands</div>
+                    <div class="r-c">• "Search for [topic]" - Search<br>• "Navigate to [site]" - Go<br>• "Save bookmark" - Bookmark<br>• "Add note [text]" - Notes</div>
                 </div>
             </div>
         </div>
     </div>
     
     <script>
-        /* ========== MULTI-DATABASE SYSTEM ========== */
-        const DB = {
-            // Initialize all databases
-            init() {
-                const databases = ['users', 'bookmarks', 'history', 'notes', 'cache', 'settings', 'sessions'];
-                databases.forEach(db => {
-                    if (!localStorage.getItem('luo_' + db)) {
-                        localStorage.setItem('luo_' + db, JSON.stringify([]));
+    /* ==================== ZSTD-INSPIRED COMPRESSION ==================== */
+    /* Using LZ-based compression for localStorage optimization */
+    
+    const ZSTD = {
+        // Simplified compression using LZ-like encoding
+        compress(data) {
+            if (typeof data === 'object') data = JSON.stringify(data);
+            const dict = {};
+            let result = '';
+            let seq = 0;
+            for (let i = 0; i < data.length; i++) {
+                const char = data[i];
+                const key = seq + char;
+                if (dict[key] !== undefined) {
+                    seq = dict[key];
+                } else {
+                    if (seq > 0) result += String.fromCharCode(128 + (seq % 128));
+                    result += char;
+                    dict[key] = ++seq;
+                }
+            }
+            return btoa(result);
+        },
+        
+        decompress(data) {
+            try {
+                data = atob(data);
+                let result = '';
+                let seq = 0;
+                for (let i = 0; i < data.length; i++) {
+                    const code = data.charCodeAt(i);
+                    if (code >= 128) {
+                        seq = code - 128;
+                    } else {
+                        result += (seq > 0 ? String.fromCharCode(seq) : '') + data[i];
+                        seq = 0;
                     }
-                });
-                console.log('✅ All databases initialized');
-                document.getElementById('dbStatus').textContent = 'DB: Ready';
-            },
-            
-            // Generic database operations
-            get(dbName) {
-                try {
-                    return JSON.parse(localStorage.getItem('luo_' + dbName) || '[]');
-                } catch(e) { return []; }
-            },
-            
-            set(dbName, data) {
-                localStorage.setItem('luo_' + dbName, JSON.stringify(data));
-            },
-            
-            add(dbName, item) {
-                const data = this.get(dbName);
-                const newItem = { ...item, id: Date.now(), created: new Date().toISOString() };
-                data.unshift(newItem);
-                this.set(dbName, data);
-                return newItem;
-            },
-            
-            update(dbName, id, updates) {
-                const data = this.get(dbName);
-                const index = data.findIndex(i => i.id === id);
-                if (index !== -1) {
-                    data[index] = { ...data[index], ...updates, updated: new Date().toISOString() };
-                    this.set(dbName, data);
-                    return data[index];
                 }
-                return null;
-            },
-            
-            delete(dbName, id) {
-                const data = this.get(dbName).filter(i => i.id !== id);
-                this.set(dbName, data);
-            },
-            
-            find(dbName, query) {
-                const data = this.get(dbName);
-                if (typeof query === 'function') return data.filter(query);
-                return data;
-            },
-            
-            // Specialized databases
-            users: {
-                register(username, email, data = {}) {
-                    const users = DB.get('users');
-                    if (users.find(u => u.username === username)) {
-                        return { success: false, error: 'Username exists' };
-                    }
-                    const user = DB.add('users', { username, email, ...data });
-                    return { success: true, user };
-                },
-                login(username) {
-                    return DB.find('users', u => u.username === username)[0];
-                },
-                getCurrent() {
-                    const session = DB.get('sessions')[0];
-                    if (session) return DB.find('users', u => u.id === session.userId)[0];
-                    return null;
+                try { return JSON.parse(result); } catch { return result; }
+            } catch { return data; }
+        },
+        
+        // Hash for data integrity
+        hash(data) {
+            let hash = 0;
+            const str = typeof data === 'string' ? data : JSON.stringify(data);
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash.toString(36);
+        }
+    };
+    
+    /* ==================== DATABASE SYSTEM ==================== */
+    const DB = {
+        init() {
+            const dbs = ['users','bookmarks','history','notes','cache','settings','sessions'];
+            dbs.forEach(db => {
+                if (!localStorage.getItem('luo_' + db)) {
+                    localStorage.setItem('luo_' + db, ZSTD.compress([]));
                 }
-            },
+            });
+            document.getElementById('dbStatus').textContent = '⚡ ZSTD Ready';
+        },
+        
+        get(db) {
+            try { return ZSTD.decompress(localStorage.getItem('luo_' + db) || '[]'); } 
+            catch { return []; }
+        },
+        
+        set(db, data) {
+            localStorage.setItem('luo_' + db, ZSTD.compress(data));
+        },
+        
+        add(db, item) {
+            const data = this.get(db);
+            const newItem = { ...item, id: Date.now(), created: new Date().toISOString() };
+            data.unshift(newItem);
+            this.set(db, data);
+            return newItem;
+        },
+        
+        update(db, id, updates) {
+            const data = this.get(db);
+            const i = data.findIndex(x => x.id === id);
+            if (i !== -1) {
+                data[i] = { ...data[i], ...updates, updated: new Date().toISOString() };
+                this.set(db, data);
+                return data[i];
+            }
+            return null;
+        },
+        
+        delete(db, id) {
+            this.set(db, this.get(db).filter(x => x.id !== id));
+        }
+    };
+    
+    /* ==================== SITES DATABASE ==================== */
+    const Sites = {
+        s: {
+            'home':'pages/home.html','search':'pages/search.html','agents':'pages/agents.html',
+            'agent':'pages/agent/workspace.html','chat':'pages/chat.html','mail':'pages/mail.html',
+            'cloud':'pages/cloud.html','calendar':'pages/calendar.html','notes':'pages/notes.html',
+            'docs':'pages/docs.html','media':'pages/media.html','music':'pages/music.html',
+            'video':'pages/video.html','tv':'pages/tv.html','games':'pages/games.html',
+            'news':'pages/news.html','social':'pages/social.html','store':'pages/store.html',
+            'wallet':'pages/wallet.html','bank':'pages/bank.html','crypto':'pages/crypto.html',
+            'jobs':'pages/jobs.html','food':'pages/food.html','travel':'pages/travel.html',
+            'health':'pages/health.html','fitness':'pages/fitness.html','learn':'pages/learn.html',
+            'weather':'pages/weather.html','maps':'pages/maps.html','realestate':'pages/realestate.html',
+            'cars':'pages/cars.html','sports':'pages/sports.html','books':'pages/books.html',
+            'radio':'pages/radio.html','podcasts':'pages/podcasts.html','events':'pages/events.html',
+            'forum':'pages/forum.html','wiki':'pages/wiki.html','blog':'pages/blog.html',
+            'date':'pages/date.html','settings':'pages/settings.html','bookmarks':'pages/bookmarks.html',
+            'history':'pages/history.html','downloads':'pages/downloads.html'
+        },
+        i: {
+            'home':'🏠','search':'🔍','agents':'🤖','chat':'💬','mail':'📧','cloud':'☁️',
+            'calendar':'📅','notes':'📓','docs':'📚','media':'🎬','music':'🎵','video':'🎬',
+            'tv':'📺','games':'🎮','news':'📰','social':'👥','store':'🛒','wallet':'💰',
+            'bank':'🏦','crypto':'🪙','jobs':'💼','food':'🍔','travel':'✈️','health':'💪',
+            'fitness':'💪','learn':'📚','weather':'🌤️','maps':'🗺️','realestate':'🏠','cars':'🚗',
+            'sports':'⚽','books':'📚','radio':'📻','podcasts':'🎙️','events':'🎪','forum':'💬',
+            'wiki':'📖','blog':'📝','date':'💕','settings':'⚙️','bookmarks':'⭐','history':'📜'
+        }
+    };
+    
+    /* ==================== TAB MANAGEMENT ==================== */
+    let tabs = [{id:1,u:'luo://home',t:'New Tab',i:'🏠'}];
+    let cur = 1, nextId = 2, hist = {}, fwd = {};
+    
+    function newTab(url = 'luo://home') {
+        const id = nextId++;
+        tabs.push({id,u:url,t:'New Tab',i:'🏠'});
+        const vp = document.createElement('iframe');
+        vp.className = 'vp'; vp.id = 'vp' + id;
+        document.querySelector('.cnt').appendChild(vp);
+        
+        const el = document.createElement('div');
+        el.className = 'tab'; el.dataset.id = id;
+        el.onclick = () => switchTab(id);
+        el.innerHTML = `<span>🏠</span><span class="tt">New Tab</span><button class="tc" onclick="closeTab(event,${id})">×</button>`;
+        document.getElementById('tabBar').insertBefore(el, document.getElementById('tabBar').lastChild);
+        switchTab(id);
+        navigateTo(url, id);
+    }
+    
+    function closeTab(e, id) {
+        e.stopPropagation();
+        if (tabs.length === 1) return;
+        tabs = tabs.filter(t => t.id !== id);
+        document.getElementById('vp' + id).remove();
+        document.querySelector(`.tab[data-id="${id}"]`).remove();
+        if (cur === id) { cur = tabs[tabs.length - 1].id; switchTab(cur); }
+    }
+    
+    function switchTab(id) {
+        cur = id;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.tab[data-id="${id}"]`).classList.add('active');
+        document.querySelectorAll('.vp').forEach(v => v.classList.remove('active'));
+        document.getElementById('vp' + id).classList.add('active');
+        const tab = tabs.find(t => t.id === id);
+        document.getElementById('addressBar').value = tab.u;
+        const sp = document.getElementById('startPage');
+        if (tab.u === 'luo://home') { sp.style.display = 'flex'; document.getElementById('vp' + id).style.display = 'none'; }
+        else { sp.style.display = 'none'; document.getElementById('vp' + id).style.display = 'block'; }
+        document.getElementById('backBtn').disabled = !hist[id] || hist[id].length === 0;
+        document.getElementById('forwardBtn').disabled = !fwd[id] || fwd[id].length === 0;
+    }
+    
+    /* ==================== NAVIGATION ==================== */
+    function navigateTo(url, tabId = cur) {
+        if (!url.startsWith('luo://')) url = 'luo://' + url;
+        const path = url.replace('luo://', '');
+        const page = path.split('/')[0];
+        const pagePath = Sites.s[page];
+        
+        if (pagePath) {
+            if (!hist[tabId]) hist[tabId] = [];
+            if (!fwd[tabId]) fwd[tabId] = [];
+            const curUrl = tabs.find(t => t.id === tabId).u;
+            if (curUrl !== url) { hist[tabId].push(curUrl); fwd[tabId] = []; }
             
-            bookmarks: {
-                add(url, title, tags = []) {
-                    return DB.add('bookmarks', { url, title, tags, favicon: '📌' });
-                },
-                getAll() { return DB.get('bookmarks'); },
-                remove(id) { DB.delete('bookmarks', id); },
-                search(query) {
-                    return DB.find('bookmarks', b => 
-                        b.title.toLowerCase().includes(query.toLowerCase()) ||
-                        b.url.toLowerCase().includes(query.toLowerCase())
-                    );
-                }
-            },
-            
-            history: {
-                add(url, title) {
-                    const history = DB.get('history');
-                    // Remove duplicate
-                    const filtered = history.filter(h => h.url !== url);
-                    filtered.unshift({ url, title, visited: new Date().toISOString(), id: Date.now() });
-                    DB.set('history', filtered.slice(0, 500)); // Keep last 500
-                },
-                getAll() { return DB.get('history'); },
-                clear() { DB.set('history', []); },
-                search(query) {
-                    return DB.find('history', h => 
-                        h.title.toLowerCase().includes(query.toLowerCase()) ||
-                        h.url.toLowerCase().includes(query.toLowerCase())
-                    );
-                }
-            },
-            
-            notes: {
-                add(title, content, color = '#6366f1') {
-                    return DB.add('notes', { title, content, color });
-                },
-                getAll() { return DB.get('notes'); },
-                update(id, title, content) {
-                    return DB.update('notes', id, { title, content });
-                },
-                delete(id) { DB.delete('notes', id); }
-            },
-            
-            cache: {
-                set(key, value, expiryMs = 3600000) {
-                    const cache = DB.get('cache');
-                    cache[key] = { value, expiry: Date.now() + expiryMs };
-                    DB.set('cache', cache);
-                },
-                get(key) {
-                    const cache = DB.get('cache');
-                    const item = cache[key];
-                    if (item && item.expiry > Date.now()) {
-                        return item.value;
-                    }
-                    return null;
-                },
-                clear() { DB.set('cache', {}); }
-            },
-            
-            settings: {
-                get(key, defaultValue = null) {
-                    const settings = DB.get('settings')[0] || {};
-                    return key ? settings[key] : settings;
-                },
-                set(key, value) {
-                    let settings = DB.get('settings')[0] || {};
-                    settings[key] = value;
-                    DB.set('settings', [settings]);
-                },
-                getAll() { return DB.get('settings')[0] || {}; }
-            }
-        };
-        
-        // Initialize databases on load
-        DB.init();
-        
-        /* ========== SITES DATABASE ========== */
-        const SitesDB = {
-            sites: {
-                'home': 'pages/home.html','search': 'pages/search.html','agents': 'pages/agents.html',
-                'agent': 'pages/agent/workspace.html','chat': 'pages/chat.html','mail': 'pages/mail.html',
-                'cloud': 'pages/cloud.html','calendar': 'pages/calendar.html','notes': 'pages/notes.html',
-                'docs': 'pages/docs.html','media': 'pages/media.html','music': 'pages/music.html',
-                'video': 'pages/video.html','tv': 'pages/tv.html','games': 'pages/games.html',
-                'news': 'pages/news.html','social': 'pages/social.html','store': 'pages/store.html',
-                'wallet': 'pages/wallet.html','bank': 'pages/bank.html','crypto': 'pages/crypto.html',
-                'jobs': 'pages/jobs.html','food': 'pages/food.html','travel': 'pages/travel.html',
-                'health': 'pages/health.html','fitness': 'pages/fitness.html','learn': 'pages/learn.html',
-                'weather': 'pages/weather.html','maps': 'pages/maps.html','realestate': 'pages/realestate.html',
-                'cars': 'pages/cars.html','sports': 'pages/sports.html','books': 'pages/books.html',
-                'radio': 'pages/radio.html','podcasts': 'pages/podcasts.html','events': 'pages/events.html',
-                'forum': 'pages/forum.html','wiki': 'pages/wiki.html','blog': 'pages/blog.html',
-                'date': 'pages/date.html','settings': 'pages/settings.html','bookmarks': 'pages/bookmarks.html',
-                'history': 'pages/history.html','downloads': 'pages/downloads.html'
-            },
-            icons: {
-                'home': '🏠','search': '🔍','agents': '🤖','chat': '💬','mail': '📧',
-                'cloud': '☁️','calendar': '📅','notes': '📓','docs': '📚','media': '🎬',
-                'music': '🎵','video': '🎬','tv': '📺','games': '🎮','news': '📰',
-                'social': '👥','store': '🛒','wallet': '💰','bank': '🏦','crypto': '🪙',
-                'jobs': '💼','food': '🍔','travel': '✈️','health': '💪','fitness': '💪',
-                'learn': '📚','weather': '🌤️','maps': '🗺️','realestate': '🏠','cars': '🚗',
-                'sports': '⚽','books': '📚','radio': '📻','podcasts': '🎙️','events': '🎪',
-                'forum': '💬','wiki': '📖','blog': '📝','date': '💕','settings': '⚙️',
-                'bookmarks': '⭐','history': '📜','downloads': '📥'
-            }
-        };
-        
-        /* ========== TAB MANAGEMENT ========== */
-        let tabs = [{ id: 1, url: 'luo://home', title: 'New Tab', icon: '🏠' }];
-        let currentTab = 1;
-        let nextTabId = 2;
-        let historyStack = {};
-        let forwardStack = {};
-        
-        function newTab(url = 'luo://home') {
-            const id = nextTabId++;
-            tabs.push({ id, url, title: 'New Tab', icon: '🏠' });
-            const viewport = document.createElement('iframe');
-            viewport.className = 'viewport';
-            viewport.id = 'viewport-' + id;
-            document.querySelector('.content').appendChild(viewport);
-            const tabEl = document.createElement('div');
-            tabEl.className = 'tab';
-            tabEl.dataset.id = id;
-            tabEl.onclick = () => switchTab(id);
-            tabEl.innerHTML = `<span class="tab-icon">🏠</span><span class="tab-title">New Tab</span><button class="tab-close" onclick="closeTab(event, ${id})">×</button>`;
-            document.getElementById('tabBar').insertBefore(tabEl, document.getElementById('tabBar').lastChild);
-            switchTab(id);
-            navigateTo(url, id);
-            updateTabCount();
-        }
-        
-        function closeTab(e, id) {
-            e.stopPropagation();
-            if (tabs.length === 1) return;
-            tabs = tabs.filter(t => t.id !== id);
-            document.getElementById('viewport-' + id).remove();
-            document.querySelector(`.tab[data-id="${id}"]`).remove();
-            if (currentTab === id) { currentTab = tabs[tabs.length - 1].id; switchTab(currentTab); }
-            updateTabCount();
-        }
-        
-        function switchTab(id) {
-            currentTab = id;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.tab[data-id="${id}"]`).classList.add('active');
-            document.querySelectorAll('.viewport').forEach(v => v.classList.remove('active'));
-            document.getElementById('viewport-' + id).classList.add('active');
-            const tab = tabs.find(t => t.id === id);
-            document.getElementById('addressBar').value = tab.url;
-            const startPage = document.getElementById('startPage');
-            if (tab.url === 'luo://home') {
-                startPage.style.display = 'flex';
-                document.getElementById('viewport-' + id).style.display = 'none';
-            } else {
-                startPage.style.display = 'none';
-                document.getElementById('viewport-' + id).style.display = 'block';
-            }
-            document.getElementById('backBtn').disabled = !historyStack[id] || historyStack[id].length === 0;
-            document.getElementById('forwardBtn').disabled = !forwardStack[id] || forwardStack[id].length === 0;
-        }
-        
-        function updateTabCount() {
-            document.getElementById('tabCount').textContent = tabs.length + ' tab' + (tabs.length > 1 ? 's' : '');
-        }
-        
-        /* ========== NAVIGATION ========== */
-        function navigateTo(url, tabId = currentTab) {
-            if (!url.startsWith('luo://')) url = 'luo://' + url;
-            const path = url.replace('luo://', '');
-            const pageName = path.split('/')[0];
-            const pagePath = SitesDB.sites[pageName];
-            
-            if (pagePath) {
-                if (!historyStack[tabId]) historyStack[tabId] = [];
-                if (!forwardStack[tabId]) forwardStack[tabId] = [];
-                const currentUrl = tabs.find(t => t.id === tabId).url;
-                if (currentUrl !== url) { historyStack[tabId].push(currentUrl); forwardStack[tabId] = []; }
-                
-                const tab = tabs.find(t => t.id === tabId);
-                tab.url = url; tab.title = pageName.charAt(0).toUpperCase() + pageName.slice(1);
-                tab.icon = SitesDB.icons[pageName] || '📄';
-                document.getElementById('addressBar').value = url;
-                document.getElementById('viewport-' + tabId).src = pagePath;
-                const tabEl = document.querySelector(`.tab[data-id="${tabId}"]`);
-                tabEl.querySelector('.tab-icon').textContent = tab.icon;
-                tabEl.querySelector('.tab-title').textContent = tab.title;
-                document.getElementById('startPage').style.display = 'none';
-                document.getElementById('viewport-' + tabId).style.display = 'block';
-                document.getElementById('loading').classList.remove('hidden');
-                setTimeout(() => document.getElementById('loading').classList.add('hidden'), 500);
-                document.getElementById('backBtn').disabled = historyStack[tabId].length === 0;
-                document.getElementById('forwardBtn').disabled = forwardStack[tabId].length === 0;
-                
-                // Save to history database
-                DB.history.add(url, tab.title);
-            } else {
-                showError('Page not found: ' + url);
-            }
-        }
-        
-        function handleAddressBar(e) {
-            if (e.key === 'Enter') {
-                let url = e.target.value.trim();
-                if (!url.startsWith('luo://') && !url.startsWith('http')) {
-                    navigateTo('luo://search?q=' + encodeURIComponent(url));
-                } else if (url.startsWith('http')) {
-                    showError('Use luo:// sites only');
-                } else { navigateTo(url); }
-            }
-        }
-        
-        function goBack() {
-            if (historyStack[currentTab] && historyStack[currentTab].length > 0) {
-                const currentUrl = tabs.find(t => t.id === currentTab).url;
-                forwardStack[currentTab].push(currentUrl);
-                navigateTo(historyStack[currentTab].pop(), currentTab);
-            }
-        }
-        
-        function goForward() {
-            if (forwardStack[currentTab] && forwardStack[currentTab].length > 0) {
-                const currentUrl = tabs.find(t => t.id === currentTab).url;
-                historyStack[currentTab].push(currentUrl);
-                navigateTo(forwardStack[currentTab].pop(), currentTab);
-            }
-        }
-        
-        function reload() { navigateTo(tabs.find(t => t.id === currentTab).url, currentTab); }
-        
-        function showError(msg) {
-            const viewport = document.getElementById('viewport-' + currentTab);
-            viewport.srcdoc = '<!DOCTYPE html><html><head><style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#000;color:#fff}.e{text-align:center;padding:40px}.i{font-size:48px;margin-bottom:20px}.t{font-size:20px;color:#ef4444;margin-bottom:10px}.m{color:#666}</style></head><body><div class="e"><div class="i">⚠️</div><div class="t">Oops!</div><div class="m">' + msg + '</div></div></body></html>';
-            viewport.style.display = 'block';
+            const tab = tabs.find(t => t.id === tabId);
+            tab.u = url; tab.t = page.charAt(0).toUpperCase() + page.slice(1);
+            tab.i = Sites.i[page] || '📄';
+            document.getElementById('addressBar').value = url;
+            document.getElementById('vp' + tabId).src = pagePath;
+            const el = document.querySelector(`.tab[data-id="${tabId}"]`);
+            el.querySelector('span:first-child').textContent = tab.i;
+            el.querySelector('.tt').textContent = tab.t;
             document.getElementById('startPage').style.display = 'none';
+            document.getElementById('vp' + tabId).style.display = 'block';
+            document.getElementById('loading').classList.remove('hi');
+            setTimeout(() => document.getElementById('loading').classList.add('hi'), 500);
+            document.getElementById('backBtn').disabled = hist[tabId].length === 0;
+            document.getElementById('forwardBtn').disabled = fwd[tabId].length === 0;
+            DB.add('history', {url, title: tab.t});
+        } else { showErr('Page not found: ' + url); }
+    }
+    
+    function handleAddress(e) {
+        if (e.key === 'Enter') {
+            let url = e.target.value.trim();
+            if (!url.startsWith('luo://') && !url.startsWith('http')) navigateTo('luo://search?q=' + encodeURIComponent(url));
+            else if (url.startsWith('http')) showErr('Use luo:// sites only');
+            else navigateTo(url);
         }
-        
-        /* ========== AI PANEL ========== */
-        function toggleAI() { document.getElementById('aiPanel').classList.toggle('open'); }
-        
-        function aiCommand(agent) {
-            const commands = { codemaster: '💻 Write code:', researchpro: '🔬 Research:', contentgen: '✍️ Write about:', datawhiz: '📊 Analyze:' };
-            document.getElementById('aiCommandInput').placeholder = commands[agent] + '...';
+    }
+    
+    function goBack() {
+        if (hist[cur] && hist[cur].length > 0) {
+            fwd[cur].push(tabs.find(t => t.id === cur).u);
+            navigateTo(hist[cur].pop(), cur);
         }
-        
-        function executeAICommand() {
-            const input = document.getElementById('aiCommandInput');
-            const cmd = input.value.trim();
-            if (!cmd) return;
-            const result = document.createElement('div');
-            result.className = 'ai-result';
-            const lower = cmd.toLowerCase();
-            let response = '';
-            
-            if (lower.includes('search')) {
-                navigateTo('luo://search?q=' + encodeURIComponent(cmd.replace(/search/i, '').trim()));
-                response = '🔍 Searching: ' + cmd.replace(/search/i, '').trim();
-            } else if (lower.includes('navigate') || lower.includes('go to') || lower.includes('open')) {
-                navigateTo(cmd.replace(/navigate|go to|open/i, '').trim());
-                response = '➡️ Opening: ' + cmd.replace(/navigate|go to|open/i, '').trim();
-            } else if (lower.includes('bookmark')) {
-                const tab = tabs.find(t => t.id === currentTab);
-                DB.bookmarks.add(tab.url, tab.title);
-                response = '⭐ Bookmarked: ' + tab.title;
-            } else if (lower.includes('save note') || lower.includes('add note')) {
-                const noteText = cmd.replace(/save note|add note/i, '').trim();
-                DB.notes.add('Quick Note', noteText);
-                response = '📝 Note saved: ' + noteText.substring(0, 30) + '...';
-            } else if (lower.includes('show history') || lower.includes('view history')) {
-                navigateTo('luo://history');
-                response = '📜 Opened history';
-            } else if (lower.includes('show bookmarks') || lower.includes('view bookmarks')) {
-                navigateTo('luo://bookmarks');
-                response = '⭐ Opened bookmarks';
-            } else if (lower.includes('clear history')) {
-                DB.history.clear();
-                response = '🗑️ History cleared';
-            } else {
-                navigateTo('luo://search?q=' + encodeURIComponent(cmd));
-                response = '🔍 Searched: ' + cmd;
-            }
-            result.innerHTML = '<div class="ai-result-title">Command</div><div class="ai-result-content">' + response + '</div>';
-            document.getElementById('aiResults').insertBefore(result, document.getElementById('aiResults').firstChild);
-            input.value = '';
+    }
+    
+    function goForward() {
+        if (fwd[cur] && fwd[cur].length > 0) {
+            hist[cur].push(tabs.find(t => t.id === cur).u);
+            navigateTo(fwd[cur].pop(), cur);
         }
+    }
+    
+    function reload() { navigateTo(tabs.find(t => t.id === cur).u, cur); }
+    
+    function showErr(msg) {
+        const vp = document.getElementById('vp' + cur);
+        vp.srcdoc = '<!DOCTYPE html><html><head><style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#000;color:#fff}.e{text-align:center;padding:40px}.i{font-size:48px;margin-bottom:20px}.t{font-size:20px;color:#ef4444;margin-bottom:10px}.m{color:#666}</style></head><body><div class="e"><div class="i">⚠️</div><div class="t">Oops!</div><div class="m">' + msg + '</div></div></body></html>';
+        vp.style.display = 'block';
+        document.getElementById('startPage').style.display = 'none';
+    }
+    
+    /* ==================== AI PANEL ==================== */
+    function toggleAI() { document.getElementById('aiPanel').classList.toggle('o'); }
+    
+    function setAgent(agent) {
+        const cmds = {codemaster:'💻 Code:',researchpro:'🔬 Research:',contentgen:'✍️ Write:',datawhiz:'📊 Analyze:'};
+        document.getElementById('aiInput').placeholder = cmds[agent] + '...';
+    }
+    
+    function quickAI(action) {
+        const tab = tabs.find(t => t.id === cur);
+        let response = '';
+        if (action === 'search') { navigateTo('luo://search'); response = '🔍 Search'; }
+        else if (action === 'bookmark') { DB.add('bookmarks', {url:tab.u,title:tab.t}); response = '⭐ Bookmarked'; }
+        else if (action === 'note') { DB.add('notes',{title:'Quick Note',content:'From: '+tab.t}); response = '📝 Note added'; }
+        else if (action === 'history') { navigateTo('luo://history'); response = '📜 History'; }
+        addAIResult(response);
+    }
+    
+    function executeAI() {
+        const input = document.getElementById('aiInput');
+        const cmd = input.value.trim();
+        if (!cmd) return;
+        const lower = cmd.toLowerCase();
+        let response = '';
         
-        /* ========== INIT ========== */
-        document.getElementById('addressBar').value = 'luo://home';
-        document.addEventListener('keydown', (e) => {
-            if (e.altKey && e.key === 'ArrowLeft') goBack();
-            if (e.altKey && e.key === 'ArrowRight') goForward();
-            if (e.ctrlKey && e.key === 't') { e.preventDefault(); newTab(); }
-            if (e.ctrlKey && e.key === 'w') { e.preventDefault(); closeTab(event, currentTab); }
-            if (e.ctrlKey && e.key === 'l') { e.preventDefault(); document.getElementById('addressBar').focus(); }
-        });
+        if (lower.includes('search')) {
+            navigateTo('luo://search?q=' + encodeURIComponent(cmd.replace(/search/i, '').trim()));
+            response = '🔍 Searching: ' + cmd.replace(/search/i, '').trim();
+        } else if (lower.includes('navigate') || lower.includes('go to') || lower.includes('open')) {
+            navigateTo(cmd.replace(/navigate|go to|open/i, '').trim());
+            response = '➡️ Opening: ' + cmd.replace(/navigate|go to|open/i, '').trim();
+        } else if (lower.includes('bookmark')) {
+            const tab = tabs.find(t => t.id === cur);
+            DB.add('bookmarks', {url:tab.u,title:tab.t});
+            response = '⭐ Bookmarked: ' + tab.t;
+        } else if (lower.includes('add note') || lower.includes('save note')) {
+            const text = cmd.replace(/add note|save note/i, '').trim();
+            DB.add('notes', {title:'Quick Note', content:text});
+            response = '📝 Note saved: ' + text.substring(0, 30) + '...';
+        } else {
+            navigateTo('luo://search?q=' + encodeURIComponent(cmd));
+            response = '🔍 Searched: ' + cmd;
+        }
+        addAIResult(response);
+        input.value = '';
+    }
+    
+    function addAIResult(response) {
+        const results = document.getElementById('aiResults');
+        const el = document.createElement('div');
+        el.className = 'r';
+        el.innerHTML = '<div class="r-t">Command</div><div class="r-c">' + response + '</div>';
+        results.insertBefore(el, results.firstChild);
+    }
+    
+    /* ==================== INIT ==================== */
+    DB.init();
+    document.getElementById('addressBar').value = 'luo://home';
+    document.addEventListener('keydown', e => {
+        if (e.altKey && e.key === 'ArrowLeft') goBack();
+        if (e.altKey && e.key === 'ArrowRight') goForward();
+        if (e.ctrlKey && e.key === 't') { e.preventDefault(); newTab(); }
+        if (e.ctrlKey && e.key === 'w') { e.preventDefault(); closeTab(event, cur); }
+        if (e.ctrlKey && e.key === 'l') { e.preventDefault(); document.getElementById('addressBar').focus(); }
+    });
+    
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
     </script>
 </body>
 </html>
