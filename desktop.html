@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Luo Desktop OS</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0067c0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;cursor:default}
         body{font-family:Segoe.UI,sans-serif;background:#000;color:#fff;height:100vh;overflow:hidden;touch-action:none}
@@ -117,14 +121,14 @@
     <!-- Luo Desktop Area -->
     <div id="luo-desktop">
         <div class="desktop" id="desktop-icons">
-            <div class="icon" ondblclick="open('term')"><div>⬛</div><span>Terminal</span></div>
-            <div class="icon" ondblclick="open('files')"><div>📁</div><span>Files</span></div>
-            <div class="icon" ondblclick="open('browser')"><div>🌐</div><span>Browser</span></div>
-            <div class="icon" ondblclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
-            <div class="icon" ondblclick="open('note')"><div>📝</div><span>Notepad</span></div>
-            <div class="icon" ondblclick="open('set')"><div>⚙️</div><span>Settings</span></div>
-            <div class="icon" ondblclick="open('game')"><div>🎮</div><span>Games</span></div>
-            <div class="icon" ondblclick="open('proc')"><div>📊</div><span>Tasks</span></div>
+            <div class="icon" data-id="term" ondblclick="open('term')"><div>⬛</div><span>Terminal</span></div>
+            <div class="icon" data-id="files" ondblclick="open('files')"><div>📁</div><span>Files</span></div>
+            <div class="icon" data-id="browser" ondblclick="open('browser')"><div>🌐</div><span>Browser</span></div>
+            <div class="icon" data-id="calc" ondblclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
+            <div class="icon" data-id="note" ondblclick="open('note')"><div>📝</div><span>Notepad</span></div>
+            <div class="icon" data-id="set" ondblclick="open('set')"><div>⚙️</div><span>Settings</span></div>
+            <div class="icon" data-id="game" ondblclick="open('game')"><div>🎮</div><span>Games</span></div>
+            <div class="icon" data-id="proc" ondblclick="open('proc')"><div>📊</div><span>Tasks</span></div>
         </div>
     </div>
     
@@ -212,17 +216,48 @@
     </div>
 
     <script>
-        // === DATABASE SYSTEM ===
+        // === PWA & OFFLINE SUPPORT ===
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('[Luo] Service Worker registered');
+            }).catch(err => console.log('[Luo] SW error:', err));
+        }
+        
+        // === DATABASE SYSTEM (Full-featured localStorage DB) ===
         const DB = {
+            tables: ['icons','files','notes','settings','history','cookies','cache','tasks','network'],
             init(){
-                ['icons','files','notes','settings','history'].forEach(t => {
+                this.tables.forEach(t => {
                     if(!localStorage.getItem('luo_'+t)) localStorage.setItem('luo_'+t,JSON.stringify([]));
                 });
+                // Load saved icon positions
+                this.loadIcons();
+                console.log('[Luo DB] Initialized');
             },
             get(t){return JSON.parse(localStorage.getItem('luo_'+t)||'[]')},
             set(t,d){localStorage.setItem('luo_'+t,JSON.stringify(d))},
-            add(t,o){const d=this.get(t);d.unshift({...o,id:Date.now()});this.set(t,d);return o}
+            add(t,o){const d=this.get(t);d.unshift({...o,id:Date.now(),created:new Date().toISOString()});this.set(t,d);return o},
+            update(t,id,updates){
+                const d=this.get(t),i=d.findIndex(r=>r.id===id);
+                if(i!==-1){d[i]={...d[i],...updates,updated:new Date().toISOString()};this.set(t,d);return d[i]}return null
+            },
+            delete(t,id){this.set(t,this.get(t).filter(r=>r.id!==id))},
+            find(t,fn){return this.get(t).filter(fn)},
+            clear(t){this.set(t,[])},
+            saveIcons(pos){this.set('icons',pos)},
+            loadIcons(){
+                const s=this.get('icons');if(s.length){
+                    s.forEach(p=>{const e=document.querySelector(`[data-id="${p.id}"]`);if(e){e.style.left=p.x+'px';e.style.top=p.y+'px';e.style.position='fixed'}})
+                }
+            }
         };
+        
+        // Notes, Settings, History, Cache helpers
+        const Notes = { all:()=>DB.get('notes'), get:id=>DB.find('notes',n=>n.id===id)[0], create:(t,c)=>DB.add('notes',{title:t,content:c}), update:(id,t,c)=>DB.update('notes',id,{title:t,content:c}), delete:id=>DB.delete('notes',id) };
+        const Settings = { get:(k,d)=>{const s=DB.get('settings')[0]||{};return k?s[k]:s}, set:(k,v)=>{let s=DB.get('settings')[0]||{};s[k]=v;DB.set('settings',[s])}, all:()=>DB.get('settings')[0]||{} };
+        const History = { add:(p,t)=>DB.add('history',{page:p,title:t,url:location.href}) };
+        const Cache = { get:k=>DB.find('cache',x=>x.key===k&&x.expiry>Date.now())[0]?.value, set:(k,v,ttl=3600000)=>DB.add('cache',{key:k,value:v,expiry:Date.now()+ttl}), clear:()=>DB.clear('cache') };
+        
         DB.init();
         
         // Save icon positions
@@ -232,7 +267,7 @@
             icons.forEach((el,i) => {
                 positions.push({id:el.dataset.id||i, x:el.offsetLeft, y:el.offsetTop});
             });
-            DB.set('icons', positions);
+            DB.saveIcons(positions);
         }
         
         // Make icons draggable

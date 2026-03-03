@@ -1,21 +1,18 @@
 {
-    "name": "Luo Browser",
+    "name": "Luo Desktop OS",
     "short_name": "Luo",
-    "description": "The Ultimate Browser for Humans & AI Agents",
-    "start_url": "/",
+    "description": "Your Personal Desktop in Browser",
+    "start_url": "/desktop.html",
     "display": "standalone",
     "background_color": "#000000",
-    "theme_color": "#6366f1",
-    "orientation": "portrait-primary",
+    "theme_color": "#0067c0",
+    "orientation": "any",
     "icons": [
         {
-            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%236366f1' rx='20' width='100' height='100'/><text y='.9em' font-size='80' x='50%25' text-anchor='middle'>🦁</text></svg>",
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230067c0' rx='20' width='100' height='100'/><text y='.9em' font-size='70'>🦁</text></svg>",
             "sizes": "any",
-            "type": "image/svg+xml",
-            "purpose": "any maskable"
+            "type": "image/svg+xml"
         }
     ],
-    "categories": ["utilities", "productivity"],
-    "lang": "en",
-    "dir": "ltr"
+    "categories": ["utilities", "productivity"]
 }
