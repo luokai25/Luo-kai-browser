@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luo Search - The AI-Powered Search</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: #94a3b8;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        .search-box {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus-within {
+            border-color: #6366f1;
+        }
+        .search-icon { font-size: 20px; }
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #f8fafc;
+            font-size: 18px;
+            outline: none;
+        }
+        .search-btn {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .search-btn:hover { transform: scale(1.05); }
+        .quick-categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .category {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category:hover {
+            transform: translateY(-5px);
+            background: #334155;
+        }
+        .category-icon { font-size: 32px; margin-bottom: 10px; }
+        .category-name { font-weight: 600; }
+        .results {
+            text-align: left;
+            margin-top: 40px;
+        }
+        .result-item {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .result-item:hover {
+            background: #334155;
+            transform: translateX(10px);
+        }
+        .result-title {
+            color: #6366f1;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .result-url {
+            color: #22c55e;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-family: monospace;
+        }
+        .result-desc {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔍</div>
+        <h1 class="title">Luo Search</h1>
+        <p class="subtitle">Search the Luoverse • Powered by AI</p>
+        
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search the Luoverse...">
+            <button class="search-btn" onclick="performSearch()">Search</button>
+        </div>
+        
+        <div class="quick-categories">
+            <div class="category" onclick="searchCategory('news')">
+                <div class="category-icon">📰</div>
+                <div class="category-name">News</div>
+            </div>
+            <div class="category" onclick="searchCategory('images')">
+                <div class="category-icon">🖼️</div>
+                <div class="category-name">Images</div>
+            </div>
+            <div class="category" onclick="searchCategory('videos')">
+                <div class="category-icon">🎬</div>
+                <div class="category-name">Videos</div>
+            </div>
+            <div class="category" onclick="searchCategory('shopping')">
+                <div class="category-icon">🛒</div>
+                <div class="category-name">Shopping</div>
+            </div>
+        </div>
+        
+        <div class="results" id="results"></div>
+    </div>
+    
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+        
+        function performSearch() {
+            const query = searchInput.value;
+            if (!query) return;
+            
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <h2 style="margin-bottom: 20px; color: #94a3b8;">Results for "${query}"</h2>
+                <div class="result-item">
+                    <div class="result-title">🏠 Luo Home - ${query}</div>
+                    <div class="result-url">luo://home</div>
+                    <div class="result-desc">The official home page of Luo Browser. Your gateway to the Luoverse.</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-title">📰 Luo News - Latest on ${query}</div>
+                    <div class="result-url">luo://news</div>
+                    <div class="result-desc">Stay updated with the latest news about ${query} in the Luoverse.</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-title">💬 Luo Chat - Discuss ${query}</div>
+                    <div class="result-url">luo://chat</div>
+                    <div class="result-desc">Join the conversation about ${query} with the Luo community.</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-title">📝 Luo Docs - Learn about ${query}</div>
+                    <div class="result-url">luo://docs</div>
+                    <div class="result-desc">Documentation and guides about ${query} in the Luo Browser.</div>
+                </div>
+            `;
+        }
+        
+        function searchCategory(cat) {
+            searchInput.value = cat;
+            performSearch();
+        }
+    </script>
+</body>
+</html>
