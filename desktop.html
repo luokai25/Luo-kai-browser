@@ -2,1567 +2,221 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Luo Desktop OS</title>
-    <meta name="theme-color" content="#000000">
     <style>
-        :root {
-            --bg: #000000;
-            --surface: #0c0c0c;
-            --surface1: #141414;
-            --surface2: #1c1c1c;
-            --surface3: #252525;
-            --border: #2d2d2d;
-            --text: #ffffff;
-            --text2: #c0c0c0;
-            --text3: #707070;
-            --primary: #0067c0;
-            --primary2: #0078d4;
-            --accent: #60cdff;
-            --success: #6ccb5f;
-            --warning: #fce100;
-            --danger: #ff453a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass1: rgba(255, 255, 255, 0.03);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Segoe UI Variable', 'Segoe UI', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            height: 100vh;
-            overflow: hidden;
-            user-select: none;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        /* Boot Screen */
-        .boot {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s;
-        }
-        
-        .boot.hidden { opacity: 0; pointer-events: none; }
-        
-        .boot-logo {
-            font-size: 72px;
-            margin-bottom: 20px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        
-        .boot-text {
-            font-size: 24px;
-            font-weight: 300;
-            color: var(--text2);
-            margin-bottom: 40px;
-        }
-        
-        .boot-loader {
-            width: 200px;
-            height: 4px;
-            background: var(--surface3);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .boot-loader-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 0.3s;
-        }
-        
-        .boot-status {
-            margin-top: 20px;
-            font-size: 12px;
-            color: var(--text3);
-        }
-        
-        /* Wallpaper */
-        .wallpaper {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(135deg, #001833 0%, #001a40 25%, #000d1a 50%, #0a0a1a 75%, #001220 100%);
-        }
-        
-        /* Desktop */
-        .desktop {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        
-        /* Taskbar */
-        .taskbar {
-            height: 48px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(30px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            z-index: 1000;
-        }
-        
-        .start-btn {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-size: 20px;
-        }
-        
-        .start-btn:hover, .start-btn.active { background: var(--glass); }
-        
-        .taskbar-search {
-            width: 350px;
-            height: 36px;
-            background: var(--glass1);
-            border: 1px solid transparent;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 14px;
-            font-size: 13px;
-            color: var(--text3);
-            margin-left: 8px;
-            cursor: pointer;
-        }
-        
-        .taskbar-search:hover { background: var(--glass); border-color: var(--border); }
-        
-        .taskbar-apps {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            padding-left: 12px;
-        }
-        
-        .taskbar-app {
-            width: 44px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            cursor: pointer;
-            position: relative;
-            transition: background 0.15s;
-        }
-        
-        .taskbar-app:hover { background: var(--glass); }
-        .taskbar-app.active { background: var(--glass1); }
-        .taskbar-app.active::after {
-            content: '';
-            position: absolute;
-            bottom: 3px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 3px;
-            background: var(--accent);
-            border-radius: 2px;
-        }
-        
-        .taskbar-app-icon { font-size: 18px; }
-        
-        .taskbar-right {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .taskbar-icon {
-            width: 36px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .taskbar-icon:hover { background: var(--glass); }
-        
-        .taskbar-clock {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            padding: 0 8px;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .taskbar-clock:hover { background: var(--glass); }
-        
-        .clock-time { font-size: 12px; }
-        .clock-date { font-size: 10px; color: var(--text3); }
-        
-        /* Desktop Area */
-        .desktop-area {
-            flex: 1;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            position: relative;
-        }
-        
-        .desktop-icon {
-            width: 76px;
-            padding: 8px 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        
-        .desktop-icon:hover { background: var(--glass); }
-        
-        .desktop-icon-img {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: var(--surface1);
-            border: 1px solid var(--border);
-        }
-        
-        .desktop-icon-name {
-            font-size: 11px;
-            text-align: center;
-            color: var(--text2);
-            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-            line-height: 1.3;
-            word-break: break-word;
-        }
-        
-        /* Windows */
-        .window {
-            position: absolute;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            display: none;
-            flex-direction: column;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            overflow: hidden;
-            min-width: 400px;
-            min-height: 300px;
-            animation: windowOpen 0.15s ease;
-        }
-        
-        @keyframes windowOpen {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        .window.open { display: flex; }
-        
-        .window.maximized {
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: calc(100vh - 48px) !important;
-            border-radius: 0;
-        }
-        
-        .window-header {
-            height: 32px;
-            background: var(--surface1);
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            flex-shrink: 0;
-        }
-        
-        .window-title {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-left: 40px;
-            font-size: 12px;
-            color: var(--text2);
-        }
-        
-        .window-controls {
-            display: flex;
-            gap: 8px;
-            position: absolute;
-            left: 8px;
-        }
-        
-        .window-btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            transition: opacity 0.15s;
-        }
-        
-        .window-btn:hover { opacity: 0.8; }
-        .window-btn.close { background: #ff5f56; }
-        .window-btn.min { background: #ffbd2e; }
-        .window-btn.max { background: #27ca3f; }
-        
-        .window-content {
-            flex: 1;
-            overflow: auto;
-            background: var(--bg);
-        }
-        
-        /* Terminal */
-        .terminal {
-            background: #0c0c0c;
-            padding: 12px;
-            font-family: 'Cascadia Code', 'Consolas', monospace;
-            font-size: 14px;
-            line-height: 1.4;
-            height: 100%;
-            overflow: auto;
-            color: #cccccc;
-        }
-        
-        .terminal-line { white-space: pre-wrap; word-break: break-all; }
-        .terminal-prompt { color: #6ccb5f; }
-        .terminal-path { color: #60cdff; }
-        .terminal-error { color: #ff453a; }
-        .terminal-info { color: #0078d4; }
-        .terminal-success { color: #6ccb5f; }
-        
-        .terminal-input-line {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .terminal-input {
-            background: transparent;
-            border: none;
-            color: var(--text);
-            font-family: inherit;
-            font-size: inherit;
-            outline: none;
-            flex: 1;
-            caret-color: var(--accent);
-        }
-        
-        /* File Explorer */
-        .explorer {
-            display: flex;
-            height: 100%;
-        }
-        
-        .explorer-toolbar {
-            height: 40px;
-            background: var(--surface1);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            gap: 8px;
-        }
-        
-        .explorer-btn {
-            padding: 4px 8px;
-            background: transparent;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--text2);
-        }
-        
-        .explorer-btn:hover { background: var(--glass); }
-        
-        .explorer-path {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 0 12px;
-            font-size: 12px;
-            color: var(--text2);
-        }
-        
-        .explorer-sidebar {
-            width: 160px;
-            background: var(--surface1);
-            padding: 8px;
-            border-right: 1px solid var(--border);
-        }
-        
-        .explorer-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: background 0.15s;
-        }
-        
-        .explorer-item:hover { background: var(--glass); }
-        .explorer-item.active { background: var(--glass1); }
-        
-        .explorer-main {
-            flex: 1;
-            padding: 8px;
-        }
-        
-        .explorer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 4px;
-        }
-        
-        .explorer-file {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        
-        .explorer-file:hover { background: var(--glass); }
-        
-        .explorer-file-icon { font-size: 32px; }
-        .explorer-file-name { font-size: 11px; text-align: center; color: var(--text2); word-break: break-word; }
-        
-        /* Calculator */
-        .calc {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .calc-display {
-            background: var(--surface1);
-            padding: 20px;
-            text-align: right;
-            font-size: 36px;
-            font-weight: 300;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .calc-buttons {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: var(--border);
-        }
-        
-        .calc-btn {
-            background: var(--surface);
-            border: none;
-            color: var(--text);
-            font-size: 18px;
-            cursor: pointer;
-            transition: background 0.1s;
-        }
-        
-        .calc-btn:hover { background: var(--surface2); }
-        .calc-btn:active { background: var(--surface3); }
-        .calc-btn.op { background: var(--primary); color: white; }
-        .calc-btn.op:hover { background: var(--primary2); }
-        .calc-btn.eq { background: var(--primary); color: white; }
-        
-        /* Settings */
-        .settings {
-            display: flex;
-            height: 100%;
-        }
-        
-        .settings-nav {
-            width: 240px;
-            background: var(--surface1);
-            padding: 16px 8px;
-            border-right: 1px solid var(--border);
-            overflow-y: auto;
-        }
-        
-        .settings-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: background 0.15s;
-        }
-        
-        .settings-nav-item:hover { background: var(--glass); }
-        .settings-nav-item.active { background: var(--primary); color: white; }
-        
-        .settings-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-        }
-        
-        .settings-header {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        
-        .settings-section {
-            margin-bottom: 32px;
-        }
-        
-        .settings-section-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text3);
-            margin-bottom: 12px;
-        }
-        
-        .settings-card {
-            background: var(--surface1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .settings-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .settings-row:last-child { border-bottom: none; }
-        
-        .settings-row-label { font-size: 14px; }
-        .settings-row-value { font-size: 13px; color: var(--text3); }
-        
-        /* Browser */
-        .browser {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .browser-nav {
-            height: 40px;
-            background: var(--surface1);
-            display: flex;
-            align-items: center;
-            padding: 0 12px;
-            gap: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .browser-btn {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            color: var(--text2);
-            font-size: 14px;
-        }
-        
-        .browser-btn:hover { background: var(--glass); }
-        
-        .browser-url {
-            flex: 1;
-            height: 28px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 0 12px;
-            color: var(--text);
-            font-size: 12px;
-            font-family: monospace;
-        }
-        
-        .browser-url:focus { outline: none; border-color: var(--primary); }
-        
-        .browser-frame {
-            flex: 1;
-            border: none;
-            background: white;
-        }
-        
-        /* Start Menu */
-        .start-menu {
-            position: absolute;
-            bottom: 56px;
-            left: 8px;
-            width: 640px;
-            height: 600px;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(40px);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 1001;
-        }
-        
-        .start-menu.open { display: flex; }
-        
-        .start-menu-top {
-            padding: 20px;
-            padding-bottom: 12px;
-        }
-        
-        .start-search {
-            width: 100%;
-            height: 40px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 0 16px;
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-        }
-        
-        .start-search:focus { border-color: var(--primary); }
-        
-        .start-pinned {
-            padding: 0 20px 16px;
-        }
-        
-        .start-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text3);
-            margin-bottom: 12px;
-        }
-        
-        .start-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 4px;
-        }
-        
-        .start-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 12px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        
-        .start-item:hover { background: var(--glass); }
-        
-        .start-item-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            background: var(--surface2);
-        }
-        
-        .start-item-name {
-            font-size: 10px;
-            color: var(--text2);
-            text-align: center;
-        }
-        
-        .start-bottom {
-            margin-top: auto;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid var(--border);
-        }
-        
-        .start-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-        }
-        
-        .start-user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .start-power {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .start-power-btn {
-            width: 36px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            color: var(--text2);
-            font-size: 14px;
-        }
-        
-        .start-power-btn:hover { background: var(--glass); }
-        
-        /* Context Menu */
-        .context-menu {
-            position: fixed;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 4px;
-            min-width: 180px;
-            display: none;
-            z-index: 2000;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-        
-        .context-menu.open { display: block; }
-        
-        .context-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        
-        .context-item:hover { background: var(--glass); }
-        
-        .context-separator {
-            height: 1px;
-            background: var(--border);
-            margin: 4px 0;
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--surface3); }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Segoe.UI,sans-serif;background:#000;color:#fff;height:100vh;overflow:hidden;touch-action:manipulation}
+        .bg{position:fixed;inset:0;background:linear-gradient(135deg,#001220 0%,#001a40 50%,#000910 100%);z-index:-1}
+        .desk{flex:1;display:flex;flex-direction:column}
+        .bar{height:44px;background:rgba(0,0,0,.85);display:flex;align-items:center;padding:0 8px;border-top:1px solid #333}
+        .btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;font-size:18px;background:0;border:0;color:#ccc;transition:background .1s}
+        .btn:hover,.btn:active{background:rgba(255,255,255,.1)}
+        .search{flex:1;margin:0 8px;height:32px;background:rgba(255,255,255,.05);border:1px solid #333;border-radius:16px;padding:0 12px;color:#fff;font-size:13px;outline:0}
+        .search:focus{border-color:#0067c0;background:rgba(255,255,255,.1)}
+        .apps{display:flex;gap:2px;padding-left:8px}
+        .app{width:40px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;font-size:16px;position:relative}
+        .app:hover,.app:active{background:rgba(255,255,255,.1)}
+        .app.on{background:rgba(255,255,255,.08)}
+        .app.on::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:12px;height:2px;background:#60cdff;border-radius:1px}
+        .clock{text-align:right;font-size:12px;line-height:1.3;padding:0 8px}
+        .area{flex:1;padding:10px;display:flex;flex-direction:column;gap:4px}
+        .icon{width:70px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border-radius:6px}
+        .icon:hover,.icon:active{background:rgba(255,255,255,.08)}
+        .icon img,.icon div{width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#1a1a1a;border:1px solid #333}
+        .icon span{font-size:10px;color:#aaa;text-align:center;word-break:break-word}
+        .win{position:absolute;background:#0c0c0c;border:1px solid #333;border-radius:6px;display:none;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.6);min-width:300px;min-height:200px;overflow:hidden}
+        .win.on{display:flex}
+        .win-head{height:28px;background:#1a1a1a;display:flex;align-items:center;padding:0 6px}
+        .win-btns{display:flex;gap:6px}
+        .win-btn{width:10px;height:10px;border-radius:50%;border:0;cursor:pointer}
+        .win-btn.r{background:#ff5f56}.win-btn.y{background:#ffbd2e}.win-btn.g{background:#27ca3f}
+        .win-title{flex:1;text-align:center;font-size:11px;color:#888}
+        .win-body{flex:1;overflow:auto;background:#000}
+        .start{position:absolute;bottom:52px;left:8px;width:500px;max-height:500px;background:rgba(15,15,15,.95);border:1px solid #333;border-radius:8px;display:none;overflow:auto;z-index:100}
+        .start.on{display:block}
+        .start-s{padding:16px}
+        .start-search{width:100%;height:34px;background:#1a1a1a;border:1px solid #333;border-radius:18px;padding:0 14px;color:#fff;font-size:13px;outline:0}
+        .start-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:12px}
+        .start-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:4px;cursor:pointer}
+        .start-item:hover,.start-item:active{background:rgba(255,255,255,.08)}
+        .start-item div{width:28px;height:28px;border-radius:4px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:14px}
+        .start-item span{font-size:9px;color:#aaa}
+        .term{background:#0c0c0c;padding:10px;font-family:Consolas,monospace;font-size:13px;line-height:1.4;height:100%;color:#ccc;overflow:auto}
+        .term input{background:0;border:0;color:#fff;font-family:inherit;font-size:inherit;outline:0;width:60%}
+        .calc{display:flex;flex-direction:column;height:100%}
+        .calc-d{background:#1a1a1a;padding:16px;text-align:right;font-size:28px;border-bottom:1px solid #333}
+        .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#333;flex:1}
+        .calc-btns button{background:#0c0c0c;border:0;color:#fff;font-size:16px;cursor:pointer}
+        .calc-btns button:hover,.calc-btns button:active{background:#1a1a1a}
+        .calc-btns button.o{background:#0067c0;color:#fff}
+        .calc-btns button.e{background:#0067c0;color:#fff}
+        .files{display:flex;height:100%}
+        .files-s{width:140px;background:#141414;padding:8px;border-right:1px solid #333}
+        .files-i{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:4px;font-size:12px;cursor:pointer}
+        .files-i:hover,.files-i:active{background:rgba(255,255,255,.08)}
+        .files-i.on{background:rgba(255,255,255,.06)}
+        .files-m{flex:1;padding:8px}
+        .files-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:4px}
+        .files-f{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border-radius:4px;cursor:pointer}
+        .files-f:hover,.files-f:active{background:rgba(255,255,255,.08)}
+        .files-f div{font-size:28px}
+        .files-f span{font-size:10px;color:#aaa;text-align:center}
+        .set{display:flex;height:100%}
+        .set-s{width:180px;background:#141414;padding:8px}
+        .set-i{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;font-size:12px;cursor:pointer}
+        .set-i:hover,.set-i:active{background:rgba(255,255,255,.08)}
+        .set-i.on{background:#0067c0;color:#fff}
+        .set-m{flex:1;padding:20px;overflow:auto}
+        .set-h{font-size:24px;margin-bottom:20px}
+        .set-r{display:flex;justify-content:space-between;padding:12px;background:#141414;border-radius:8px;margin-bottom:8px;font-size:13px}
+        .nav{display:flex;align-items:center;gap:4px;padding:0 8px;height:36px;background:#1a1a1a;border-bottom:1px solid #333}
+        .nav-b{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;background:0;border:0;color:#888;font-size:12px}
+        .nav-b:hover,.nav-b:active{background:rgba(255,255,255,.1)}
+        .nav-u{flex:1;height:24px;background:#0c0c0c;border:1px solid #333;border-radius:4px;padding:0 10px;color:#fff;font-size:11px;font-family:monospace}
+        .nav-iframe{flex:1;border:0}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:#444;border-radius:3px}
     </style>
 </head>
 <body>
-    <!-- Boot Screen -->
-    <div class="boot" id="boot">
-        <div class="boot-logo">🦁</div>
-        <div class="boot-text">Luo Desktop OS</div>
-        <div class="boot-loader">
-            <div class="boot-loader-bar" id="boot-bar"></div>
+    <div class="bg"></div>
+    <div class="desk">
+        <div class="area" id="area">
+            <div class="icon" onclick="open('term')"><div>⬛</div><span>Terminal</span></div>
+            <div class="icon" onclick="open('files')"><div>📁</div><span>Files</span></div>
+            <div class="icon" onclick="open('browser')"><div>🌐</div><span>Browser</span></div>
+            <div class="icon" onclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
+            <div class="icon" onclick="open('set')"><div>⚙️</div><span>Settings</span></div>
+            <div class="icon" onclick="open('note')"><div>📝</div><span>Notepad</span></div>
         </div>
-        <div class="boot-status" id="boot-status">Starting...</div>
-    </div>
-    
-    <div class="wallpaper"></div>
-    
-    <div class="desktop" id="desktop">
-        <!-- Desktop Icons -->
-        <div class="desktop-area" id="desktop-area">
-            <div class="desktop-icon" ondblclick="openApp('terminal')">
-                <div class="desktop-icon-img">⬛</div>
-                <span class="desktop-icon-name">Terminal</span>
+        <div class="bar">
+            <button class="btn" onclick="toggleStart()">🦁</button>
+            <input type="text" class="search" placeholder="Search...">
+            <div class="apps">
+                <div class="app" onclick="open('term')">⬛</div>
+                <div class="app" onclick="open('files')">📁</div>
+                <div class="app" onclick="open('browser')">🌐</div>
+                <div class="app" onclick="open('set')">⚙️</div>
             </div>
-            <div class="desktop-icon" ondblclick="openApp('explorer')">
-                <div class="desktop-icon-img">📁</div>
-                <span class="desktop-icon-name">Files</span>
-            </div>
-            <div class="desktop-icon" ondblclick="openApp('browser')">
-                <div class="desktop-icon-img">🌐</div>
-                <span class="desktop-icon-name">Browser</span>
-            </div>
-            <div class="desktop-icon" ondblclick="openApp('settings')">
-                <div class="desktop-icon-img">⚙️</div>
-                <span class="desktop-icon-name">Settings</span>
-            </div>
-            <div class="desktop-icon" ondblclick="openApp('calculator')">
-                <div class="desktop-icon-img">🧮</div>
-                <span class="desktop-icon-name">Calculator</span>
-            </div>
-            <div class="desktop-icon" ondblclick="openApp('notepad')">
-                <div class="desktop-icon-img">📝</div>
-                <span class="desktop-icon-name">Notepad</span>
-            </div>
-        </div>
-        
-        <!-- Windows -->
-        
-        <!-- Terminal -->
-        <div class="window" id="terminal-window" style="width:700px;height:450px;left:200px;top:100px;">
-            <div class="window-header">
-                <div class="window-controls">
-                    <button class="window-btn close" onclick="closeWindow('terminal')"></button>
-                    <button class="window-btn min" onclick="minimizeWindow('terminal')"></button>
-                    <button class="window-btn max" onclick="maximizeWindow('terminal')"></button>
-                </div>
-                <div class="window-title">⬛ Luo Terminal</div>
-            </div>
-            <div class="window-content">
-                <div class="terminal" id="terminal">
-                    <div class="terminal-line"><span class="terminal-info">Luo Terminal v1.0.0</span></div>
-                    <div class="terminal-line">Type <span class="terminal-info">help</span> for commands</div>
-                    <br>
-                    <div id="term-output"></div>
-                    <div class="terminal-input-line">
-                        <span class="terminal-prompt">➜</span>
-                        <span class="terminal-path">~</span>
-                        <input type="text" class="terminal-input" id="term-input" autofocus onkeydown="runCommand(event)">
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- File Explorer -->
-        <div class="window" id="explorer-window" style="width:800px;height:500px;left:150px;top:80px;">
-            <div class="window-header">
-                <div class="window-controls">
-                    <button class="window-btn close" onclick="closeWindow('explorer')"></button>
-                    <button class="window-btn min" onclick="minimizeWindow('explorer')"></button>
-                    <button class="window-btn max" onclick="maximizeWindow('explorer')"></button>
-                </div>
-                <div class="window-title">📁 Files</div>
-            </div>
-            <div class="explorer-toolbar">
-                <button class="explorer-btn" onclick="navigateDir('..')">⬆️ Back</button>
-                <button class="explorer-btn" onclick="navigateDir('..')">⬇️ Forward</button>
-                <button class="explorer-btn" onclick="refreshExplorer()">🔄 Refresh</button>
-                <div class="explorer-path" id="explorer-path">/home/luo</div>
-            </div>
-            <div class="explorer">
-                <div class="explorer-sidebar">
-                    <div class="explorer-item active" onclick="navigateDir('/home/luo')">🏠 Home</div>
-                    <div class="explorer-item" onclick="navigateDir('/desktop')">🖥️ Desktop</div>
-                    <div class="explorer-item" onclick="navigateDir('/documents')">📄 Documents</div>
-                    <div class="explorer-item" onclick="navigateDir('/downloads')">⬇️ Downloads</div>
-                    <div class="explorer-item" onclick="navigateDir('/pictures')">🖼️ Pictures</div>
-                    <div class="explorer-item" onclick="navigateDir('/music')">🎵 Music</div>
-                    <div class="explorer-item" onclick="navigateDir('/videos')">🎬 Videos</div>
-                </div>
-                <div class="explorer-main">
-                    <div class="explorer-grid" id="explorer-grid"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Browser -->
-        <div class="window" id="browser-window" style="width:900px;height:600px;left:100px;top:50px;">
-            <div class="window-header">
-                <div class="window-controls">
-                    <button class="window-btn close" onclick="closeWindow('browser')"></button>
-                    <button class="window-btn min" onclick="minimizeWindow('browser')"></button>
-                    <button class="window-btn max" onclick="maximizeWindow('browser')"></button>
-                </div>
-                <div class="window-title">🌐 Luo Browser</div>
-            </div>
-            <div class="browser">
-                <div class="browser-nav">
-                    <button class="browser-btn" onclick="goBack()">⬅️</button>
-                    <button class="browser-btn" onclick="goForward()">➡️</button>
-                    <button class="browser-btn" onclick="reloadPage()">🔄</button>
-                    <input type="text" class="browser-url" id="browser-url" placeholder="Search or enter URL..." onkeydown="navigateBrowser(event)">
-                </div>
-                <iframe class="browser-frame" id="browser-frame" src="about:blank"></iframe>
-            </div>
-        </div>
-        
-        <!-- Settings -->
-        <div class="window" id="settings-window" style="width:900px;height:550px;left:100px;top:50px;">
-            <div class="window-header">
-                <div class="window-controls">
-                    <button class="window-btn close" onclick="closeWindow('settings')"></button>
-                    <button class="window-btn min" onclick="minimizeWindow('settings')"></button>
-                    <button class="window-btn max" onclick="maximizeWindow('settings')"></button>
-                </div>
-                <div class="window-title">⚙️ Settings</div>
-            </div>
-            <div class="settings">
-                <div class="settings-nav">
-                    <div class="settings-nav-item active">🖥️ Display</div>
-                    <div class="settings-nav-item">🔊 Sound</div>
-                    <div class="settings-nav-item">🔔 Notifications</div>
-                    <div class="settings-nav-item">🔒 Privacy</div>
-                    <div class="settings-nav-item">🎨 Personalization</div>
-                    <div class="settings-nav-item">⏰ Time & Language</div>
-                    <div class="settings-nav-item">🎮 Gaming</div>
-                    <div class="settings-nav-item">💼 Accessibility</div>
-                    <div class="settings-nav-item">🔄 Recovery</div>
-                    <div class="settings-nav-item">ℹ️ About</div>
-                </div>
-                <div class="settings-content">
-                    <div class="settings-header">Display</div>
-                    <div class="settings-section">
-                        <div class="settings-section-title">Brightness</div>
-                        <div class="settings-card">
-                            <div class="settings-row">
-                                <span class="settings-row-label">Brightness level</span>
-                                <span class="settings-row-value">80%</span>
-                            </div>
-                            <div class="settings-row">
-                                <span class="settings-row-label">Night light</span>
-                                <span class="settings-row-value">Off</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title">Wallpaper</div>
-                        <div class="settings-card">
-                            <div class="settings-row">
-                                <span class="settings-row-label">Theme</span>
-                                <span class="settings-row-value">Dark</span>
-                            </div>
-                            <div class="settings-row">
-                                <span class="settings-row-label">Accent color</span>
-                                <span class="settings-row-value">Blue</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <div class="settings-section-title">About</div>
-                        <div class="settings-card">
-                            <div class="settings-row">
-                                <span class="settings-row-label">Device name</span>
-                                <span class="settings-row-value">Luo-PC</span>
-                            </div>
-                            <div class="settings-row">
-                                <span class="settings-row-label">OS</span>
-                                <span class="settings-row-value">Luo Desktop OS v1.0</span>
-                            </div>
-                            <div class="settings-row">
-                                <span class="settings-row-label">Build</span>
-                                <span class="settings-row-value">2026.03.03</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Calculator -->
-        <div class="window" id="calculator-window" style="width:300px;height:420px;right:50px;bottom:70px;">
-            <div class="window-header">
-                <div class="window-controls">
-                    <button class="window-btn close" onclick="closeWindow('calculator')"></button>
-                    <button class="window-btn min"></button>
-                    <button class="window-btn max"></button>
-                </div>
-                <div class="window-title">🧮 Calculator</div>
-            </div>
-            <div class="calc">
-                <div class="calc-display" id="calc-display">0</div>
-                <div class="calc-buttons">
-                    <button class="calc-btn" onclick="calc('C')">C</button>
-                    <button class="calc-btn" onclick="calc('±')">±</button>
-                    <button class="calc-btn" onclick="calc('%')">%</button>
-                    <button class="calc-btn op" onclick="calc('/')">÷</button>
-                    <button class="calc-btn" onclick="calc('7')">7</button>
-                    <button class="calc-btn" onclick="calc('8')">8</button>
-                    <button class="calc-btn" onclick="calc('9')">9</button>
-                    <button class="calc-btn op" onclick="calc('*')">×</button>
-                    <button class="calc-btn" onclick="calc('4')">4</button>
-                    <button class="calc-btn" onclick="calc('5')">5</button>
-                    <button class="calc-btn" onclick="calc('6')">6</button>
-                    <button class="calc-btn op" onclick="calc('-')">−</button>
-                    <button class="calc-btn" onclick="calc('1')">1</button>
-                    <button class="calc-btn" onclick="calc('2')">2</button>
-                    <button class="calc-btn" onclick="calc('3')">3</button>
-                    <button class="calc-btn op" onclick="calc('+')">+</button>
-                    <button class="calc-btn" onclick="calc('0')" style="grid-column:span:2">0</button>
-                    <button class="calc-btn" onclick="calc('.')">.</button>
-                    <button class="calc-btn eq" onclick="calc('=')">=</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Notepad -->
-        <div class="window" id="notepad-window" style="width:600px;height:400px;left:250px;top:120px;">
-            <div class="window-header">
-                <div class="window-controls">
-                    <button class="window-btn close" onclick="closeWindow('notepad')"></button>
-                    <button class="window-btn min"></button>
-                    <button class="window-btn max"></button>
-                </div>
-                <div class="window-title">📝 Untitled - Notepad</div>
-            </div>
-            <div class="window-content" style="padding:0">
-                <textarea style="width:100%;height:100%;background:#1a1a1a;border:none;color:#fff;padding:12px;font-family:monospace;font-size:14px;resize:none;outline:none" id="notepad-content" placeholder="Start typing..."></textarea>
-            </div>
-        </div>
-        
-        <!-- Taskbar -->
-        <div class="taskbar">
-            <div class="start-btn" onclick="toggleStartMenu()">🦁</div>
-            <div class="taskbar-search" onclick="openApp('terminal')">🔍 Search apps, files, settings...</div>
-            
-            <div class="taskbar-apps">
-                <div class="taskbar-app" onclick="openApp('terminal')">
-                    <span class="taskbar-app-icon">⬛</span>
-                </div>
-                <div class="taskbar-app" onclick="openApp('explorer')">
-                    <span class="taskbar-app-icon">📁</span>
-                </div>
-                <div class="taskbar-app" onclick="openApp('browser')">
-                    <span class="taskbar-app-icon">🌐</span>
-                </div>
-                <div class="taskbar-app" onclick="openApp('settings')">
-                    <span class="taskbar-app-icon">⚙️</span>
-                </div>
-                <div class="taskbar-app" onclick="openApp('notepad')">
-                    <span class="taskbar-app-icon">📝</span>
-                </div>
-            </div>
-            
-            <div class="taskbar-right">
-                <div class="taskbar-icon">🔋</div>
-                <div class="taskbar-icon">📶</div>
-                <div class="taskbar-clock">
-                    <div class="clock-time" id="clock-time">12:00 PM</div>
-                    <div class="clock-date" id="clock-date">3/3/2026</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Start Menu -->
-        <div class="start-menu" id="start-menu">
-            <div class="start-menu-top">
-                <input type="text" class="start-search" placeholder="Search for apps, settings, and documents">
-            </div>
-            
-            <div class="start-pinned">
-                <div class="start-title">Pinned</div>
-                <div class="start-grid">
-                    <div class="start-item" onclick="openApp('terminal')">
-                        <div class="start-item-icon">⬛</div>
-                        <div class="start-item-name">Terminal</div>
-                    </div>
-                    <div class="start-item" onclick="openApp('explorer')">
-                        <div class="start-item-icon">📁</div>
-                        <div class="start-item-name">Files</div>
-                    </div>
-                    <div class="start-item" onclick="openApp('browser')">
-                        <div class="start-item-icon">🌐</div>
-                        <div class="start-item-name">Browser</div>
-                    </div>
-                    <div class="start-item" onclick="openApp('settings')">
-                        <div class="start-item-icon">⚙️</div>
-                        <div class="start-item-name">Settings</div>
-                    </div>
-                    <div class="start-item" onclick="openApp('calculator')">
-                        <div class="start-item-icon">🧮</div>
-                        <div class="start-item-name">Calculator</div>
-                    </div>
-                    <div class="start-item" onclick="openApp('notepad')">
-                        <div class="start-item-icon">📝</div>
-                        <div class="start-item-name">Notepad</div>
-                    </div>
-                    <div class="start-item">
-                        <div class="start-item-icon">📧</div>
-                        <div class="start-item-name">Mail</div>
-                    </div>
-                    <div class="start-item">
-                        <div class="start-item-icon">📺</div>
-                        <div class="start-item-name">Media</div>
-                    </div>
-                    <div class="start-item">
-                        <div class="start-item-icon">🎮</div>
-                        <div class="start-item-name">Games</div>
-                    </div>
-                    <div class="start-item">
-                        <div class="start-item-icon">🗺️</div>
-                        <div class="start-item-name">Maps</div>
-                    </div>
-                    <div class="start-item">
-                        <div class="start-item-icon">📅</div>
-                        <div class="start-item-name">Calendar</div>
-                    </div>
-                    <div class="start-item">
-                        <div class="start-item-icon">🎵</div>
-                        <div class="start-item-name">Music</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="start-bottom">
-                <div class="start-user">
-                    <div class="start-user-avatar">👤</div>
-                    <span>Luo</span>
-                </div>
-                <div class="start-power">
-                    <button class="start-power-btn" onclick="shutdown()" title="Shutdown">⏻</button>
-                    <button class="start-power-btn" onclick="restart()" title="Restart">🔄</button>
-                    <button class="start-power-btn" onclick="sleep()" title="Sleep">💤</button>
-                </div>
+            <div class="clock">
+                <div id="tm">12:00 PM</div>
+                <div id="dt" style="font-size:10px;color:#888">1/1/2026</div>
             </div>
         </div>
     </div>
-    
-    <!-- Context Menu -->
-    <div class="context-menu" id="context-menu">
-        <div class="context-item" onclick="openApp('terminal')">⬛ Open Terminal</div>
-        <div class="context-item" onclick="openApp('explorer')">📁 Open Files</div>
-        <div class="context-separator"></div>
-        <div class="context-item" onclick="newFile()">📄 New File</div>
-        <div class="context-item" onclick="newFolder()">📁 New Folder</div>
-        <div class="context-separator"></div>
-        <div class="context-item" onclick="refreshDesktop()">🔄 Refresh</div>
+    <!-- Terminal -->
+    <div class="win" id="term-win" style="width:600px;height:400px;left:100px;top:50px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('term')"></button><button class="win-btn y" onclick="mini('term')"></button><button class="win-btn g" onclick="max('term')"></button></div><div class="win-title">⬛ Terminal</div></div>
+        <div class="win-body term" id="term">
+            <div>Luo Terminal v1.0 - Type 'help'</div><br><div id="tout"></div>
+            <div><span style="color:#6ccb5f">➜</span> <span style="color:#60cdff">~</span> <input id="tin" onkeydown="cmd(event)"></div>
+        </div>
     </div>
-
+    <!-- Calculator -->
+    <div class="win" id="calc-win" style="width:260px;height:360px;right:50px;bottom:60px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('calc')"></button></div><div class="win-title">🧮</div></div>
+        <div class="win-body calc"><div class="calc-d" id="cd">0</div>
+            <div class="calc-btns">
+                <button onclick="c('C')">C</button><button onclick="c('±')">±</button><button onclick="c('%')">%</button><button class="o" onclick="c('/')">÷</button>
+                <button onclick="c('7')">7</button><button onclick="c('8')">8</button><button onclick="c('9')">9</button><button class="o" onclick="c('*')">×</button>
+                <button onclick="c('4')">4</button><button onclick="c('5')">5</button><button onclick="c('6')">6</button><button class="o" onclick="c('-')">−</button>
+                <button onclick="c('1')">1</button><button onclick="c('2')">2</button><button onclick="c('3')">3</button><button class="o" onclick="c('+')">+</button>
+                <button onclick="c('0')" style="grid-column:span 2">0</button><button onclick="c('.')">.</button><button class="e" onclick="c('=')">=</button>
+            </div>
+        </div>
+    </div>
+    <!-- Files -->
+    <div class="win" id="files-win" style="width:700px;height:450px;left:80px;top:40px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('files')"></button><button class="win-btn y" onclick="mini('files')"></button><button class="win-btn g" onclick="max('files')"></button></div><div class="win-title">📁 Files</div></div>
+        <div class="win-body files">
+            <div class="files-s">
+                <div class="files-i on" onclick="cd('/home')">🏠 Home</div>
+                <div class="files-i" onclick="cd('/doc')">📄 Documents</div>
+                <div class="files-i" onclick="cd('/dl')">⬇ Downloads</div>
+                <div class="files-i" onclick="cd('/pic')">🖼 Pictures</div>
+            </div>
+            <div class="files-m"><div class="files-g" id="fg"></div></div>
+        </div>
+    </div>
+    <!-- Browser -->
+    <div class="win" id="browser-win" style="width:800px;height:500px;left:50px;top:30px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('browser')"></button><button class="win-btn y" onclick="mini('browser')"></button><button class="win-btn g" onclick="max('browser')"></button></div><div class="win-title">🌐 Browser</div></div>
+        <div class="nav"><button class="nav-b" onclick="gob()">⬅</button><button class="nav-b" onclick="gof()">➡</button><button class="nav-b" onclick="rel()">↻</button><input class="nav-u" id="url" placeholder="Search or URL..." onkeydown="navUrl(event)"></div>
+        <iframe class="nav-iframe" id="frame" src="about:blank"></iframe>
+    </div>
+    <!-- Settings -->
+    <div class="win" id="set-win" style="width:700px;height:450px;left:100px;top:50px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('set')"></button></div><div class="win-title">⚙ Settings</div></div>
+        <div class="win-body set">
+            <div class="set-s">
+                <div class="set-i on">🖥 Display</div>
+                <div class="set-i">🔊 Sound</div>
+                <div class="set-i">🔔 Notifications</div>
+                <div class="set-i">🔒 Privacy</div>
+                <div class="set-i">⏰ Time</div>
+                <div class="set-i">ℹ️ About</div>
+            </div>
+            <div class="set-m">
+                <div class="set-h">Display</div>
+                <div class="set-r"><span>Theme</span><span>Dark</span></div>
+                <div class="set-r"><span>Accent</span><span>Blue</span></div>
+                <div class="set-r"><span>Resolution</span><span>Auto</span></div>
+                <div class="set-r"><span>OS</span><span>Luo Desktop OS v1</span></div>
+                <div class="set-r"><span>Device</span><span>Luo PC</span></div>
+            </div>
+        </div>
+    </div>
+    <!-- Notepad -->
+    <div class="win" id="note-win" style="width:500px;height:350px;left:150px;top:80px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('note')"></button></div><div class="win-title">📝 Untitled</div></div>
+        <textarea style="width:100%;height:100%;background:#141414;border:0;color:#fff;padding:10px;font-family:Consolas,monospace;font-size:13px;resize:none;outline:0" placeholder="Type here..."></textarea>
+    </div>
+    <!-- Start Menu -->
+    <div class="start" id="start">
+        <div class="start-s"><input class="start-search" placeholder="Search apps..."></div>
+        <div class="start-grid">
+            <div class="start-item" onclick="open('term');toggleStart()"><div>⬛</div><span>Terminal</span></div>
+            <div class="start-item" onclick="open('files');toggleStart()"><div>📁</div><span>Files</span></div>
+            <div class="start-item" onclick="open('browser');toggleStart()"><div>🌐</div><span>Browser</span></div>
+            <div class="start-item" onclick="open('set');toggleStart()"><div>⚙️</div><span>Settings</span></div>
+            <div class="start-item" onclick="open('calc');toggleStart()"><div>🧮</div><span>Calc</span></div>
+            <div class="start-item" onclick="open('note');toggleStart()"><div>📝</div><span>Notepad</span></div>
+        </div>
+    </div>
     <script>
-        /* ========== FILE SYSTEM ========== */
-        const FS = {
-            data: {
-                '/home/luo': [
-                    {n:'Documents',t:'folder'},
-                    {n:'Downloads',t:'folder'},
-                    {n:'Pictures',t:'folder'},
-                    {n:'Music',t:'folder'},
-                    {n:'Videos',t:'folder'},
-                    {n:'readme.txt',t:'file',c:'Welcome to Luo Desktop OS!\n\nThis is your personal desktop environment.'}
-                ],
-                '/home/luo/Documents': [
-                    {n:'notes.txt',t:'file',c:'My notes...'},
-                    {n:'project.txt',t:'file',c:'Luo Browser Project\nVersion 1.0'}
-                ],
-                '/home/luo/Downloads': [],
-                '/home/luo/Pictures': [],
-                '/home/luo/Music': [],
-                '/home/luo/Videos': []
-            },
-            
-            read(path) {
-                return this.data[path] || [];
-            },
-            
-            exists(path) {
-                return this.data[path] !== undefined;
-            },
-            
-            readFile(path) {
-                const parts = path.split('/');
-                let current = this.data['/'];
-                for (let i = 1; i < parts.length - 1; i++) {
-                    const folder = current.find(f => f.n === parts[i]);
-                    if (folder && folder.t === 'folder') {
-                        current = this.data['/home/luo/' + parts.slice(1, i + 1).join('/')] || [];
-                    }
-                }
-                const file = current.find(f => f.n === parts[parts.length - 1]);
-                return file ? file.c : null;
-            }
-        };
-        
-        let currentPath = '/home/luo';
-        
-        /* ========== BOOT ========== */
-        async function boot() {
-            const bar = document.getElementById('boot-bar');
-            const status = document.getElementById('boot-status');
-            
-            bar.style.width = '50%';
-            status.textContent = 'Loading...';
-            await sleep(200);
-            bar.style.width = '100%';
-            status.textContent = 'Ready!';
-            await sleep(200);
-            document.getElementById('boot').classList.add('hidden');
-        }
-        
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-        
-        /* ========== CLOCK ========== */
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('clock-date').textContent = now.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-        
-        /* ========== TERMINAL ========== */
-        const commands = {
-            help: () => `Available commands:
-  ls [path]     - List files
-  cd <path>     - Change directory
-  pwd          - Print working directory
-  cat <file>   - Read file
-  mkdir <name>  - Create folder
-  touch <name>  - Create file
-  rm <name>    - Delete file/folder
-  clear        - Clear screen
-  date         - Show date/time
-  whoami       - Show user
-  neofetch     - System info
-  echo <text>  - Print text
-  uptime       - Show uptime
-  memory       - Show memory
-  cpu          - Show CPU info
-  ps           - Show processes
-  kill <pid>   - Kill process
-  history      - Command history
-  exit         - Close terminal`,
-            
-            ls: (args) => {
-                const path = args[0] ? '/' + args[0].replace(/^\//, '') : currentPath;
-                const files = FS.read(path) || [];
-                if (files.length === 0) return '(empty)';
-                return files.map(f => f.t === 'folder' ? `\x1b[34m${f.n}/\x1b[0m` : f.n).join('  ');
-            },
-            
-            cd: (args) => {
-                if (!args[0]) { currentPath = '/home/luo'; return ''; }
-                let newPath = args[0];
-                if (newPath === '..') {
-                    const parts = currentPath.split('/');
-                    parts.pop();
-                    currentPath = parts.join('/') || '/home/luo';
-                } else if (newPath.startsWith('/')) {
-                    currentPath = newPath;
-                } else {
-                    currentPath = currentPath + '/' + newPath;
-                }
-                return '';
-            },
-            
-            pwd: () => currentPath,
-            
-            cat: (args) => {
-                if (!args[0]) return 'Usage: cat <filename>';
-                const path = currentPath + '/' + args[0];
-                const content = FS.readFile(path);
-                return content !== null ? content : `cat: ${args[0]}: No such file`;
-            },
-            
-            clear: () => { document.getElementById('term-output').innerHTML = ''; return ''; },
-            
-            date: () => new Date().toString(),
-            
-            whoami: () => 'luo',
-            
-            neofetch: () => `
-     ▄█     █▄     ▄████████ ▀█████████▄   ▄██████▄     ▄████████ 
-    ███     ███   ███    ███   ███    ███ ███    ███   ███    ███ 
-    ███     ███   ███    █▀    ███    ███ ███    ███   ███    █▀  
-    ███     ███  ▄███▄▄▄      ▄███▄▄▄██▀  ███    ███   ███        
-    ███     ███ ▀▀███▀▀▀     ▀▀███▀▀▀██▄  ███    ███ ▀███████████ 
-    ███     ███   ███    █▄    ███    ██▄ ███    ███          ███ 
-    ███ ▄█▄ ███   ███    ███   ███    ███ ███    ███    ▄█    ███ 
-     ▀███▀███▀    ██████████ ▄█████████▀   ▀██████▀   ▄████████▀  
-
-OS: Luo Desktop OS v1.0
-Host: Luo PC
-Kernel: Luo Kernel 1.0
-Shell: Luo Terminal
-Resolution: 1920x1080
-Theme: Dark Blue
-Uptime: ${Math.floor(performance.now() / 60000)} minutes`,
-            
-            echo: (args) => args.join(' '),
-            
-            uptime: () => `Uptime: ${Math.floor(performance.now() / 60000)} minutes`,
-            
-            memory: () => `Memory: ${(Math.random() * 8 + 4).toFixed(1)} GB used of 16 GB`,
-            
-            cpu: () => `CPU: Luo Virtual Processor @ 4.2GHz\nCores: 8\nUsage: ${Math.floor(Math.random() * 40 + 20)}%`,
-            
-            ps: () => `  PID USER      COMMAND
-    1 root      init
-  234 luo       terminal
-  456 luo       explorer
-  789 luo       browser
- 1024 luo       settings`,
-            
-            kill: (args) => args[0] ? `Process ${args[0]} terminated` : 'Usage: kill <pid>',
-            
-            history: () => '1 help\n2 ls\n3 cd\n4 pwd',
-            
-            exit: () => { closeWindow('terminal'); return 'Goodbye!'; },
-            
-            shutdown: () => { window.location.reload(); return 'Shutting down...'; },
-            
-            restart: () => { window.location.reload(); return 'Restarting...'; }
-        };
-        
-        let commandHistory = [];
-        let historyIndex = -1;
-        
-        function runCommand(e) {
-            if (e.key === 'Enter') {
-                const input = document.getElementById('term-input');
-                const cmd = input.value.trim();
-                const output = document.getElementById('term-output');
-                
-                if (cmd) {
-                    commandHistory.push(cmd);
-                    historyIndex = commandHistory.length;
-                    
-                    output.innerHTML += `<div class="terminal-line"><span class="terminal-prompt">➜</span> <span class="terminal-path">~</span> ${cmd}</div>`;
-                    
-                    const [command, ...args] = cmd.split(' ');
-                    if (commands[command]) {
-                        const result = commands[command](args);
-                        if (result) {
-                            output.innerHTML += `<div class="terminal-line">${result}</div>`;
-                        }
-                    } else if (command) {
-                        output.innerHTML += `<div class="terminal-line terminal-error">Command not found: ${command}</div>`;
-                    }
-                    
-                    output.innerHTML += '<br>';
-                    output.scrollTop = output.scrollHeight;
-                }
-                
-                input.value = '';
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                if (historyIndex > 0) {
-                    historyIndex--;
-                    document.getElementById('term-input').value = commandHistory[historyIndex];
-                }
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                if (historyIndex < commandHistory.length - 1) {
-                    historyIndex++;
-                    document.getElementById('term-input').value = commandHistory[historyIndex];
-                } else {
-                    historyIndex = commandHistory.length;
-                    document.getElementById('term-input').value = '';
-                }
-            }
-        }
-        
-        /* ========== FILE EXPLORER ========== */
-        function navigateDir(path) {
-            if (path === '..') {
-                const parts = currentPath.split('/');
-                parts.pop();
-                currentPath = parts.join('/') || '/home/luo';
-            } else if (path.startsWith('/')) {
-                currentPath = path;
-            } else {
-                currentPath = currentPath + '/' + path;
-            }
-            refreshExplorer();
-        }
-        
-        function refreshExplorer() {
-            document.getElementById('explorer-path').textContent = currentPath;
-            const files = FS.read(currentPath) || [];
-            const grid = document.getElementById('explorer-grid');
-            
-            if (currentPath !== '/home/luo') {
-                files.unshift({n:'..',t:'folder'});
-            }
-            
-            grid.innerHTML = files.map(f => `
-                <div class="explorer-file" ondblclick="${f.n === '..' ? 'navigateDir(\\'..\\')' : 'openFile(\\'' + f.n + '\\')'}">
-                    <div class="explorer-file-icon">${f.t === 'folder' ? (f.n === '..' ? '⬆️' : '📁') : getFileIcon(f.n)}</div>
-                    <div class="explorer-file-name">${f.n}</div>
-                </div>
-            `).join('');
-        }
-        
-        function getFileIcon(name) {
-            const ext = name.split('.').pop().toLowerCase();
-            const icons = {
-                txt: '📄', md: '📝', js: '📜', html: '🌐', css: '🎨',
-                jpg: '🖼️', png: '🖼️', gif: '🖼️', mp3: '🎵', mp4: '🎬',
-                pdf: '📕', zip: '📦', exe: '⚙️'
-            };
-            return icons[ext] || '📄';
-        }
-        
-        function openFile(name) {
-            const files = FS.read(currentPath);
-            const file = files.find(f => f.n === name);
-            if (file && file.t === 'file') {
-                if (name.endsWith('.txt') || name.endsWith('.md')) {
-                    openApp('notepad');
-                    document.getElementById('notepad-content').value = file.c || '';
-                }
-            }
-        }
-        
-        /* ========== BROWSER ========== */
-        let browserHistory = [];
-        let browserIndex = -1;
-        
-        function navigateBrowser(e) {
-            if (e.key === 'Enter') {
-                let url = e.target.value;
-                if (!url.startsWith('http') && !url.startsWith('about:')) {
-                    url = 'https://www.google.com/search?q=' + encodeURIComponent(url);
-                }
-                document.getElementById('browser-frame').src = url;
-                browserHistory.push(url);
-                browserIndex = browserHistory.length - 1;
-            }
-        }
-        
-        function goBack() {
-            if (browserIndex > 0) {
-                browserIndex--;
-                document.getElementById('browser-frame').src = browserHistory[browserIndex];
-            }
-        }
-        
-        function goForward() {
-            if (browserIndex < browserHistory.length - 1) {
-                browserIndex++;
-                document.getElementById('browser-frame').src = browserHistory[browserIndex];
-            }
-        }
-        
-        function reloadPage() {
-            document.getElementById('browser-frame').src = document.getElementById('browser-frame').src;
-        }
-        
-        /* ========== CALCULATOR ========== */
-        let calcResult = '0', calcOp = null, calcPrev = null;
-        
-        function calc(v) {
-            const d = document.getElementById('calc-display');
-            if (v === 'C') { calcResult = '0'; calcOp = null; calcPrev = null; }
-            else if (v === '±') calcResult = String(-parseFloat(calcResult));
-            else if (v === '%') calcResult = String(parseFloat(calcResult) / 100);
-            else if (['+', '-', '*', '/'].includes(v)) { calcOp = v; calcPrev = parseFloat(calcResult); calcResult = '0'; }
-            else if (v === '=' && calcOp && calcPrev !== null) {
-                const cur = parseFloat(calcResult);
-                calcResult = String(eval(calcPrev + calcOp + cur));
-                calcOp = null; calcPrev = null;
-            }
-            else if (v === '.') { if (!calcResult.includes('.')) calcResult += '.'; }
-            else calcResult = calcResult === '0' ? v : calcResult + v;
-            d.textContent = calcResult;
-        }
-        
-        /* ========== WINDOWS ========== */
-        function openApp(app) {
-            const win = document.getElementById(app + '-window');
-            if (win) {
-                win.classList.add('open');
-                closeStartMenu();
-                
-                if (app === 'explorer') refreshExplorer();
-                if (app === 'terminal') document.getElementById('term-input').focus();
-                if (app === 'browser') {
-                    document.getElementById('browser-url').focus();
-                    if (!browserHistory.length) {
-                        document.getElementById('browser-frame').src = 'pages/home.html';
-                    }
-                }
-            }
-        }
-        
-        function closeWindow(app) {
-            const win = document.getElementById(app + '-window');
-            if (win) win.classList.remove('open');
-        }
-        
-        function minimizeWindow(app) {
-            closeWindow(app);
-        }
-        
-        function maximizeWindow(app) {
-            const win = document.getElementById(app + '-window');
-            if (win) win.classList.toggle('maximized');
-        }
-        
-        function toggleStartMenu() {
-            document.getElementById('start-menu').classList.toggle('open');
-            document.querySelector('.start-btn').classList.toggle('active');
-        }
-        
-        function closeStartMenu() {
-            document.getElementById('start-menu').classList.remove('open');
-            document.querySelector('.start-btn').classList.remove('active');
-        }
-        
-        /* ========== POWER ========== */
-        function shutdown() {
-            document.getElementById('boot').classList.remove('hidden');
-            document.getElementById('boot-bar').style.width = '0%';
-            setTimeout(() => boot(), 1000);
-        }
-        
-        function restart() { shutdown(); }
-        
-        function sleep() { alert('Sleep mode not available in web version'); }
-        
-        /* ========== CONTEXT MENU ========== */
-        document.getElementById('desktop-area').addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            const menu = document.getElementById('context-menu');
-            menu.style.left = e.clientX + 'px';
-            menu.style.top = e.clientY + 'px';
-            menu.classList.add('open');
-        });
-        
-        document.addEventListener('click', () => {
-            document.getElementById('context-menu').classList.remove('open');
-        });
-        
-        function newFile() { openApp('notepad'); }
-        function newFolder() { alert('Creating folder...'); }
-        function refreshDesktop() { location.reload(); }
-        
-        /* ========== INIT ========== */
-        boot();
+        // Clock
+        setInterval(()=>{
+            const d=new Date();
+            document.getElementById('tm').textContent=d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+            document.getElementById('dt').textContent=d.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'});
+        },1000);
+        // Window functions
+        function open(n){document.getElementById(n+'-win').classList.add('on');document.querySelector('.start').classList.remove('on')}
+        function close(n){document.getElementById(n+'-win').classList.remove('on')}
+        function mini(n){document.getElementById(n+'-win').classList.remove('on')}
+        function max(n){const w=document.getElementById(n+'-win');w.style.width='100%';w.style.height='calc(100% - 52px)';w.style.left='0';w.style.top='0';w.style.borderRadius='0'}
+        function toggleStart(){document.getElementById('start').classList.toggle('on')}
+        // Terminal
+        const cmds={help:'ls,cd,pwd,cat,clear,date,whoami,neofetch,echo,exit',ls:'Documents  Downloads  Pictures  Music',pwd:'/home/luo',date:()=>new Date().toString(),whoami:'luo',neofetch:'Luo Desktop OS v1\nOS: Luo\nHost: LuoPC\nShell: Luo Terminal',echo:(a)=>a.join(' '),clear:()=>{document.getElementById('tout').innerHTML='';return''}};
+        function cmd(e){if(e.key==='Enter'){const i=document.getElementById('tin'),v=i.value.trim(),o=document.getElementById('tout');o.innerHTML+='<div><span style="color:#6ccb5f">➜</span> <span style="color:#60cdff">~</span> '+v+'</div>';if(v){const[c,...a]=v.split(' ');if(cmds[c]){let r=typeof cmds[c]==='function'?cmds[c](a):cmds[c];if(r)o.innerHTML+='<div>'+r+'</div>'}else o.innerHTML+='<div style="color:#ff453a">Command not found: '+c+'</div>'}o.innerHTML+='<br>';i.value='';o.scrollTop=o.scrollHeight}}
+        // Calculator
+        let cr='0',co=null,cp=null;
+        function c(v){const d=document.getElementById('cd');if(v==='C'){cr='0';co=null;cp=null}else if(v==='±')cr=String(-parseFloat(cr));else if(v==='%')cr=String(parseFloat(cr)/100);else if(['+','-','*','/'].includes(v)){co=v;cp=parseFloat(cr);cr='0'}else if(v==='='&&co&&cp!==null){cr=String(eval(cp+co+parseFloat(cr)));co=null;cp=null}else if(v==='.'){if(!cr.includes('.'))cr+='.'}else cr=cr==='0'?v:cr+v;d.textContent=cr}
+        // Files
+        const fs={'/home':['Documents','Downloads','Pictures','Music','Videos','readme.txt'],'/doc':['notes.txt','project.txt'],'/dl':[],'/pic':[],'/vid':[]};
+        function cd(p){let f=fs[p]||[];if(p==='/home')f=fs['/home'];document.getElementById('fg').innerHTML=f.map(n=>'<div class="files-f" onclick="openf(\''+n+'\')"><div>'+(n.includes('.')?'📄':'📁')+'</div><span>'+n+'</span></div>').join('')}
+        function openf(n){if(n.endsWith('.txt')){open('note')}}
+        cd('/home');
+        // Browser
+        let bh=[],bi=-1;
+        function navUrl(e){if(e.key==='Enter'){let u=e.target.value;if(!u.startsWith('http'))u='https://www.google.com/search?q='+encodeURIComponent(u);document.getElementById('frame').src=u;bh.push(u);bi=bh.length-1}}
+        function gob(){if(bi>0){bi--;document.getElementById('frame').src=bh[bi]}}
+        function gof(){if(bi<bh.length-1){bi++;document.getElementById('frame').src=bh[bi]}}
+        function rel(){document.getElementById('frame').src=document.getElementById('frame').src}
+        // Click outside to close start
+        document.addEventListener('click',e=>{if(!e.target.closest('.btn')&&!e.target.closest('.start'))document.getElementById('start').classList.remove('on')});
     </script>
 </body>
 </html>
