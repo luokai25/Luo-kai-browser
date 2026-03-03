@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Podcasts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #f59e0b, #ef4444); padding: 20px 30px; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .hero { background: linear-gradient(135deg, #f59e0b33, #ef444433); margin: 30px; border-radius: 20px; padding: 40px; display: flex; gap: 30px; }
+        .hero-img { width: 180px; height: 180px; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 60px; }
+        .hero-info h1 { font-size: 28px; margin-bottom: 10px; }
+        .hero-info p { color: #94a3b8; margin-bottom: 20px; }
+        .play-btn { background: #f59e0b; border: none; color: #0f172a; padding: 15px 35px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .episodes { padding: 0 30px 30px; }
+        .episodes h2 { margin-bottom: 20px; }
+        .episode { background: #1e293b; border-radius: 15px; padding: 20px; margin-bottom: 15px; display: flex; gap: 20px; cursor: pointer; transition: all 0.2s; }
+        .episode:hover { background: #334155; }
+        .ep-num { font-size: 24px; font-weight: 700; color: #f59e0b; width: 50px; }
+        .ep-info { flex: 1; }
+        .ep-title { font-weight: 600; margin-bottom: 5px; }
+        .ep-desc { color: #94a3b8; font-size: 14px; margin-bottom: 10px; }
+        .ep-meta { color: #64748b; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🎙️ Luo Podcasts</div>
+    </div>
+    <div class="hero">
+        <div class="hero-img">🎙️</div>
+        <div class="hero-info">
+            <h1>Tech Talk Daily</h1>
+            <p>Daily insights into the world of technology, AI, and innovation.</p>
+            <button class="play-btn">▶ Play Latest</button>
+        </div>
+    </div>
+    <div class="episodes">
+        <h2>Latest Episodes</h2>
+        <div class="episode"><div class="ep-num">42</div><div class="ep-info"><div class="ep-title">The Future of AI Agents</div><div class="ep-desc">How AI agents are changing the way we work and live.</div><div class="ep-meta">25 min • Today</div></div></div>
+        <div class="episode"><div class="ep-num">41</div><div class="ep-info"><div class="ep-title">Building Your First App</div><div class="ep-desc">A beginner's guide to web development.</div><div class="ep-meta">30 min • Yesterday</div></div></div>
+        <div class="episode"><div class="ep-num">40</div><div class="ep-info"><div class="ep-title">Startup Stories</div><div class="ep-desc">Interview with founders who've made it big.</div><div class="ep-meta">45 min • 2 days ago</div></div></div>
+    </div>
+</body>
+</html>

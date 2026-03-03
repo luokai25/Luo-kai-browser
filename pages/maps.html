@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Maps</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; height: 100vh; overflow: hidden; }
+        .sidebar { position: absolute; left: 0; top: 0; bottom: 0; width: 350px; background: #1e293b; z-index: 10; display: flex; flex-direction: column; }
+        .search-box { padding: 20px; background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .search { width: 100%; background: white; border: none; padding: 15px 20px; border-radius: 30px; font-size: 16px; outline: none; }
+        .section { padding: 20px; border-bottom: 1px solid #334155; }
+        .section-title { font-size: 12px; text-transform: uppercase; color: #94a3b8; margin-bottom: 15px; letter-spacing: 1px; }
+        .quick-links { display: flex; flex-wrap: wrap; gap: 10px; }
+        .quick-link { background: #334155; padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .quick-link:hover { background: #22c55e; }
+        .directions { display: flex; gap: 10px; }
+        .direction-input { flex: 1; background: #334155; border: none; padding: 12px 15px; border-radius: 10px; color: #f8fafc; }
+        .results { flex: 1; overflow-y: auto; padding: 20px; }
+        .result { background: #334155; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+        .result:hover { background: #475569; }
+        .result-name { font-weight: 600; margin-bottom: 5px; }
+        .result-address { color: #94a3b8; font-size: 14px; }
+        .result-distance { color: #22c55e; font-size: 13px; margin-top: 8px; }
+        .map { margin-left: 350px; height: 100%; background: linear-gradient(135deg, #1e293b, #334155); display: flex; align-items: center; justify-content: center; }
+        .map-placeholder { text-align: center; }
+        .map-icon { font-size: 120px; margin-bottom: 20px; }
+        .map-text { color: #94a3b8; font-size: 18px; }
+        .floating-btns { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
+        .floating-btn { width: 50px; height: 50px; background: #1e293b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="search-box">
+            <input type="text" class="search" placeholder="🔍 Search places, addresses...">
+        </div>
+        <div class="section">
+            <div class="section-title">Quick Searches</div>
+            <div class="quick-links">
+                <div class="quick-link">🍔 Restaurants</div>
+                <div class="quick-link">⛽ Gas Stations</div>
+                <div class="quick-link">🛒 Grocery</div>
+                <div class="quick-link">🏥 Hospitals</div>
+                <div class="quick-link">🅿️ Parking</div>
+                <div class="quick-link">☕ Coffee</div>
+                <div class="quick-link">🏨 Hotels</div>
+                <div class="quick-link">🎬 Movies</div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-title">Directions</div>
+            <div class="directions">
+                <input type="text" class="direction-input" placeholder="From..." value="Current Location">
+                <input type="text" class="direction-input" placeholder="To...">
+            </div>
+        </div>
+        <div class="results">
+            <div class="result"><div class="result-name">🏪 Luo's Convenience Store</div><div class="result-address">123 Main Street, New York, NY</div><div class="result-distance">0.3 miles away</div></div>
+            <div class="result"><div class="result-name">🌳 Central Park</div><div class="result-address">59th St to 110th St, New York, NY</div><div class="result-distance">1.2 miles away</div></div>
+            <div class="result"><div class="result-name">🍕 Tony's Pizza</div><div class="result-address">456 Broadway, New York, NY</div><div class="result-distance">0.5 miles away</div></div>
+            <div class="result"><div class="result-name">🏛️ Museum of Modern Art</div><div class="result-address">11 W 53rd St, New York, NY</div><div class="result-distance">0.8 miles away</div></div>
+        </div>
+    </div>
+    <div class="map">
+        <div class="map-placeholder"><div class="map-icon">🗺️</div><div class="map-text">Interactive map loading...</div></div>
+    </div>
+    <div class="floating-btns">
+        <div class="floating-btn">➕</div>
+        <div class="floating-btn">➖</div>
+        <div class="floating-btn">🧭</div>
+        <div class="floating-btn">🛰️</div>
+    </div>
+</body>
+</html>

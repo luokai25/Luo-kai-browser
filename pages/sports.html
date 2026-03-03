@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Sports</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #059669, #10b981); padding: 20px 30px; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .hero { background: linear-gradient(135deg, #05966933, #10b98133); margin: 30px; border-radius: 20px; padding: 40px; }
+        .live { background: #dc2626; padding: 8px 15px; border-radius: 20px; font-size: 14px; display: inline-block; margin-bottom: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .hero h1 { font-size: 32px; margin-bottom: 10px; }
+        .hero p { color: #94a3b8; }
+        .scores { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 0 30px 30px; }
+        .score { background: #1e293b; border-radius: 15px; padding: 25px; }
+        .teams { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .team { text-align: center; }
+        .team-icon { font-size: 40px; }
+        .team-name { font-weight: 600; margin-top: 5px; }
+        .vs { font-size: 24px; font-weight: 700; color: #94a3b8; }
+        .score-num { font-size: 36px; font-weight: 700; }
+        .score-time { color: #22c55e; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">⚽ Luo Sports</div>
+    </div>
+    <div class="hero">
+        <div class="live">🔴 LIVE NOW</div>
+        <h1>Championship Finals</h1>
+        <p>Watch live • 2.5M viewers</p>
+    </div>
+    <div class="scores">
+        <div class="score">
+            <div class="teams">
+                <div class="team"><div class="team-icon">🦁</div><div class="team-name">Luo FC</div></div>
+                <div class="vs">vs</div>
+                <div class="team"><div class="team-icon">🐉</div><div class="team-name">Dragon FC</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-around;"><div class="score-num">2</div><div class="score-num">1</div></div>
+            <div class="score-time">67' • 2nd Half</div>
+        </div>
+        <div class="score">
+            <div class="teams">
+                <div class="team"><div class="team-icon">🏀</div><div class="team-name">Luo Lakers</div></div>
+                <div class="vs">vs</div>
+                <div class="team"><div class="team-icon">🌟</div><div class="team-name">Stars</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-around;"><div class="score-num">98</div><div class="score-num">95</div></div>
+            <div class="score-time">Q4 • 2:30 left</div>
+        </div>
+    </div>
+</body>
+</html>

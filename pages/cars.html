@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Cars</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #1f2937, #374151); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .filters { display: flex; gap: 15px; padding: 20px 30px; overflow-x: auto; }
+        .filter { background: #1e293b; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
+        .filter.active { background: #f59e0b; color: #0f172a; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 20px 30px; }
+        .car { background: #1e293b; border-radius: 20px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
+        .car:hover { transform: translateY(-5px); }
+        .car-img { height: 200px; background: linear-gradient(135deg, #374151, #4b5563); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+        .car-body { padding: 25px; }
+        .car-name { font-size: 20px; font-weight: 700; margin-bottom: 5px; }
+        .car-price { font-size: 24px; font-weight: 700; color: #22c55e; margin-bottom: 15px; }
+        .car-specs { display: flex; gap: 20px; color: #94a3b8; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🚗 Luo Cars</div>
+        <span>🔍</span>
+    </div>
+    <div class="filters">
+        <div class="filter active">All</div>
+        <div class="filter">New</div>
+        <div class="filter">Used</div>
+        <div class="filter">Electric</div>
+        <div class="filter">SUV</div>
+        <div class="filter">Sedan</div>
+    </div>
+    <div class="grid">
+        <div class="car"><div class="car-img">🚙</div><div class="car-body"><div class="car-name">Tesla Model S</div><div class="car-price">$89,990</div><div class="car-specs"><span>⚡ Electric</span><span>🚀 0-60: 2.4s</span></div></div></div>
+        <div class="car"><div class="car-img">🚘</div><div class="car-body"><div class="car-name">BMW M5</div><div class="car-price">$102,500</div><div class="car-specs"><span>⛽ Gas</span><span>🚀 0-60: 3.2s</span></div></div></div>
+        <div class="car"><div class="car-img">🚗</div><div class="car-body"><div class="car-name">Honda Civic</div><div class="car-price">$24,250</div><div class="car-specs"><span>⛽ Gas</span><span>🚗 35 MPG</span></div></div></div>
+        <div class="car"><div class="car-img">🛻</div><div class="car-body"><div class="car-name">Ford F-150</div><div class="car-price">$58,990</div><div class="car-specs"><span>⛽ Hybrid</span><span>📦 Truck</span></div></div></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Food</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #f97316, #ef4444); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .location { display: flex; align-items: center; gap: 10px; }
+        .search { flex: 1; max-width: 500px; margin: 0 30px; }
+        .search input { width: 100%; background: white; border: none; padding: 15px 25px; border-radius: 30px; font-size: 16px; outline: none; }
+        .categories { display: flex; gap: 20px; padding: 20px 30px; overflow-x: auto; }
+        .cat { text-align: center; cursor: pointer; min-width: 80px; }
+        .cat-icon { width: 70px; height: 70px; background: #1e293b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 8px; transition: all 0.2s; }
+        .cat:hover .cat-icon, .cat.active .cat-icon { background: #f97316; }
+        .cat-name { font-size: 14px; }
+        .section { padding: 20px 30px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section h2 { font-size: 24px; }
+        .see-all { color: #f97316; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .restaurant { background: #1e293b; border-radius: 15px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
+        .restaurant:hover { transform: translateY(-5px); }
+        .restaurant-img { height: 180px; background: linear-gradient(135deg, #334155, #475569); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+        .restaurant-info { padding: 20px; }
+        .restaurant-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .restaurant-name { font-size: 18px; font-weight: 700; }
+        .restaurant-rating { background: #22c55e; padding: 3px 10px; border-radius: 15px; font-size: 14px; }
+        .restaurant-cuisine { color: #94a3b8; margin-bottom: 10px; }
+        .restaurant-meta { display: flex; gap: 15px; color: #64748b; font-size: 14px; }
+        .restaurant-promo { background: #f9731633; border: 1px solid #f9731655; border-radius: 10px; padding: 10px; margin-top: 15px; font-size: 14px; color: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🍔 Luo Food</div>
+        <div class="location">📍 123 Main Street, New York</div>
+        <div class="search"><input type="text" placeholder="Search restaurants, cuisines..."></div>
+        <span>🛒 Cart (2)</span>
+    </div>
+    <div class="categories">
+        <div class="cat active"><div class="cat-icon">🍔</div><div class="cat-name">Burgers</div></div>
+        <div class="cat"><div class="cat-icon">🍕</div><div class="cat-name">Pizza</div></div>
+        <div class="cat"><div class="cat-icon">🍜</div><div class="cat-name">Asian</div></div>
+        <div class="cat"><div class="cat-icon">🌮</div><div class="cat-name">Mexican</div></div>
+        <div class="cat"><div class="cat-icon">🍣</div><div class="cat-name">Sushi</div></div>
+        <div class="cat"><div class="cat-icon">🍕</div><div class="cat-name">Italian</div></div>
+        <div class="cat"><div class="cat-icon">🥗</div><div class="cat-name">Healthy</div></div>
+        <div class="cat"><div class="cat-icon">🍩</div><div class="cat-name">Desserts</div></div>
+    </div>
+    <div class="section">
+        <div class="section-header"><h2>Nearby Restaurants</h2><span class="see-all">See All</span></div>
+        <div class="grid">
+            <div class="restaurant">
+                <div class="restaurant-img">🍔</div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header"><div class="restaurant-name">Luo's Burger Joint</div><div class="restaurant-rating">4.8</div></div>
+                    <div class="restaurant-cuisine">American • Fast Food</div>
+                    <div class="restaurant-meta"><span>🚴 15 min</span><span>💰 $$</span></div>
+                    <div class="restaurant-promo">🎉 20% OFF first order</div>
+                </div>
+            </div>
+            <div class="restaurant">
+                <div class="restaurant-img">🍕</div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header"><div class="restaurant-name">Tony's Pizza Palace</div><div class="restaurant-rating">4.6</div></div>
+                    <div class="restaurant-cuisine">Italian • Pizza</div>
+                    <div class="restaurant-meta"><span>🚴 25 min</span><span>💰 $$</span></div>
+                    <div class="restaurant-promo">🆓 Free delivery</div>
+                </div>
+            </div>
+            <div class="restaurant">
+                <div class="restaurant-img">🍜</div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header"><div class="restaurant-name">Dragon Wok</div><div class="restaurant-rating">4.7</div></div>
+                    <div class="restaurant-cuisine">Chinese • Asian</div>
+                    <div class="restaurant-meta"><span>🚴 20 min</span><span>💰 $</span></div>
+                </div>
+            </div>
+            <div class="restaurant">
+                <div class="restaurant-img">🍣</div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header"><div class="restaurant-name">Sakura Sushi</div><div class="restaurant-rating">4.9</div></div>
+                    <div class="restaurant-cuisine">Japanese • Sushi</div>
+                    <div class="restaurant-meta"><span>🚴 30 min</span><span>💰 $$$</span></div>
+                    <div class="restaurant-promo">🎁 10% OFF + free appetizer</div>
+                </div>
+            </div>
+            <div class="restaurant">
+                <div class="restaurant-img">🌮</div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header"><div class="restaurant-name">Mexican Fiesta</div><div class="restaurant-rating">4.5</div></div>
+                    <div class="restaurant-cuisine">Mexican • Tex-Mex</div>
+                    <div class="restaurant-meta"><span>🚴 20 min</span><span>💰 $$</span></div>
+                </div>
+            </div>
+            <div class="restaurant">
+                <div class="restaurant-img">🥗</div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header"><div class="restaurant-name">Green Bowl</div><div class="restaurant-rating">4.4</div></div>
+                    <div class="restaurant-cuisine">Healthy • Salads</div>
+                    <div class="restaurant-meta"><span>🚴 15 min</span><span>💰 $$</span></div>
+                    <div class="restaurant-promo">🥗 Free drink with salad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

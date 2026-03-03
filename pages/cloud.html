@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Cloud - Your Personal Cloud</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: linear-gradient(135deg, #0f172a, #1e293b); color: #f8fafc; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, #06b6d4, #3b82f6); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .user { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #f59e0b; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .storage { background: #1e293b; margin: 30px; border-radius: 15px; padding: 25px; }
+        .storage-bar { height: 20px; background: #334155; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        .storage-fill { height: 100%; background: linear-gradient(90deg, #06b6d4, #3b82f6); width: 35%; }
+        .storage-text { display: flex; justify-content: space-between; color: #94a3b8; font-size: 14px; }
+        .toolbar { display: flex; gap: 10px; padding: 0 30px 20px; }
+        .btn { background: #1e293b; border: none; color: #f8fafc; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn:hover { background: #334155; }
+        .btn-primary { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+        .btn-primary:hover { opacity: 0.9; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 0 30px 30px; }
+        .file { background: #1e293b; border-radius: 15px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .file:hover { transform: translateY(-5px); background: #334155; }
+        .file-icon { font-size: 48px; margin-bottom: 15px; }
+        .file-name { font-weight: 600; margin-bottom: 5px; }
+        .file-size { color: #94a3b8; font-size: 13px; }
+        .file-date { color: #64748b; font-size: 12px; margin-top: 8px; }
+        .folder { background: linear-gradient(135deg, #f59e0b33, #f59e0b11); border: 1px solid #f59e0b44; }
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal.open { display: flex; }
+        .modal-content { background: #1e293b; border-radius: 20px; padding: 30px; width: 400px; text-align: center; }
+        .modal h2 { margin-bottom: 20px; }
+        .modal-input { width: 100%; background: #334155; border: none; border-radius: 10px; padding: 15px; color: #f8fafc; font-size: 16px; margin-bottom: 15px; }
+        .modal-btns { display: flex; gap: 10px; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">☁️ Luo Cloud</div>
+        <div class="user">
+            <span>35% used of 15 GB</span>
+            <div class="avatar">U</div>
+        </div>
+    </div>
+    <div class="storage">
+        <div class="storage-text"><span>Storage</span><span>5.25 GB of 15 GB</span></div>
+        <div class="storage-bar"><div class="storage-fill"></div></div>
+    </div>
+    <div class="toolbar">
+        <button class="btn btn-primary" onclick="document.getElementById('upload').click()">⬆️ Upload</button>
+        <button class="btn" onclick="showModal('folder')">📁 New Folder</button>
+        <button class="btn" onclick="showModal('file')">📄 New File</button>
+    </div>
+    <input type="file" id="upload" style="display:none" multiple>
+    <div class="grid">
+        <div class="file folder" onclick="parent.navigateTo('luo://cloud/projects')">
+            <div class="file-icon">📁</div>
+            <div class="file-name">Projects</div>
+            <div class="file-date">Modified: Today</div>
+        </div>
+        <div class="file folder">
+            <div class="file-icon">📁</div>
+            <div class="file-name">Photos</div>
+            <div class="file-date">Modified: Yesterday</div>
+        </div>
+        <div class="file folder">
+            <div class="file-icon">📁</div>
+            <div class="file-name">Documents</div>
+            <div class="file-date">Modified: 2 days ago</div>
+        </div>
+        <div class="file">
+            <div class="file-icon">📄</div>
+            <div class="file-name">resume.pdf</div>
+            <div class="file-size">2.4 MB</div>
+            <div class="file-date">Uploaded: Jan 15</div>
+        </div>
+        <div class="file">
+            <div class="file-icon">🖼️</div>
+            <div class="file-name">vacation.jpg</div>
+            <div class="file-size">3.1 MB</div>
+            <div class="file-date">Uploaded: Jan 10</div>
+        </div>
+        <div class="file">
+            <div class="file-icon">🎵</div>
+            <div class="file-name">playlist.m3u</div>
+            <div class="file-size">156 KB</div>
+            <div class="file-date">Uploaded: Jan 5</div>
+        </div>
+        <div class="file">
+            <div class="file-icon">🎬</div>
+            <div class="file-name">project.mp4</div>
+            <div class="file-size">145 MB</div>
+            <div class="file-date">Uploaded: Jan 1</div>
+        </div>
+        <div class="file">
+            <div class="file-icon">💻</div>
+            <div class="file-name">code.zip</div>
+            <div class="file-size">4.2 MB</div>
+            <div class="file-date">Uploaded: Dec 28</div>
+        </div>
+    </div>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Create Folder</h2>
+            <input type="text" class="modal-input" id="modalInput" placeholder="Folder name...">
+            <div class="modal-btns">
+                <button class="btn" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createItem()">Create</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showModal(type) {
+            document.getElementById('modal').classList.add('open');
+            document.getElementById('modalTitle').textContent = type === 'folder' ? 'Create Folder' : 'Create File';
+            document.getElementById('modalInput').placeholder = type === 'folder' ? 'Folder name...' : 'File name...';
+        }
+        function closeModal() { document.getElementById('modal').classList.remove('open'); }
+        function createItem() { closeModal(); alert('Item created!'); }
+    </script>
+</body>
+</html>

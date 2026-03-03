@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Video</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: #1e293b; padding: 15px 30px; display: flex; align-items: center; gap: 30px; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .search { flex: 1; display: flex; }
+        .search input { width: 100%; background: #0f172a; border: none; padding: 12px 20px; border-radius: 30px 0 0 30px; color: #f8fafc; outline: none; }
+        .search button { background: #ef4444; border: none; padding: 12px 25px; border-radius: 0 30px 30px 0; color: white; cursor: pointer; }
+        .user { display: flex; gap: 15px; align-items: center; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #ef4444; }
+        .categories { display: flex; gap: 15px; padding: 15px 30px; overflow-x: auto; }
+        .cat { background: #1e293b; padding: 8px 20px; border-radius: 20px; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
+        .cat:hover, .cat.active { background: #ef4444; }
+        .hero { padding: 30px; }
+        .featured { background: linear-gradient(135deg, #1e293b, #334155); border-radius: 20px; overflow: hidden; display: flex; }
+        .featured-img { width: 500px; background: linear-gradient(135deg, #ef4444, #f59e0b); display: flex; align-items: center; justify-content: center; font-size: 100px; }
+        .featured-info { padding: 30px; flex: 1; }
+        .featured-title { font-size: 28px; font-weight: 700; margin-bottom: 15px; }
+        .featured-meta { color: #94a3b8; margin-bottom: 20px; }
+        .featured-desc { color: #cbd5e1; line-height: 1.6; margin-bottom: 20px; }
+        .featured-btn { background: #ef4444; border: none; color: white; padding: 15px 30px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 0 30px 30px; }
+        .video { cursor: pointer; transition: all 0.3s; }
+        .video:hover { transform: translateY(-5px); }
+        .video-thumb { height: 170px; background: linear-gradient(135deg, #334155, #475569); border-radius: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; }
+        .duration { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 3px 8px; border-radius: 5px; font-size: 13px; }
+        .video-title { font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
+        .video-meta { color: #94a3b8; font-size: 14px; display: flex; gap: 15px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🎬 Luo Video</div>
+        <div class="search"><input type="text" placeholder="Search videos..."><button>🔍</button></div>
+        <div class="user"><span>Upload</span><div class="avatar"></div></div>
+    </div>
+    <div class="categories">
+        <div class="cat active">All</div>
+        <div class="cat">Gaming</div>
+        <div class="cat">Music</div>
+        <div class="cat">Tech</div>
+        <div class="cat">Sports</div>
+        <div class="cat">News</div>
+        <div class="cat">Learning</div>
+        <div class="cat">Live</div>
+    </div>
+    <div class="hero">
+        <div class="featured">
+            <div class="featured-img">🎥</div>
+            <div class="featured-info">
+                <div class="featured-title">The Future of AI in the Luoverse</div>
+                <div class="featured-meta">1.2M views • 5 hours ago</div>
+                <div class="featured-desc">Explore how AI is reshaping our digital world. From virtual assistants to autonomous systems, discover what's next.</div>
+                <button class="featured-btn">▶ Watch Now</button>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="video"><div class="video-thumb">🎮<span class="duration">12:45</span></div><div class="video-title">Pro Gamer Reacts to AI Plays</div><div class="video-meta"><span>500K views</span><span>2h ago</span></div></div>
+        <div class="video"><div class="video-thumb">🎵<span class="duration">3:42</span></div><div class="video-title">New Hit Song Takes Over Luoverse</div><div class="video-meta"><span>2.1M views</span><span>1d ago</span></div></div>
+        <div class="video"><div class="video-thumb">💻<span class="duration">8:15</span></div><div class="video-title">Build Your Own AI Assistant</div><div class="video-meta"><span>350K views</span><span>3d ago</span></div></div>
+        <div class="video"><div class="video-thumb">⚽<span class="duration">15:30</span></div><div class="video-title">Championship Finals Highlights</div><div class="video-meta"><span>5M views</span><span>5h ago</span></div></div>
+        <div class="video"><div class="video-thumb">🔬<span class="duration">22:10</span></div><div class="video-title">Science Explained: Quantum Computing</div><div class="video-meta"><span>180K views</span><span>1w ago</span></div></div>
+        <div class="video"><div class="video-thumb">🍳<span class="duration">5:20</span></div><div class="video-title">Master Chef Cooks Luo Style</div><div class="video-meta"><span>890K views</span><span>2d ago</span></div></div>
+        <div class="video"><div class="video-thumb">🚗<span class="duration">10:00</span></div><div class="video-title">Future of Transportation</div><div class="video-meta"><span>1.5M views</span><span>4d ago</span></div></div>
+        <div class="video"><div class="video-thumb">🎨<span class="duration">6:30</span></div><div class="video-title">Digital Art Masterclass</div><div class="video-meta"><span>420K views</span><span>6d ago</span></div></div>
+    </div>
+</body>
+</html>

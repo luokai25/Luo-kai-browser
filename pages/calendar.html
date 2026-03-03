@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Calendar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; height: 100vh; display: flex; }
+        .sidebar { width: 300px; background: #1e293b; padding: 25px; }
+        .logo { font-size: 24px; font-weight: 700; margin-bottom: 25px; }
+        .mini-cal { background: #334155; border-radius: 15px; padding: 15px; margin-bottom: 25px; }
+        .mini-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 600; }
+        .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; font-size: 12px; }
+        .mini-day { padding: 5px; }
+        .mini-day.header { color: #94a3b8; }
+        .mini-day.num { cursor: pointer; border-radius: 5px; }
+        .mini-day.num:hover { background: #475569; }
+        .mini-day.today { background: #6366f1; }
+        .mini-day.other { color: #64748b; }
+        .calendars { margin-bottom: 25px; }
+        .calendars h3 { font-size: 14px; color: #94a3b8; margin-bottom: 15px; }
+        .calendar-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+        .calendar-check { width: 20px; height: 20px; border-radius: 5px; border: 2px solid #6366f1; }
+        .calendar-name { flex: 1; }
+        .calendar-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .upcoming h3 { font-size: 14px; color: #94a3b8; margin-bottom: 15px; }
+        .event { background: #334155; border-radius: 10px; padding: 12px; margin-bottom: 10px; border-left: 3px solid #6366f1; }
+        .event-time { font-size: 12px; color: #94a3b8; }
+        .event-title { font-weight: 600; margin: 5px 0; }
+        .main { flex: 1; padding: 30px; display: flex; flex-direction: column; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { font-size: 32px; }
+        .nav-btns { display: flex; gap: 10px; }
+        .nav-btn { background: #1e293b; border: none; color: #f8fafc; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px; }
+        .view-btns { display: flex; gap: 10px; background: #1e293b; padding: 5px; border-radius: 10px; }
+        .view-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .view-btn.active { background: #6366f1; color: white; }
+        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 10px; }
+        .weekday { text-align: center; color: #94a3b8; font-weight: 600; padding: 10px; }
+        .calendar { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+        .day { background: #1e293b; border-radius: 12px; padding: 15px; min-height: 120px; }
+        .day.other-month { opacity: 0.4; }
+        .day.today { border: 2px solid #6366f1; }
+        .day-num { font-weight: 600; margin-bottom: 10px; }
+        .day.today .day-num { background: #6366f1; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .day-event { background: #6366f1; padding: 4px 8px; border-radius: 5px; font-size: 12px; margin-bottom: 5px; cursor: pointer; }
+        .day-event.work { background: #f59e0b; }
+        .day-event.personal { background: #22c55e; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">📅 Luo Calendar</div>
+        <div class="mini-cal">
+            <div class="mini-header"><span>March 2026</span><span>◀ ▶</span></div>
+            <div class="mini-grid">
+                <div class="mini-day header">S</div><div class="mini-day header">M</div><div class="mini-day header">T</div><div class="mini-day header">W</div><div class="mini-day header">T</div><div class="mini-day header">F</div><div class="mini-day header">S</div>
+                <div class="mini-day num other">22</div><div class="mini-day num other">23</div><div class="mini-day num other">24</div><div class="mini-day num other">25</div><div class="mini-day num other">26</div><div class="mini-day num other">27</div><div class="mini-day num other">28</div>
+                <div class="mini-day num">1</div><div class="mini-day num">2</div><div class="mini-day num today">3</div><div class="mini-day num">4</div><div class="mini-day num">5</div><div class="mini-day num">6</div><div class="mini-day num">7</div>
+                <div class="mini-day num">8</div><div class="mini-day num">9</div><div class="mini-day num">10</div><div class="mini-day num">11</div><div class="mini-day num">12</div><div class="mini-day num">13</div><div class="mini-day num">14</div>
+            </div>
+        </div>
+        <div class="calendars">
+            <h3>My Calendars</h3>
+            <div class="calendar-item"><div class="calendar-check"></div><span class="calendar-name">Personal</span><div class="calendar-dot" style="background:#22c55e"></div></div>
+            <div class="calendar-item"><div class="calendar-check"></div><span class="calendar-name">Work</span><div class="calendar-dot" style="background:#6366f1"></div></div>
+            <div class="calendar-item"><div class="calendar-check"></div><span class="calendar-name">Family</span><div class="calendar-dot" style="background:#f59e0b"></div></div>
+        </div>
+        <div class="upcoming">
+            <h3>Today's Events</h3>
+            <div class="event"><div class="event-time">9:00 AM</div><div class="event-title">Team Standup</div></div>
+            <div class="event" style="border-color:#f59e0b"><div class="event-time">2:00 PM</div><div class="event-title">Project Review</div></div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="header">
+            <h1>March 2026</h1>
+            <div class="nav-btns"><button class="nav-btn">◀</button><button class="nav-btn">▶</button></div>
+            <div class="view-btns"><button class="view-btn">Day</button><button class="view-btn active">Week</button><button class="view-btn">Month</button></div>
+            <button class="nav-btn" style="background:#6366f1;width:auto;padding:0 20px;">+ Event</button>
+        </div>
+        <div class="weekdays">
+            <div class="weekday">Sunday</div><div class="weekday">Monday</div><div class="weekday">Tuesday</div><div class="weekday">Wednesday</div><div class="weekday">Thursday</div><div class="weekday">Friday</div><div class="weekday">Saturday</div>
+        </div>
+        <div class="calendar">
+            <div class="day other-month"><div class="day-num">22</div></div>
+            <div class="day other-month"><div class="day-num">23</div></div>
+            <div class="day other-month"><div class="day-num">24</div></div>
+            <div class="day other-month"><div class="day-num">25</div></div>
+            <div class="day other-month"><div class="day-num">26</div></div>
+            <div class="day"><div class="day-num">27</div></div>
+            <div class="day"><div class="day-num">28</div></div>
+            <div class="day"><div class="day-num">1</div></div>
+            <div class="day"><div class="day-num">2</div></div>
+            <div class="day today"><div class="day-num">3</div><div class="day-event">9:00 Team Standup</div><div class="day-event work">2:00 Project Review</div></div>
+            <div class="day"><div class="day-num">4</div></div>
+            <div class="day"><div class="day-num">5</div><div class="day-event personal">10:00 Doctor</div></div>
+            <div class="day"><div class="day-num">6</div></div>
+            <div class="day"><div class="day-num">7</div></div>
+            <div class="day"><div class="day-num">8</div></div>
+            <div class="day"><div class="day-num">9</div><div class="day-event">11:00 Client Call</div></div>
+            <div class="day"><div class="day-num">10</div></div>
+            <div class="day"><div class="day-num">11</div></div>
+            <div class="day"><div class="day-num">12</div></div>
+            <div class="day"><div class="day-num">13</div></div>
+            <div class="day"><div class="day-num">14</div></div>
+        </div>
+    </div>
+</body>
+</html>

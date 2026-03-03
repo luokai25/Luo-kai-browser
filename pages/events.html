@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Events</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #ec4899, #8b5cf6); padding: 20px 30px; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .hero { background: linear-gradient(135deg, #ec489933, #8b5cf633); margin: 30px; border-radius: 20px; padding: 40px; text-align: center; }
+        .hero h1 { font-size: 32px; margin-bottom: 10px; }
+        .hero p { color: #94a3b8; }
+        .filters { display: flex; gap: 15px; padding: 0 30px 20px; overflow-x: auto; }
+        .filter { background: #1e293b; padding: 10px 20px; border-radius: 20px; cursor: pointer; white-space: nowrap; }
+        .filter.active { background: #ec4899; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 0 30px 30px; }
+        .event { background: #1e293b; border-radius: 15px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
+        .event:hover { transform: translateY(-5px); }
+        .event-img { height: 150px; background: linear-gradient(135deg, #334155, #475569); display: flex; align-items: center; justify-content: center; font-size: 50px; }
+        .event-body { padding: 20px; }
+        .event-date { color: #ec4899; font-size: 13px; font-weight: 600; }
+        .event-title { font-size: 18px; font-weight: 600; margin: 8px 0; }
+        .event-meta { color: #94a3b8; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🎪 Luo Events</div>
+    </div>
+    <div class="hero">
+        <h1>Discover Events Near You</h1>
+        <p>Concerts, conferences, meetups, and more</p>
+    </div>
+    <div class="filters">
+        <div class="filter active">All</div>
+        <div class="filter">Music</div>
+        <div class="filter">Tech</div>
+        <div class="filter">Sports</div>
+        <div class="filter">Food</div>
+        <div class="filter">Art</div>
+    </div>
+    <div class="grid">
+        <div class="eventevent-img">🎸</div><div class="event-body"><div class=""><div class="event-date">Mar 15, 2026</div><div class="event-title">Tech Conference 2026</div><div class="event-meta">📍 Convention Center • 10K attending</div></div></div>
+        <div class="event"><div class="event-img">🎵</div><div class="event-body"><div class="event-date">Mar 20, 2026</div><div class="event-title">Music Festival</div><div class="event-meta">📍 Central Park • 50K attending</div></div></div>
+        <div class="event"><div class="event-img">🎯</div><div class="event-body"><div class="event-date">Mar 25, 2026</div><div class="event-title">Startup Meetup</div><div class="event-meta">📍 Downtown Hub • 500 attending</div></div></div>
+    </div>
+</body>
+</html>

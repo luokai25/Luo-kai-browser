@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Weather</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: linear-gradient(180deg, #1e3a5f 0%, #0f172a 100%); color: #f8fafc; min-height: 100vh; }
+        .header { background: rgba(0,0,0,0.2); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .search { background: rgba(255,255,255,0.1); border: none; padding: 12px 20px; border-radius: 25px; color: #f8fafc; width: 300px; outline: none; }
+        .hero { text-align: center; padding: 60px 20px; }
+        .location { font-size: 32px; font-weight: 600; margin-bottom: 10px; }
+        .temp { font-size: 96px; font-weight: 200; margin: 20px 0; }
+        .temp span { font-size: 48px; }
+        .condition { font-size: 24px; margin-bottom: 30px; }
+        .details { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; }
+        .detail { text-align: center; }
+        .detail-icon { font-size: 32px; margin-bottom: 8px; }
+        .detail-value { font-size: 24px; font-weight: 600; }
+        .detail-label { color: #94a3b8; font-size: 14px; }
+        .hourly { background: rgba(255,255,255,0.05); margin: 0 30px 30px; border-radius: 20px; padding: 25px; }
+        .hourly h3 { margin-bottom: 20px; }
+        .hourly-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
+        .hour { text-align: center; min-width: 80px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; }
+        .hour-time { color: #94a3b8; margin-bottom: 10px; }
+        .hour-icon { font-size: 28px; margin-bottom: 8px; }
+        .hour-temp { font-weight: 600; }
+        .forecast { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; padding: 0 30px 30px; }
+        .day { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; text-align: center; }
+        .day-name { color: #94a3b8; margin-bottom: 15px; }
+        .day-icon { font-size: 32px; margin-bottom: 10px; }
+        .day-temp { font-weight: 600; }
+        .day-low { color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🌤️ Luo Weather</div>
+        <input type="text" class="search" placeholder="Search location...">
+    </div>
+    <div class="hero">
+        <div class="location">📍 New York, USA</div>
+        <div class="temp">72<span>°F</span></div>
+        <div class="condition">☀️ Sunny</div>
+        <div class="details">
+            <div class="detail"><div class="detail-icon">💨</div><div class="detail-value">12 mph</div><div class="detail-label">Wind</div></div>
+            <div class="detail"><div class="detail-icon">💧</div><div class="detail-value">45%</div><div class="detail-label">Humidity</div></div>
+            <div class="detail"><div class="detail-icon">👁️</div><div class="detail-value">10 mi</div><div class="detail-label">Visibility</div></div>
+            <div class="detail"><div class="detail-icon">🌡️</div><div class="detail-value">72°</div><div class="detail-label">Feels Like</div></div>
+        </div>
+    </div>
+    <div class="hourly">
+        <h3>Hourly Forecast</h3>
+        <div class="hourly-scroll">
+            <div class="hour"><div class="hour-time">Now</div><div class="hour-icon">☀️</div><div class="hour-temp">72°</div></div>
+            <div class="hour"><div class="hour-time">1 PM</div><div class="hour-icon">🌤️</div><div class="hour-temp">74°</div></div>
+            <div class="hour"><div class="hour-time">2 PM</div><div class="hour-icon">🌤️</div><div class="hour-temp">75°</div></div>
+            <div class="hour"><div class="hour-time">3 PM</div><div class="hour-icon">⛅</div><div class="hour-temp">74°</div></div>
+            <div class="hour"><div class="hour-time">4 PM</div><div class="hour-icon">⛅</div><div class="hour-temp">72°</div></div>
+            <div class="hour"><div class="hour-time">5 PM</div><div class="hour-icon">🌅</div><div class="hour-temp">68°</div></div>
+            <div class="hour"><div class="hour-time">6 PM</div><div class="hour-icon">🌆</div><div class="hour-temp">65°</div></div>
+            <div class="hour"><div class="hour-time">7 PM</div><div class="hour-icon">🌙</div><div class="hour-temp">62°</div></div>
+        </div>
+    </div>
+    <div class="forecast">
+        <div class="day"><div class="day-name">Today</div><div class="day-icon">☀️</div><div class="day-temp">75°</div><div class="day-low">62°</div></div>
+        <div class="day"><div class="day-name">Wed</div><div class="day-icon">⛅</div><div class="day-temp">73°</div><div class="day-low">60°</div></div>
+        <div class="day"><div class="day-name">Thu</div><div class="day-icon">🌧️</div><div class="day-temp">68°</div><div class="day-low">55°</div></div>
+        <div class="day"><div class="day-name">Fri</div><div class="day-icon">🌧️</div><div class="day-temp">65°</div><div class="day-low">52°</div></div>
+        <div class="day"><div class="day-name">Sat</div><div class="day-icon">⛅</div><div class="day-temp">70°</div><div class="day-low">58°</div></div>
+        <div class="day"><div class="day-name">Sun</div><div class="day-icon">☀️</div><div class="day-temp">76°</div><div class="day-low">62°</div></div>
+        <div class="day"><div class="day-name">Mon</div><div class="day-icon">☀️</div><div class="day-temp">78°</div><div class="day-low">65°</div></div>
+    </div>
+</body>
+</html>

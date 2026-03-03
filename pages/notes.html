@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Notes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; height: 100vh; display: flex; }
+        .sidebar { width: 280px; background: #1e293b; padding: 20px; display: flex; flex-direction: column; }
+        .logo { font-size: 24px; font-weight: 700; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+        .new-btn { background: linear-gradient(135deg, #f59e0b, #ef4444); border: none; color: white; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
+        .folders { flex: 1; }
+        .folder { padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; transition: all 0.2s; }
+        .folder:hover, .folder.active { background: #334155; }
+        .folder-icon { font-size: 18px; }
+        .folder-name { flex: 1; }
+        .folder-count { background: #334155; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+        .tags { margin-top: 20px; }
+        .tag { padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 14px; }
+        .tag-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .main { flex: 1; padding: 30px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { font-size: 32px; }
+        .search { background: #1e293b; border: none; padding: 12px 20px; border-radius: 25px; color: #f8fafc; width: 300px; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .note { background: #1e293b; border-radius: 15px; padding: 20px; cursor: pointer; transition: all 0.3s; min-height: 200px; display: flex; flex-direction: column; }
+        .note:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .note-color { height: 5px; background: #f59e0b; border-radius: 3px; margin-bottom: 15px; }
+        .note-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .note-content { color: #94a3b8; line-height: 1.6; flex: 1; font-size: 14px; }
+        .note-meta { margin-top: 15px; color: #64748b; font-size: 13px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">📓 Luo Notes</div>
+        <button class="new-btn">+ New Note</button>
+        <div class="folders">
+            <div class="folder active">📋 All Notes</div>
+            <div class="folder">⭐ Favorites</div>
+            <div class="folder">📁 Personal</div>
+            <div class="folder">💼 Work</div>
+            <div class="folder">🎓 Learning</div>
+        </div>
+        <div class="tags">
+            <div style="color:#94a3b8;font-size:12px;margin-bottom:10px;">TAGS</div>
+            <div class="tag"><span class="tag-dot" style="background:#ef4444"></span>Important</div>
+            <div class="tag"><span class="tag-dot" style="background:#f59e0b"></span>Todo</div>
+            <div class="tag"><span class="tag-dot" style="background:#22c55e"></span>Ideas</div>
+            <div class="tag"><span class="tag-dot" style="background:#3b82f6"></span>Meeting</div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="header">
+            <h1>All Notes</h1>
+            <input type="text" class="search" placeholder="Search notes...">
+        </div>
+        <div class="grid">
+            <div class="note"><div class="note-color" style="background:#f59e0b"></div><div class="note-title">Project Roadmap</div><div class="note-content">1. Launch Luo Browser beta<br>2. Add 50+ sites<br>3. Enable GitHub Pages<br>4. Marketing campaign</div><div class="note-meta"><span>Edited: 2h ago</span><span>⭐</span></div></div>
+            <div class="note"><div class="note-color" style="background:#3b82f6"></div><div class="note-title">Meeting Notes</div><div class="note-content">Weekly sync with team:<br>- Progress on browser<br>- New site ideas<br>- Timeline review</div><div class="note-meta"><span>Edited: 5h ago</span></div></div>
+            <div class="note"><div class="note-color" style="background:#22c55e"></div><div class="note-title">Ideas for New Sites</div><div class="note-content">- Luo Weather<br>- Luo Cloud<br>- Luo Music<br>- Luo Video<br>- Luo Maps<br>- Luo Notes</div><div class="note-meta"><span>Edited: 1d ago</span><span>⭐</span></div></div>
+            <div class="note"><div class="note-color" style="background:#ef4444"></div><div class="note-title">Important Links</div><div class="note-content">GitHub: github.com/luokai25<br>Docs: luo://docs<br>API: luo://ai</div><div class="note-meta"><span>Edited: 2d ago</span></div></div>
+            <div class="note"><div class="note-color" style="background:#8b5cf6"></div><div class="note-title">Learning Resources</div><div class="note-content">HTML/CSS Tutorials<br>JavaScript Guide<br>Browser Dev Tools</div><div class="note-meta"><span>Edited: 3d ago</span></div></div>
+            <div class="note"><div class="note-color" style="background:#06b6d4"></div><div class="note-title">Shopping List</div><div class="note-content">- New keyboard<br>- Monitor stand<br>- Coffee beans<br>- Office plants</div><div class="note-meta"><span>Edited: 4d ago</span></div></div>
+        </div>
+    </div>
+</body>
+</html>

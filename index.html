@@ -514,6 +514,22 @@
             font-size: 13px;
             line-height: 1.6;
         }
+        
+        .agent-quick-btn {
+            background: var(--surface-light);
+            border: none;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .agent-quick-btn:hover {
+            background: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -536,10 +552,11 @@
             <button class="bookmark" onclick="navigateTo('luo://home')">🏠 Home</button>
             <button class="bookmark" onclick="navigateTo('luo://search')">🔍 Search</button>
             <button class="bookmark" onclick="navigateTo('luo://mail')">📧 Mail</button>
+            <button class="bookmark" onclick="navigateTo('luo://agents')">🤖 Agents</button>
             <button class="bookmark" onclick="navigateTo('luo://chat')">💬 Chat</button>
             <button class="bookmark" onclick="navigateTo('luo://docs')">📝 Docs</button>
             <button class="bookmark" onclick="navigateTo('luo://media')">🎬 Media</button>
-            <button class="bookmark" onclick="navigateTo('luo://ai')">🤖 AI</button>
+            <button class="bookmark" onclick="navigateTo('luo://ai')">🧠 AI</button>
         </div>
         
         <!-- Tab Bar -->
@@ -642,29 +659,33 @@
             
             <div class="ai-results" id="aiResults">
                 <div class="ai-result">
+                    <div class="ai-result-title">🤖 Available Agents</div>
+                    <div class="ai-result-content">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">💻 CodeMaster</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">🔬 ResearchPro</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">✍️ ContentGen</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">📊 DataWhiz</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">👩‍💼 ExecutiveAI</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">🎨 DesignBot</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">🎧 SupportPro</button>
+                            <button class="agent-quick-btn" onclick="navigateTo('luo://agent')">📈 TradeBot</button>
+                        </div>
+                        <button class="ai-submit" style="margin-top:15px;width:100%;" onclick="navigateTo('luo://agents')">View All Agents →</button>
+                    </div>
+                </div>
+                <div class="ai-result">
                     <div class="ai-result-title">📡 API Endpoint</div>
                     <div class="ai-result-content">
                         <code>POST /api/ai-execute</code><br><br>
                         Example:<br>
                         <pre style="background: var(--bg); padding: 10px; border-radius: 6px; overflow-x: auto;">
 {
-  "command": "navigate luo://search",
-  "action": "search",
-  "query": "your search"
+  "agent": "codemaster",
+  "command": "write code",
+  "task": "your task"
 }
                         </pre>
-                    </div>
-                </div>
-                <div class="ai-result">
-                    <div class="ai-result-title">🔗 Direct Access</div>
-                    <div class="ai-result-content">
-                        AI agents can directly access pages via:<br>
-                        <code>http://localhost:3000/luo/{page}</code><br><br>
-                        Examples:<br>
-                        • <code>/luo/search</code><br>
-                        • <code>/luo/mail</code><br>
-                        • <code>/luo/chat</code><br>
-                        • <code>/luo/docs</code>
                     </div>
                 </div>
             </div>
@@ -688,7 +709,26 @@
             'news': 'pages/news.html',
             'social': 'pages/social.html',
             'store': 'pages/store.html',
-            'wallet': 'pages/wallet.html'
+            'wallet': 'pages/wallet.html',
+            'cloud': 'pages/cloud.html',
+            'weather': 'pages/weather.html',
+            'maps': 'pages/maps.html',
+            'music': 'pages/music.html',
+            'video': 'pages/video.html',
+            'notes': 'pages/notes.html',
+            'calendar': 'pages/calendar.html',
+            'games': 'pages/games.html',
+            'jobs': 'pages/jobs.html',
+            'food': 'pages/food.html',
+            'travel': 'pages/travel.html',
+            'agents': 'pages/agents.html',
+            'agent': 'pages/agent/workspace.html',
+            'tv': 'pages/tv.html',
+            'health': 'pages/health.html',
+            'learn': 'pages/learn.html',
+            'realestate': 'pages/realestate.html',
+            'date': 'pages/date.html',
+            'crypto': 'pages/crypto.html'
         };
         
         let currentPage = 'home';

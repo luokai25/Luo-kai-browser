@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Health</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #22c55e, #10b981); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .user { display: flex; align-items: center; gap: 15px; }
+        .stats-banner { background: linear-gradient(135deg, #22c55e33, #10b98133); margin: 30px; border-radius: 20px; padding: 30px; display: flex; gap: 30px; }
+        .stat-card { flex: 1; background: #1e293b; border-radius: 15px; padding: 25px; text-align: center; }
+        .stat-icon { font-size: 40px; margin-bottom: 10px; }
+        .stat-value { font-size: 32px; font-weight: 700; }
+        .stat-label { color: #94a3b8; }
+        .section { padding: 0 30px 30px; }
+        .section h2 { font-size: 24px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #1e293b; border-radius: 15px; padding: 25px; cursor: pointer; transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card-icon { font-size: 40px; margin-bottom: 15px; }
+        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .card-desc { color: #94a3b8; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">💪 Luo Health</div>
+        <div class="user"><span>John's Health</span>👤</div>
+    </div>
+    <div class="stats-banner">
+        <div class="stat-card"><div class="stat-icon">👟</div><div class="stat-value">8,432</div><div class="stat-label">Steps Today</div></div>
+        <div class="stat-card"><div class="stat-icon">🔥</div><div class="stat-value">1,847</div><div class="stat-label">Calories Burned</div></div>
+        <div class="stat-card"><div class="stat-icon">💤</div><div class="stat-value">7.2h</div><div class="stat-label">Sleep</div></div>
+        <div class="stat-card"><div class="stat-icon">💗</div><div class="stat-value">72</div><div class="stat-label">BPM</div></div>
+    </div>
+    <div class="section">
+        <h2>Quick Actions</h2>
+        <div class="grid">
+            <div class="card"><div class="card-icon">🏃</div><div class="card-title">Workouts</div><div class="card-desc">Start a workout or view history</div></div>
+            <div class="card"><div class="card-icon">🧘</div><div class="card-title">Meditation</div><div class="card-desc">Relax your mind with guided sessions</div></div>
+            <div class="card"><div class="card-icon">🥗</div><div class="card-title">Nutrition</div><div class="card-desc">Track meals and calories</div></div>
+            <div class="card"><div class="card-icon">💊</div><div class="card-title">Medications</div><div class="card-desc">Set reminders and track</div></div>
+            <div class="card"><div class="card-icon">🏥</div><div class="card-title">Doctors</div><div class="card-desc">Book appointments</div></div>
+            <div class="card"><div class="card-icon">📊</div><div class="card-title">Progress</div><div class="card-desc">View your health trends</div></div>
+        </div>
+    </div>
+</body>
+</html>

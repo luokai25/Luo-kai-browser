@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Bank</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; }
+        .header { background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .nav { display: flex; gap: 20px; }
+        .nav-item { cursor: pointer; }
+        .hero { background: linear-gradient(135deg, #1e40af33, #3b82f633); margin: 30px; border-radius: 20px; padding: 40px; display: flex; gap: 40px; }
+        .accounts { flex: 1; }
+        .account { background: #1e293b; border-radius: 15px; padding: 25px; margin-bottom: 15px; }
+        .account-name { color: #94a3b8; font-size: 14px; }
+        .account-balance { font-size: 32px; font-weight: 700; margin: 10px 0; }
+        .account-num { color: #64748b; font-size: 14px; }
+        .actions { display: flex; gap: 15px; margin-top: 20px; }
+        .action-btn { background: #1e293b; border: none; color: white; padding: 15px 25px; border-radius: 12px; cursor: pointer; font-size: 14px; flex: 1; }
+        .action-btn:hover { background: #334155; }
+        .action-btn.primary { background: #3b82f6; }
+        .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 30px 30px; }
+        .quick-action { background: #1e293b; border-radius: 15px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .quick-action:hover { transform: translateY(-5px); }
+        .quick-icon { font-size: 32px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🏦 Luo Bank</div>
+        <div class="nav"><span>Accounts</span><span>Cards</span><span>Transfers</span><span>Settings</span></div>
+    </div>
+    <div class="hero">
+        <div class="accounts">
+            <div class="account"><div class="account-name">Checking Account</div><div class="account-balance">$12,847.32</div><div class="account-num">****4521</div></div>
+            <div class="account"><div class="account-name">Savings Account</div><div class="account-balance">$45,230.00</div><div class="account-num">****7832</div></div>
+            <div class="actions">
+                <button class="action-btn primary">Transfer</button>
+                <button class="action-btn">Pay</button>
+                <button class="action-btn">History</button>
+            </div>
+        </div>
+    </div>
+    <div class="quick-actions">
+        <div class="quick-action"><div class="quick-icon">💸</div><div>Send Money</div></div>
+        <div class="quick-action"><div class="quick-icon">💳</div><div>Cards</div></div>
+        <div class="quick-action"><div class="quick-icon">📊</div><div>Statements</div></div>
+        <div class="quick-action"><div class="quick-icon">🎁</div><div>Rewards</div></div>
+    </div>
+</body>
+</html>
