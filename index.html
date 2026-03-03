@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luo Browser - Step 2</title>
+    <title>Luo Browser</title>
     <style>
-        /* PURE BLACK DARK + SPEED OPTIMIZED */
+        /* PURE BLACK + SPEED + MULTI-DATABASE */
         :root {
             --bg: #000000;
             --surface: #0a0a0a;
@@ -165,7 +165,7 @@
         .start-logo { font-size: 64px; margin-bottom: 24px; animation: float 4s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.3)); }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         .start-title { font-size: 36px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .start-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+        .start-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
         .quick-links { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; max-width: 600px; }
         .quick-link { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--text); }
         .quick-link:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.15); background: var(--surface-2); }
@@ -356,7 +356,7 @@
                 <span>Ready</span>
             </div>
             <div style="display:flex;align-items:center;gap:12px;">
-                <span id="statusText">Luo Browser</span>
+                <span id="dbStatus">DB: OK</span>
                 <span id="tabCount">1 tab</span>
             </div>
         </div>
@@ -381,15 +381,167 @@
             <div class="ai-results" id="aiResults">
                 <div class="ai-result">
                     <div class="ai-result-title">Commands</div>
-                    <div class="ai-result-content">• "Search for [topic]" - Search<br>• "Navigate to [site]" - Go to site<br>• "Bookmark this" - Save</div>
+                    <div class="ai-result-content">• "Search for [topic]" - Search<br>• "Navigate to [site]" - Go to site<br>• "Bookmark this" - Save<br>• "Save note [text]" - Save note<br>• "Show history" - View history</div>
                 </div>
             </div>
         </div>
     </div>
     
     <script>
-        // FAST DATABASE - Preloaded
+        /* ========== MULTI-DATABASE SYSTEM ========== */
         const DB = {
+            // Initialize all databases
+            init() {
+                const databases = ['users', 'bookmarks', 'history', 'notes', 'cache', 'settings', 'sessions'];
+                databases.forEach(db => {
+                    if (!localStorage.getItem('luo_' + db)) {
+                        localStorage.setItem('luo_' + db, JSON.stringify([]));
+                    }
+                });
+                console.log('✅ All databases initialized');
+                document.getElementById('dbStatus').textContent = 'DB: Ready';
+            },
+            
+            // Generic database operations
+            get(dbName) {
+                try {
+                    return JSON.parse(localStorage.getItem('luo_' + dbName) || '[]');
+                } catch(e) { return []; }
+            },
+            
+            set(dbName, data) {
+                localStorage.setItem('luo_' + dbName, JSON.stringify(data));
+            },
+            
+            add(dbName, item) {
+                const data = this.get(dbName);
+                const newItem = { ...item, id: Date.now(), created: new Date().toISOString() };
+                data.unshift(newItem);
+                this.set(dbName, data);
+                return newItem;
+            },
+            
+            update(dbName, id, updates) {
+                const data = this.get(dbName);
+                const index = data.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    data[index] = { ...data[index], ...updates, updated: new Date().toISOString() };
+                    this.set(dbName, data);
+                    return data[index];
+                }
+                return null;
+            },
+            
+            delete(dbName, id) {
+                const data = this.get(dbName).filter(i => i.id !== id);
+                this.set(dbName, data);
+            },
+            
+            find(dbName, query) {
+                const data = this.get(dbName);
+                if (typeof query === 'function') return data.filter(query);
+                return data;
+            },
+            
+            // Specialized databases
+            users: {
+                register(username, email, data = {}) {
+                    const users = DB.get('users');
+                    if (users.find(u => u.username === username)) {
+                        return { success: false, error: 'Username exists' };
+                    }
+                    const user = DB.add('users', { username, email, ...data });
+                    return { success: true, user };
+                },
+                login(username) {
+                    return DB.find('users', u => u.username === username)[0];
+                },
+                getCurrent() {
+                    const session = DB.get('sessions')[0];
+                    if (session) return DB.find('users', u => u.id === session.userId)[0];
+                    return null;
+                }
+            },
+            
+            bookmarks: {
+                add(url, title, tags = []) {
+                    return DB.add('bookmarks', { url, title, tags, favicon: '📌' });
+                },
+                getAll() { return DB.get('bookmarks'); },
+                remove(id) { DB.delete('bookmarks', id); },
+                search(query) {
+                    return DB.find('bookmarks', b => 
+                        b.title.toLowerCase().includes(query.toLowerCase()) ||
+                        b.url.toLowerCase().includes(query.toLowerCase())
+                    );
+                }
+            },
+            
+            history: {
+                add(url, title) {
+                    const history = DB.get('history');
+                    // Remove duplicate
+                    const filtered = history.filter(h => h.url !== url);
+                    filtered.unshift({ url, title, visited: new Date().toISOString(), id: Date.now() });
+                    DB.set('history', filtered.slice(0, 500)); // Keep last 500
+                },
+                getAll() { return DB.get('history'); },
+                clear() { DB.set('history', []); },
+                search(query) {
+                    return DB.find('history', h => 
+                        h.title.toLowerCase().includes(query.toLowerCase()) ||
+                        h.url.toLowerCase().includes(query.toLowerCase())
+                    );
+                }
+            },
+            
+            notes: {
+                add(title, content, color = '#6366f1') {
+                    return DB.add('notes', { title, content, color });
+                },
+                getAll() { return DB.get('notes'); },
+                update(id, title, content) {
+                    return DB.update('notes', id, { title, content });
+                },
+                delete(id) { DB.delete('notes', id); }
+            },
+            
+            cache: {
+                set(key, value, expiryMs = 3600000) {
+                    const cache = DB.get('cache');
+                    cache[key] = { value, expiry: Date.now() + expiryMs };
+                    DB.set('cache', cache);
+                },
+                get(key) {
+                    const cache = DB.get('cache');
+                    const item = cache[key];
+                    if (item && item.expiry > Date.now()) {
+                        return item.value;
+                    }
+                    return null;
+                },
+                clear() { DB.set('cache', {}); }
+            },
+            
+            settings: {
+                get(key, defaultValue = null) {
+                    const settings = DB.get('settings')[0] || {};
+                    return key ? settings[key] : settings;
+                },
+                set(key, value) {
+                    let settings = DB.get('settings')[0] || {};
+                    settings[key] = value;
+                    DB.set('settings', [settings]);
+                },
+                getAll() { return DB.get('settings')[0] || {}; }
+            }
+        };
+        
+        // Initialize databases on load
+        DB.init();
+        
+        /* ========== SITES DATABASE ========== */
+        const SitesDB = {
             sites: {
                 'home': 'pages/home.html','search': 'pages/search.html','agents': 'pages/agents.html',
                 'agent': 'pages/agent/workspace.html','chat': 'pages/chat.html','mail': 'pages/mail.html',
@@ -420,7 +572,7 @@
             }
         };
         
-        // TAB MANAGEMENT - Optimized
+        /* ========== TAB MANAGEMENT ========== */
         let tabs = [{ id: 1, url: 'luo://home', title: 'New Tab', icon: '🏠' }];
         let currentTab = 1;
         let nextTabId = 2;
@@ -479,12 +631,12 @@
             document.getElementById('tabCount').textContent = tabs.length + ' tab' + (tabs.length > 1 ? 's' : '');
         }
         
-        // NAVIGATION - Speed optimized
+        /* ========== NAVIGATION ========== */
         function navigateTo(url, tabId = currentTab) {
             if (!url.startsWith('luo://')) url = 'luo://' + url;
             const path = url.replace('luo://', '');
             const pageName = path.split('/')[0];
-            const pagePath = DB.sites[pageName];
+            const pagePath = SitesDB.sites[pageName];
             
             if (pagePath) {
                 if (!historyStack[tabId]) historyStack[tabId] = [];
@@ -494,7 +646,7 @@
                 
                 const tab = tabs.find(t => t.id === tabId);
                 tab.url = url; tab.title = pageName.charAt(0).toUpperCase() + pageName.slice(1);
-                tab.icon = DB.icons[pageName] || '📄';
+                tab.icon = SitesDB.icons[pageName] || '📄';
                 document.getElementById('addressBar').value = url;
                 document.getElementById('viewport-' + tabId).src = pagePath;
                 const tabEl = document.querySelector(`.tab[data-id="${tabId}"]`);
@@ -506,7 +658,9 @@
                 setTimeout(() => document.getElementById('loading').classList.add('hidden'), 500);
                 document.getElementById('backBtn').disabled = historyStack[tabId].length === 0;
                 document.getElementById('forwardBtn').disabled = forwardStack[tabId].length === 0;
-                localStorage.setItem('luo_history', JSON.stringify([{ url, title: tab.title, time: Date.now() }, ...JSON.parse(localStorage.getItem('luo_history') || '[]').slice(0, 99)]));
+                
+                // Save to history database
+                DB.history.add(url, tab.title);
             } else {
                 showError('Page not found: ' + url);
             }
@@ -548,7 +702,7 @@
             document.getElementById('startPage').style.display = 'none';
         }
         
-        // AI PANEL
+        /* ========== AI PANEL ========== */
         function toggleAI() { document.getElementById('aiPanel').classList.toggle('open'); }
         
         function aiCommand(agent) {
@@ -564,6 +718,7 @@
             result.className = 'ai-result';
             const lower = cmd.toLowerCase();
             let response = '';
+            
             if (lower.includes('search')) {
                 navigateTo('luo://search?q=' + encodeURIComponent(cmd.replace(/search/i, '').trim()));
                 response = '🔍 Searching: ' + cmd.replace(/search/i, '').trim();
@@ -571,8 +726,22 @@
                 navigateTo(cmd.replace(/navigate|go to|open/i, '').trim());
                 response = '➡️ Opening: ' + cmd.replace(/navigate|go to|open/i, '').trim();
             } else if (lower.includes('bookmark')) {
-                localStorage.setItem('luo_bookmarks', JSON.stringify([{ url: tabs.find(t => t.id === currentTab).url, title: tabs.find(t => t.id === currentTab).title, time: Date.now() }, ...JSON.parse(localStorage.getItem('luo_bookmarks') || '[]')]));
-                response = '⭐ Bookmarked: ' + tabs.find(t => t.id === currentTab).title;
+                const tab = tabs.find(t => t.id === currentTab);
+                DB.bookmarks.add(tab.url, tab.title);
+                response = '⭐ Bookmarked: ' + tab.title;
+            } else if (lower.includes('save note') || lower.includes('add note')) {
+                const noteText = cmd.replace(/save note|add note/i, '').trim();
+                DB.notes.add('Quick Note', noteText);
+                response = '📝 Note saved: ' + noteText.substring(0, 30) + '...';
+            } else if (lower.includes('show history') || lower.includes('view history')) {
+                navigateTo('luo://history');
+                response = '📜 Opened history';
+            } else if (lower.includes('show bookmarks') || lower.includes('view bookmarks')) {
+                navigateTo('luo://bookmarks');
+                response = '⭐ Opened bookmarks';
+            } else if (lower.includes('clear history')) {
+                DB.history.clear();
+                response = '🗑️ History cleared';
             } else {
                 navigateTo('luo://search?q=' + encodeURIComponent(cmd));
                 response = '🔍 Searched: ' + cmd;
@@ -582,7 +751,7 @@
             input.value = '';
         }
         
-        // INIT
+        /* ========== INIT ========== */
         document.getElementById('addressBar').value = 'luo://home';
         document.addEventListener('keydown', (e) => {
             if (e.altKey && e.key === 'ArrowLeft') goBack();
