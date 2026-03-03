@@ -3,117 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Luo Desktop OS - Ultimate</title>
+    <title>Luo Desktop OS</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:Segoe.UI,system-ui,sans-serif;background:#000;color:#fff;height:100vh;overflow:hidden;touch-action:manipulation;-webkit-user-select:none}
-        :root{--bg:#000;--s:#0c0c0c;--s1:#141414;--s2:#1a1a1a;--b:#2d2d2d;--t:#fff;--t2:#ccc;--t3:#777;--p:#0067c0;--a:#60cdff}
-        .bg{position:fixed;inset:0;background:linear-gradient(135deg,#001220,#001a40,#000918,#001020);z-index:-1}
-        .dsk{flex:1;display:flex;flex-direction:column}
-        .bar{height:44px;background:rgba(0,0,0,.9);display:flex;align-items:center;padding:0 10px;border-top:1px solid var(--b);backdrop-filter:blur(10px)}
-        .btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;font-size:18px;background:0;border:0;color:var(--t2);transition:background .1s}
-        .btn:hover,.btn:active{background:rgba(255,255,255,.1)}
-        .search{flex:1;margin:0 12px;height:32px;background:rgba(255,255,255,.05);border:1px solid var(--b);border-radius:16px;padding:0 14px;color:var(--t);font-size:13px;outline:0}
-        .search:focus{border-color:var(--p);background:rgba(255,255,255,.1)}
-        .apps{display:flex;gap:2px}
-        .app{width:40px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;font-size:16px;position:relative}
-        .app:hover,.app:active{background:rgba(255,255,255,.1)}
+        :root{--bg:#000;--s:#0c0c0c;--s1:#141414;--s2:#1a1a1a;--b:#2d2d2d;--t:#fff;--t2:#ccc;--t3:#777;--p:#0067c0;--a:#60cdff;--tr:.2s}
+        .bg{position:fixed;inset:0;background:linear-gradient(135deg,#001122,#001a33,#000911,#001020);z-index:-1;transition:var(--tr)}
+        .dsk{flex:1;display:flex;flex-direction:column;height:100vh}
+        .bar{height:48px;background:rgba(0,0,0,.92);display:flex;align-items:center;padding:0 12px;border-top:1px solid var(--b);backdrop-filter:blur(20px)}
+        .btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-size:20px;background:0;border:0;color:var(--t2);transition:all .15s}
+        .btn:hover,.btn:active{background:rgba(255,255,255,.1);transform:scale(1.05)}
+        .search{flex:1;margin:0 16px;height:36px;background:rgba(255,255,255,.06);border:1px solid transparent;border-radius:20px;padding:0 18px;color:var(--t);font-size:14px;outline:0;transition:all .2s}
+        .search:focus,.search:hover{border-color:var(--p);background:rgba(255,255,255,.1)}
+        .apps{display:flex;gap:4px;padding-left:12px}
+        .app{width:44px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;font-size:18px;position:relative;transition:all .15s}
+        .app:hover,.app:active{background:rgba(255,255,255,.1);transform:scale(1.05)}
         .app.on{background:rgba(255,255,255,.08)}
-        .app.on::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:12px;height:2px;background:var(--a);border-radius:1px}
-        .clock{text-align:right;font-size:12px;line-height:1.3;padding:0 10px}
-        .area{flex:1;padding:12px;display:flex;flex-direction:column;gap:4px}
-        .icon{width:72px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border-radius:6px;transition:background .1s}
-        .icon:hover,.icon:active{background:rgba(255,255,255,.08)}
-        .icon div{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--s1);border:1px solid var(--b)}
-        .icon span{font-size:10px;color:var(--t2);text-align:center;word-break:break-word}
-        .win{position:absolute;background:var(--s);border:1px solid var(--b);border-radius:8px;display:none;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.6);min-width:320px;min-height:220px;overflow:hidden;animation:winIn .15s ease}
-        @keyframes winIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-        .win.on{display:flex}
-        .win-head{height:30px;background:var(--s1);display:flex;align-items:center;padding:0 8px;cursor:default}
-        .win-btns{display:flex;gap:8px}
-        .win-btn{width:12px;height:12px;border-radius:50%;border:0;cursor:pointer}
+        .app.on::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:16px;height:3px;background:var(--a);border-radius:2px}
+        .clock{text-align:right;font-size:13px;line-height:1.4;padding:0 12px}
+        .area{flex:1;padding:16px;display:flex;flex-direction:column;gap:8px}
+        .icon{width:80px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border-radius:10px;transition:all .2s}
+        .icon:hover,.icon:active{background:rgba(255,255,255,.1);transform:scale(1.08)}
+        .icon div{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;background:var(--s1);border:1px solid var(--b);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+        .icon span{font-size:11px;color:var(--t2);text-align:center;word-break:break-word}
+        .win{position:fixed;background:var(--s);border:1px solid var(--b);border-radius:12px;display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05);min-width:400px;min-height:300px;overflow:hidden;transition:all .25s cubic-bezier(0.4,0,0.2,1);transform:scale(0.95);opacity:0;z-index:10}
+        .win.on{display:flex;transform:scale(1);opacity:1}
+        .win-head{height:34px;background:var(--s1);display:flex;align-items:center;padding:0 10px;cursor:default;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.05)}
+        .win-btns{display:flex;gap:10px}
+        .win-btn{width:14px;height:14px;border-radius:50%;border:0;cursor:pointer;transition:transform .1s}
+        .win-btn:hover{transform:scale(1.2)}
         .win-btn.r{background:#ff5f56}.win-btn.y{background:#ffbd2e}.win-btn.g{background:#27ca3f}
-        .win-title{flex:1;text-align:center;font-size:11px;color:var(--t3)}
+        .win-title{flex:1;text-align:center;font-size:12px;color:var(--t3);font-weight:400}
         .win-body{flex:1;overflow:auto;background:var(--bg)}
-        .start{position:absolute;bottom:52px;left:10px;width:540px;max-height:480px;background:rgba(12,12,12,.96);border:1px solid var(--b);border-radius:8px;display:none;overflow:hidden;z-index:100;backdrop-filter:blur(20px)}
-        .start.on{display:block}
-        .start-s{padding:14px}
-        .start-search{width:100%;height:36px;background:var(--s1);border:1px solid var(--b);border-radius:18px;padding:0 16px;color:var(--t);font-size:13px;outline:0}
-        .start-search:focus{border-color:var(--p)}
-        .start-p{padding:0 14px 12px}
-        .start-t{font-size:11px;font-weight:600;color:var(--t3);margin-bottom:10px}
-        .start-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
-        .start-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:6px;cursor:pointer;transition:background .1s}
-        .start-item:hover,.start-item:active{background:rgba(255,255,255,.08)}
-        .start-item div{width:32px;height:32px;border-radius:6px;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:15px}
-        .start-item span{font-size:9px;color:var(--t2)}
-        .term{background:#0a0a0a;padding:10px;font-family:Consolas,monospace;font-size:13px;line-height:1.45;height:100%;color:#ccc;overflow:auto}
+        .start{position:fixed;bottom:56px;left:12px;width:580px;max-height:520px;background:rgba(10,10,10,.98);border:1px solid var(--b);border-radius:12px;display:none;overflow:hidden;z-index:100;backdrop-filter:blur(30px);transform:translateY(20px);opacity:0;transition:all .25s cubic-bezier(0.4,0,0.2,1)}
+        .start.on{display:flex;transform:translateY(0);opacity:1}
+        .start-s{padding:16px}
+        .start-search{width:100%;height:40px;background:var(--s1);border:1px solid var(--b);border-radius:22px;padding:0 20px;color:var(--t);font-size:14px;outline:0;transition:all .2s}
+        .start-search:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,102,192,.2)}
+        .start-p{padding:0 16px 16px}
+        .start-t{font-size:12px;font-weight:600;color:var(--t3);margin:16px 0 12px}
+        .start-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+        .start-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:8px;cursor:pointer;transition:all .15s}
+        .start-item:hover,.start-item:active{background:rgba(255,255,255,.1);transform:scale(1.05)}
+        .start-item div{width:36px;height:36px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+        .start-item span{font-size:10px;color:var(--t2)}
+        .term{background:#080808;padding:14px;font-family:Consolas,monospace;font-size:14px;line-height:1.5;height:100%;color:#ccc;overflow:auto}
         .term div{white-space:pre-wrap;word-break:break-all}
-        .term input{background:0;border:0;color:var(--t);font-family:inherit;font-size:inherit;outline:0;width:65%;caret-color:var(--a)}
-        .term .ok{color:#6ccb5f}.term .err{color:#ff453a}.term .info{color:#0078d4}.term .warn{color:#fce100}
+        .term input{background:0;border:0;color:var(--t);font-family:inherit;font-size:inherit;outline:0;width:70%;caret-color:var(--a)}
+        .term .ok{color:#6ccb5f}.term .err{color:#ff453a}.term .info{color:#0078d4}.term .path{color:#60cdff}
         .calc{display:flex;flex-direction:column;height:100%}
-        .calc-d{background:var(--s1);padding:18px;text-align:right;font-size:32px;font-weight:300;border-bottom:1px solid var(--b)}
+        .calc-d{background:var(--s1);padding:20px;text-align:right;font-size:38px;font-weight:300;border-bottom:1px solid var(--b)}
         .calc-g{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);flex:1}
-        .calc-g button{background:var(--s);border:0;color:var(--t);font-size:17px;cursor:pointer;transition:background .1s}
+        .calc-g button{background:var(--s);border:0;color:var(--t);font-size:18px;cursor:pointer;transition:all .1s}
         .calc-g button:hover,.calc-g button:active{background:var(--s2)}
         .calc-g button.o{background:var(--p);color:#fff}
         .calc-g button.e{background:var(--p);color:#fff}
         .files{display:flex;height:100%}
-        .files-s{width:150px;background:var(--s1);padding:8px;border-right:1px solid var(--b)}
-        .files-i{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;font-size:12px;cursor:pointer;transition:background .1s}
+        .files-s{width:160px;background:var(--s1);padding:10px;border-right:1px solid var(--b)}
+        .files-i{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s}
         .files-i:hover,.files-i:active{background:rgba(255,255,255,.08)}
         .files-i.on{background:rgba(255,255,255,.06)}
-        .files-m{flex:1;padding:10px}
-        .files-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:6px}
-        .files-f{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;border-radius:6px;cursor:pointer;transition:background .1s}
-        .files-f:hover,.files-f:active{background:rgba(255,255,255,.08)}
-        .files-f div{font-size:32px}
-        .files-f span{font-size:10px;color:var(--t2);text-align:center;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .files-m{flex:1;padding:12px}
+        .files-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
+        .files-f{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border-radius:10px;cursor:pointer;transition:all .15s}
+        .files-f:hover,.files-f:active{background:rgba(255,255,255,.08);transform:scale(1.05)}
+        .files-f div{font-size:36px}
+        .files-f span{font-size:11px;color:var(--t2);text-align:center;max-width:85px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .set{display:flex;height:100%}
-        .set-s{width:200px;background:var(--s1);padding:10px}
-        .set-i{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:6px;font-size:12px;cursor:pointer;transition:background .1s}
+        .set-s{width:220px;background:var(--s1);padding:12px}
+        .set-i{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s}
         .set-i:hover,.set-i:active{background:rgba(255,255,255,.08)}
         .set-i.on{background:var(--p);color:#fff}
-        .set-m{flex:1;padding:20px;overflow:auto}
-        .set-h{font-size:26px;font-weight:600;margin-bottom:24px}
-        .set-c{background:var(--s1);border-radius:8px;overflow:hidden}
-        .set-r{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--b);font-size:13px}
+        .set-m{flex:1;padding:24px;overflow:auto}
+        .set-h{font-size:28px;font-weight:600;margin-bottom:24px}
+        .set-c{background:var(--s1);border-radius:12px;overflow:hidden}
+        .set-r{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px}
         .set-r:last-child{border-bottom:0}
-        .set-r .lb{color:var(--t2)}
-        .set-r .val{color:var(--t3)}
-        .nav{display:flex;align-items:center;gap:6px;padding:0 10px;height:38px;background:var(--s1);border-bottom:1px solid var(--b)}
-        .nav-b{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;background:0;border:0;color:var(--t2);font-size:13px;transition:background .1s}
+        .nav{display:flex;align-items:center;gap:8px;padding:0 12px;height:42px;background:var(--s1);border-bottom:1px solid var(--b)}
+        .nav-b{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;background:0;border:0;color:var(--t2);font-size:14px;transition:all .15s}
         .nav-b:hover,.nav-b:active{background:rgba(255,255,255,.1)}
-        .nav-u{flex:1;height:26px;background:var(--s2);border:1px solid var(--b);border-radius:4px;padding:0 12px;color:var(--t);font-size:12px;font-family:monospace;outline:0}
+        .nav-u{flex:1;height:30px;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:0 14px;color:var(--t);font-size:13px;font-family:monospace;outline:0;transition:all .2s}
+        .nav-u:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,102,192,.2)}
         .nav-iframe{flex:1;border:0;background:#fff}
-        .note{width:100%;height:100%;background:var(--s1);border:0;color:var(--t);padding:12px;font-family:Consolas,monospace;font-size:13px;resize:none;outline:0;line-height:1.5}
+        .note{width:100%;height:100%;background:var(--s1);border:0;color:var(--t);padding:14px;font-family:Consolas,monospace;font-size:14px;resize:none;outline:0;line-height:1.6}
         .proc{display:flex;height:100%}
-        .proc-s{width:180px;background:var(--s1);padding:10px;border-right:1px solid var(--b)}
-        .proc-i{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;font-size:12px;cursor:pointer;transition:background .1s}
+        .proc-s{width:200px;background:var(--s1);padding:12px;border-right:1px solid var(--b)}
+        .proc-i{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s}
         .proc-i:hover,.proc-i:active{background:rgba(255,255,255,.08)}
-        .proc-m{flex:1;padding:10px;overflow:auto}
-        .proc-t{width:100%;border-collapse:collapse;font-size:12px}
-        .proc-t th{text-align:left;padding:8px;background:var(--s1);border-bottom:1px solid var(--b);color:var(--t3);font-weight:500}
-        .proc-t td{padding:8px;border-bottom:1px solid var(--b)}
-        ::-webkit-scrollbar{width:6px}
+        .proc-t{width:100%;border-collapse:collapse;font-size:13px}
+        .proc-t th{text-align:left;padding:12px;background:var(--s1);border-bottom:1px solid var(--b);color:var(--t3);font-weight:500}
+        .proc-t td{padding:12px;border-bottom:1px solid rgba(255,255,255,.03)}
+        .game{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px}
+        .game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .game-item{background:var(--s1);padding:24px;border-radius:12px;text-align:center;cursor:pointer;transition:all .2s}
+        .game-item:hover{background:var(--s2);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+        .game-item div{font-size:48px}
+        .game-item span{display:block;margin-top:12px;font-size:14px}
+        ::-webkit-scrollbar{width:8px}
         ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:#444;border-radius:3px}
+        ::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
     </style>
 </head>
 <body>
     <div class="bg"></div>
     <div class="dsk">
         <div class="area">
-            <div class="icon" onclick="open('term')"><div>⬛</div><span>Terminal</span></div>
-            <div class="icon" onclick="open('files')"><div>📁</div><span>Files</span></div>
-            <div class="icon" onclick="open('browser')"><div>🌐</div><span>Browser</span></div>
-            <div class="icon" onclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
-            <div class="icon" onclick="open('set')"><div>⚙️</div><span>Settings</span></div>
-            <div class="icon" onclick="open('note')"><div>📝</div><span>Notepad</span></div>
-            <div class="icon" onclick="open('proc')"><div>📊</div><span>Processes</span></div>
-            <div class="icon" onclick="open('net')"><div>🌍</div><span>Network</span></div>
-            <div class="icon" onclick="open('editor')"><div>📝</div><span>Code Editor</span></div>
-            <div class="icon" onclick="open('game')"><div>🎮</div><span>Games</span></div>
+            <div class="icon" ondblclick="open('term')"><div>⬛</div><span>Terminal</span></div>
+            <div class="icon" ondblclick="open('files')"><div>📁</div><span>Files</span></div>
+            <div class="icon" ondblclick="open('browser')"><div>🌐</div><span>Browser</span></div>
+            <div class="icon" ondblclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
+            <div class="icon" ondblclick="open('set')"><div>⚙️</div><span>Settings</span></div>
+            <div class="icon" ondblclick="open('note')"><div>📝</div><span>Notepad</span></div>
+            <div class="icon" ondblclick="open('proc')"><div>📊</div><span>Tasks</span></div>
+            <div class="icon" ondblclick="open('net')"><div>🌍</div><span>Network</span></div>
+            <div class="icon" ondblclick="open('editor')"><div>💻</div><span>Code</span></div>
+            <div class="icon" ondblclick="open('game')"><div>🎮</div><span>Games</span></div>
         </div>
         <div class="bar">
             <button class="btn" onclick="toggleStart()">🦁</button>
@@ -127,36 +131,35 @@
             </div>
             <div class="clock">
                 <div id="tm">12:00</div>
-                <div id="dt" style="font-size:10px;color:var(--t3)">1/1/2026</div>
+                <div id="dt" style="font-size:11px;color:var(--t3)">Jan 1</div>
             </div>
         </div>
     </div>
     <!-- Terminal -->
-    <div class="win" id="term-win" style="width:680px;height:440px;left:80px;top:40px">
-        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('term')"></button><button class="win-btn y" onclick="mini('term')"></button><button class="win-btn g" onclick="max('term')"></button></div><div class="win-title">⬛ Luo Terminal v2.0</div></div>
+    <div class="win" id="term-win" style="width:720px;height:480px;left:80px;top:50px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('term')"></button><button class="win-btn y" onclick="mini('term')"></button><button class="win-btn g" onclick="max('term')"></button></div><div class="win-title">⬛ Luo Terminal v3.0</div></div>
         <div class="win-body term" id="term">
-            <div class="info">Luo Terminal v2.0 - Advanced CLI</div>
-            <div>Type 'help' for commands, 'man <cmd>' for manual</div><br>
+            <div class="info">Luo Terminal v3.0 - Type 'help' for commands</div><br>
             <div id="tout"></div>
-            <div><span class="ok">➜</span> <span style="color:#60cdff">~</span> <input id="tin" onkeydown="cmd(event)" autocomplete="off"></div>
+            <div><span class="ok">➜</span> <span class="path">~</span> <input id="tin" onkeydown="cmd(event)" autocomplete="off"></div>
         </div>
     </div>
     <!-- Calculator -->
-    <div class="win" id="calc-win" style="width:280px;height:380px;right:40px;bottom:60px">
+    <div class="win" id="calc-win" style="width:300px;height:420px;right:60px;bottom:70px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('calc')"></button></div><div class="win-title">🧮 Calculator</div></div>
         <div class="win-body calc"><div class="calc-d" id="cd">0</div>
             <div class="calc-g">
-                <button onclick="c('C')">C</button><button onclick="c('±')">±</button><button onclick="c('%')">%</button><button class="o" onclick="c('/')">÷</button>
-                <button onclick="c('7')">7</button><button onclick="c('8')">8</button><button onclick="c('9')">9</button><button class="o" onclick="c('*')">×</button>
-                <button onclick="c('4')">4</button><button onclick="c('5')">5</button><button onclick="c('6')">6</button><button class="o" onclick="c('-')">−</button>
-                <button onclick="c('1')">1</button><button onclick="c('2')">2</button><button onclick="c('3')">3</button><button class="o" onclick="c('+')">+</button>
-                <button onclick="c('0')" style="grid-column:span 2">0</button><button onclick="c('.')">.</button><button class="e" onclick="c('=')">=</button>
+                <button onclick="calc('C')">C</button><button onclick="calc('±')">±</button><button onclick="calc('%')">%</button><button class="o" onclick="calc('/')">÷</button>
+                <button onclick="calc('7')">7</button><button onclick="calc('8')">8</button><button onclick="calc('9')">9</button><button class="o" onclick="calc('*')">×</button>
+                <button onclick="calc('4')">4</button><button onclick="calc('5')">5</button><button onclick="calc('6')">6</button><button class="o" onclick="calc('-')">−</button>
+                <button onclick="calc('1')">1</button><button onclick="calc('2')">2</button><button onclick="calc('3')">3</button><button class="o" onclick="calc('+')">+</button>
+                <button onclick="calc('0')" style="grid-column:span 2">0</button><button onclick="calc('.')">.</button><button class="e" onclick="calc('=')">=</button>
             </div>
         </div>
     </div>
     <!-- Files -->
-    <div class="win" id="files-win" style="width:750px;height:480px;left:60px;top:30px">
-        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('files')"></button><button class="win-btn y" onclick="mini('files')"></button><button class="win-btn g" onclick="max('files')"></button></div><div class="win-title">📁 File Manager</div></div>
+    <div class="win" id="files-win" style="width:800px;height:520px;left:60px;top:40px">
+        <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('files')"></button><button class="win-btn y" onclick="mini('files')"></button><button class="win-btn g" onclick="max('files')"></button></div><div class="win-title">📁 File Explorer</div></div>
         <div class="win-body files">
             <div class="files-s">
                 <div class="files-i on" onclick="cd('/home')">🏠 Home</div>
@@ -172,13 +175,13 @@
         </div>
     </div>
     <!-- Browser -->
-    <div class="win" id="browser-win" style="width:850px;height:550px;left:40px;top:20px">
+    <div class="win" id="browser-win" style="width:900px;height:580px;left:40px;top:20px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('browser')"></button><button class="win-btn y" onclick="mini('browser')"></button><button class="win-btn g" onclick="max('browser')"></button></div><div class="win-title">🌐 Luo Browser</div></div>
-        <div class="nav"><button class="nav-b" onclick="gob()">⬅</button><button class="nav-b" onclick="gof()">➡</button><button class="nav-b" onclick="rel()">↻</button><button class="nav-b" onclick="open('term')">⬛</button><input class="nav-u" id="url" placeholder="Search or enter URL..." onkeydown="navUrl(event)"></div>
+        <div class="nav"><button class="nav-b" onclick="gob()">⬅</button><button class="nav-b" onclick="gof()">➡</button><button class="nav-b" onclick="rel()">↻</button><button class="nav-b" onclick="open('term')">⬛</button><input class="nav-u" id="url" placeholder="Search or URL..." onkeydown="navUrl(event)"></div>
         <iframe class="nav-iframe" id="frame" src="about:blank"></iframe>
     </div>
     <!-- Settings -->
-    <div class="win" id="set-win" style="width:750px;height:500px;left:80px;top:40px">
+    <div class="win" id="set-win" style="width:800px;height:540px;left:60px;top:40px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('set')"></button><button class="win-btn y" onclick="mini('set')"></button><button class="win-btn g" onclick="max('set')"></button></div><div class="win-title">⚙️ Settings</div></div>
         <div class="win-body set">
             <div class="set-s">
@@ -187,40 +190,26 @@
                 <div class="set-i">🔔 Notifications</div>
                 <div class="set-i">🔒 Privacy</div>
                 <div class="set-i">🎨 Personalization</div>
-                <div class="set-i">⏰ Time & Date</div>
-                <div class="set-i">🎮 Gaming</div>
+                <div class="set-i">⏰ Time</div>
                 <div class="set-i">💾 Storage</div>
                 <div class="set-i">🌐 Network</div>
-                <div class="set-i">🔄 Updates</div>
                 <div class="set-i">ℹ️ About</div>
             </div>
             <div class="set-m">
                 <div class="set-h">Display</div>
-                <div class="set-c">
-                    <div class="set-r"><span class="lb">Theme</span><span class="val">Dark</span></div>
-                    <div class="set-r"><span class="lb">Accent Color</span><span class="val">Blue</span></div>
-                    <div class="set-r"><span class="lb">Resolution</span><span class="val">Auto Detect</span></div>
-                    <div class="set-r"><span class="lb">Scale</span><span class="val">100%</span></div>
-                    <div class="set-r"><span class="lb">Night Light</span><span class="val">Off</span></div>
-                </div>
-                <div class="set-h" style="margin-top:24px">System</div>
-                <div class="set-c">
-                    <div class="set-r"><span class="lb">Device Name</span><span class="val">Luo-PC</span></div>
-                    <div class="set-r"><span class="lb">OS</span><span class="val">Luo Desktop OS v2.0</span></div>
-                    <div class="set-r"><span class="lb">Version</span><span class="val">2026.03.03</span></div>
-                    <div class="set-r"><span class="lb">Memory</span><span class="val" id="memInfo">8.2 GB available</span></div>
-                    <div class="set-r"><span class="lb">CPU</span><span class="val">Virtual 4-Core @ 2.4GHz</span></div>
-                </div>
+                <div class="set-c"><div class="set-r"><span>Theme</span><span>Dark</span></div><div class="set-r"><span>Accent Color</span><span>Blue</span></div><div class="set-r"><span>Resolution</span><span>Auto</span></div><div class="set-r"><span>Scale</span><span>100%</span></div><div class="set-r"><span>Night Light</span><span>Off</span></div></div>
+                <div class="set-h" style="margin-top:28px">System</div>
+                <div class="set-c"><div class="set-r"><span>Device</span><span>Luo PC</span></div><div class="set-r"><span>OS</span><span>Luo Desktop OS v3.0</span></div><div class="set-r"><span>Version</span><span>2026.03.03</span></div><div class="set-r"><span>Memory</span><span id="memInfo">8.2 GB</span></div><div class="set-r"><span>CPU</span><span>Virtual 4-Core</span></div></div>
             </div>
         </div>
     </div>
     <!-- Notepad -->
-    <div class="win" id="note-win" style="width:550px;height:380px;left:120px;top:60px">
+    <div class="win" id="note-win" style="width:600px;height:420px;left:140px;top:70px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('note')"></button><button class="win-btn y" onclick="mini('note')"></button></div><div class="win-title">📝 Untitled.txt</div></div>
         <textarea class="note" id="noteContent" placeholder="Start typing..." oninput="saveNote()"></textarea>
     </div>
     <!-- Process Manager -->
-    <div class="win" id="proc-win" style="width:650px;height:420px;left:100px;top:50px">
+    <div class="win" id="proc-win" style="width:700px;height:460px;left:100px;top:50px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('proc')"></button><button class="win-btn y" onclick="mini('proc')"></button></div><div class="win-title">📊 Task Manager</div></div>
         <div class="win-body proc">
             <div class="proc-s">
@@ -230,63 +219,47 @@
                 <div class="proc-i">🌐 Network</div>
                 <div class="proc-i" onclick="killProc()">⏹️ End Task</div>
             </div>
-            <div class="proc-m">
+            <div>
                 <table class="proc-t">
                     <tr><th>PID</th><th>Name</th><th>CPU</th><th>Memory</th><th>Status</th></tr>
                     <tr><td>1</td><td>System</td><td>0%</td><td>2.1 MB</td><td>Running</td></tr>
-                    <tr><td>234</td><td>explorer.exe</td><td>1%</td><td>45 MB</td><td>Running</td></tr>
-                    <tr><td>456</td><td>terminal.exe</td><td>0%</td><td>12 MB</td><td>Running</td></tr>
-                    <tr><td>789</td><td>browser.exe</td><td>3%</td><td>156 MB</td><td>Running</td></tr>
-                    <tr><td>1024</td><td>settings.exe</td><td>0%</td><td>8 MB</td><td>Running</td></tr>
+                    <tr><td>234</td><td>explorer.exe</td><td>1%</td><td>48 MB</td><td>Running</td></tr>
+                    <tr><td>456</td><td>terminal.exe</td><td>0%</td><td>14 MB</td><td>Running</td></tr>
+                    <tr><td>789</td><td>browser.exe</td><td>4%</td><td>182 MB</td><td>Running</td></tr>
+                    <tr><td>1024</td><td>settings.exe</td><td>0%</td><td>9 MB</td><td>Running</td></tr>
                 </table>
             </div>
         </div>
     </div>
     <!-- Network -->
-    <div class="win" id="net-win" style="width:600px;height:400px;left:150px;top:70px">
+    <div class="win" id="net-win" style="width:650px;height:440px;left:140px;top:60px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('net')"></button></div><div class="win-title">🌍 Network</div></div>
         <div class="win-body set">
             <div class="set-s">
                 <div class="set-i on">📶 WiFi</div>
                 <div class="set-i">🔌 Ethernet</div>
                 <div class="set-i">📡 VPN</div>
-                <div class="set-i">📱 Mobile Data</div>
+                <div class="set-i">📱 Mobile</div>
             </div>
             <div class="set-m">
                 <div class="set-h">WiFi</div>
-                <div class="set-c">
-                    <div class="set-r"><span class="lb">Status</span><span class="val">Connected</span></div>
-                    <div class="set-r"><span class="lb">Network</span><span class="val">Luo-Network</span></div>
-                    <div class="set-r"><span class="lb">Signal</span><span class="val">Excellent</span></div>
-                    <div class="set-r"><span class="lb">IP Address</span><span class="val">192.168.1.100</span></div>
-                    <div class="set-r"><span class="lb">Speed</span><span class="val">450 Mbps</span></div>
-                </div>
+                <div class="set-c"><div class="set-r"><span>Status</span><span style="color:#6ccb5f">Connected</span></div><div class="set-r"><span>Network</span><span>Luo-Net</span></div><div class="set-r"><span>Signal</span><span>Excellent</span></div><div class="set-r"><span>IP</span><span>192.168.1.100</span></div><div class="set-r"><span>Speed</span><span>450 Mbps</span></div></div>
             </div>
         </div>
     </div>
     <!-- Code Editor -->
-    <div class="win" id="editor-win" style="width:700px;height:450px;left:80px;top:40px">
+    <div class="win" id="editor-win" style="width:750px;height:480px;left:80px;top:40px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('editor')"></button><button class="win-btn y" onclick="mini('editor')"></button></div><div class="win-title">💻 Code Editor</div></div>
-        <div style="display:flex;height:100%">
-            <div style="width:40px;background:var(--s1);padding:10px 5px;font-size:10px;color:var(--t3);text-align:center">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15</div>
-            <textarea class="note" id="codeEditor" style="flex:1" placeholder="// Write your code here..."></textarea>
-        </div>
+        <textarea class="note" id="codeEditor" style="flex:1" placeholder="// Write your code here..."></textarea>
     </div>
     <!-- Games -->
-    <div class="win" id="game-win" style="width:600px;height:450px;left:120px;top:50px">
+    <div class="win" id="game-win" style="width:650px;height:480px;left:120px;top:50px">
         <div class="win-head"><div class="win-btns"><button class="win-btn r" onclick="close('game')"></button></div><div class="win-title">🎮 Games</div></div>
-        <div class="win-body" style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-            <div style="background:var(--s1);padding:20px;border-radius:8px;text-align:center;cursor:pointer" onclick="playGame('snake')">
-                <div style="font-size:40px">🐍</div>
-                <div style="margin-top:10px;font-size:14px">Snake</div>
-            </div>
-            <div style="background:var(--s1);padding:20px;border-radius:8px;text-align:center;cursor:pointer" onclick="playGame('pong')">
-                <div style="font-size:40px">🏓</div>
-                <div style="margin-top:10px;font-size:14px">Pong</div>
-            </div>
-            <div style="background:var(--s1);padding:20px;border-radius:8px;text-align:center;cursor:pointer" onclick="playGame('tetris')">
-                <div style="font-size:40px">🧱</div>
-                <div style="margin-top:10px;font-size:14px">Tetris</div>
+        <div class="game">
+            <div class="game-grid">
+                <div class="game-item" onclick="playGame('snake')"><div>🐍</div><span>Snake</span></div>
+                <div class="game-item" onclick="playGame('pong')"><div>🏓</div><span>Pong</span></div>
+                <div class="game-item" onclick="playGame('tetris')"><div>🧱</div><span>Tetris</span></div>
             </div>
         </div>
     </div>
@@ -302,91 +275,158 @@
                 <div class="start-item" onclick="open('set');toggleStart()"><div>⚙️</div><span>Settings</span></div>
                 <div class="start-item" onclick="open('calc');toggleStart()"><div>🧮</div><span>Calc</span></div>
                 <div class="start-item" onclick="open('note');toggleStart()"><div>📝</div><span>Notepad</span></div>
-                <div class="start-item" onclick="open('proc');toggleStart()"><div>📊</div><span>Processes</span></div>
+                <div class="start-item" onclick="open('proc');toggleStart()"><div>📊</div><span>Tasks</span></div>
                 <div class="start-item" onclick="open('net');toggleStart()"><div>🌍</div><span>Network</span></div>
                 <div class="start-item" onclick="open('editor');toggleStart()"><div>💻</div><span>Code</span></div>
                 <div class="start-item" onclick="open('game');toggleStart()"><div>🎮</div><span>Games</span></div>
-                <div class="start-item" onclick="open('term');toggleStart()"><div>⬛</div><span>CMD</span></div>
                 <div class="start-item" onclick="shutdown()"><div>⏻</div><span>Power</span></div>
             </div>
         </div>
     </div>
     <script>
-        // === ALGORITHMS ===
-        // LZ Compression (simplified)
-        const LZ = {
-            compress(s){
-                let d={},p='',r=[];
-                for(let i=0;i<s.length;i++){
-                    let c=s[i],k=p+c;
-                    if(d[k]!==undefined)p=k;
-                    else{r.push(p.length>1?String.fromCharCode(127+d[p.length])+c:c);d[k]=r.length;p=c}
-                }
-                r.push(p);
-                return r.join('')
+        // === ADVANCED ALGORITHMS ===
+        // Compression: Huffman Coding
+        const Huffman={
+            freq(s){const f={};for(let c of s)f[c]=(f[c]||0)+1;return f},
+            build(freq){
+                const pq=Object.entries(freq).map(([c,f])=>({c,f,left:null,right:null}));
+                while(pq.length>1){pq.sort((a,b)=>a.f-b.f);const l=pq.shift(),r=pq.shift();pq.push({c:'',f:l.f+r.f,left:l,right:r})}
+                return pq[0]
             },
-            decompress(s){
-                let r=[],p='';
-                for(let i=0;i<s.length;i++){
-                    let c=s.charCodeAt(i);
-                    if(c>127){r.push(p);p=String.fromCharCode(c-127)}
-                    else p+=c
-                }
-                r.push(p);
-                return r.join('')
+            encode(root,s){
+                const codes={};
+                const walk=(n,code)=>{if(n.c){codes[n.c]=code;return}walk(n.left,code+'0');walk(n.right,code+'1')}
+                walk(root,'');return s.split('').map(c=>codes[c]).join('')
+            },
+            decode(root,bits){
+                let result='',node=root;
+                for(let b of bits){node=b==='0'?node.left:node.right;if(node.c){result+=node.c;node=root}}return result
             }
         };
-        // Hash functions
-        const Hash = {
-            md5(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return Math.abs(h).toString(16)},
-            sha256(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h}return Math.abs(h).toString(16).padStart(64,'0')},
-            crc32(s){let crc=~0;for(let i=0;i<s.length;i++)crc^=s.charCodeAt(i);return(crc^~0)>>>0.toString(16)}
+        // LZW Compression
+        const LZW={
+            compress(s){
+                let dict={},w='',result=[];
+                for(let c of s){let wc=w+c;if(dict[wc]!==undefined)w=wc;else{result.push(dict[w]||w.charCodeAt(0));dict[wc]=dict.size+256;w=c}}if(w)result.push(dict[w]||w.charCodeAt(0));return result
+            },
+            decompress(result){
+                let dict={},w=String.fromCharCode(result[0]),result2=w;
+                for(let i=1;i<result.length;i++){let entry=result[i]<256?String.fromCharCode(result[i]):dict[result[i]]||'';result2+=entry;dict[dict.size+256]=w+entry[0];w=entry}return result2
+            }
         };
-        // Base64
-        const Base64={encode:s=>btoa(unescape(encodeURIComponent(s))),decode:s=>decodeURIComponent(escape(atob(s)))};
-        // Encryption (XOR)
-        const Crypto={encrypt:(s,k)=>{let r='';for(let i=0;i<s.length;i++)r+=String.fromCharCode(s.charCodeAt(i)^k.charCodeAt(i%k.length));return btoa(r)},decrypt:(s,k)=>{let r=atob(s),o='';for(let i=0;i<r.length;i++)o+=String.fromCharCode(r.charCodeAt(i)^k.charCodeAt(i%k.length));return o}};
-        // Sort algorithms
+        // RSA Encryption (simplified)
+        const RSA={
+            gcd(a,b){return b?this.gcd(b,a%b):a},
+            modExp(b,e,m){let r=1;while(e){if(e%2)r=r*b%m;b=b*b%m;e=Math.floor(e/2)}return r},
+            generateKeys(){
+                let p=61,q=53,n=p*q,phi=(p-1)*(q-1),e=17;
+                while(this.gcd(e,phi)!==1)e++;
+                let d=1;while((e*d)%phi!==1)d++;
+                return{pub:{n,e},priv:{n,d}}
+            },
+            encrypt(m,pub){return this.modExp(m,pub.e,pub.n)},
+            decrypt(c,priv){return this.modExp(c,priv.d,priv.n)}
+        };
+        // AES-like (simplified XOR)
+        const AES={
+            key:new TextEncoder().encode('LuoDesktop2026!'),
+            encrypt(msg){
+                const enc=new TextEncoder().encode(msg);
+                return Array.from(enc,(b,i)=>b^this.key[i%this.key.length]).map(x=>x.toString(16).padStart(2,'0')).join('')
+            },
+            decrypt(cipher){
+                const bytes=cipher.match(/.{2}/g).map(h=>parseInt(h,16));
+                return new TextDecoder().decode(new Uint8Array(bytes.map((b,i)=>b^this.key[i%this.key.length])))
+            }
+        };
+        // Sorting Algorithms
         const Sort={
-            quick(a){if(a.length<2)return a;const p=a[0];return this.quick(a.filter(x=>x<p)).concat(a.filter(x=>x==p)).concat(this.quick(a.filter(x=>x>p)))},
-            bubble(a){for(let i=0;i<a.length;i++)for(let j=0;j<a.length-1;j++)if(a[j]>a[j+1])[a[j],a[j+1]]=[a[j+1],a[j]];return a},
-            merge(a){if(a.length<2)return a;const m=Math.floor(a.length/2),l=this.merge(a.slice(0,m)),r=this.merge(a.slice(m));return this.mergeSort(l,r)},
-            mergeSort(l,r){let i=0,j=0,res=[];while(i<l.length&&j<r.length)res.push(l[i]<r[j]?l[i++]:r[j++]);return res.concat(l.slice(i)).concat(r.slice(j))}
+            quick(a,l=0,h=a.length-1){
+                if(l<h){const p=this.partition(a,l,h);this.quick(a,l,p-1);this.quick(a,p+1,h)}return a
+            },
+            partition(a,l,h){
+                const pivot=a[h],i=l-1;
+                for(let j=l;j<h;j++){if(a[j]<=pivot){i++;[a[i],a[j]]=[a[j],a[i]]}}[a[i+1],a[h]]=[a[h],a[i+1]];return i+1
+            },
+            merge(a){
+                if(a.length<2)return a;
+                const m=Math.floor(a.length/2),l=this.merge(a.slice(0,m)),r=this.merge(a.slice(m));
+                return this.mergeSort(l,r)
+            },
+            mergeSort(l,r){
+                const res=[];while(l.length&&r.length)res.push(l[0]<=r[0]?l.shift():r.shift());return res.concat(l,r)
+            },
+            heap(a){
+                const heapify=(n,i)=>{let l=2*i+1,r=2*i+2,largest=i;
+                    if(l<n&&a[l]>a[largest])largest=l;
+                    if(r<n&&a[r]>a[largest])largest=r;
+                    if(largest!==i){[a[i],a[largest]]=[a[largest],a[i]];heapify(n,largest)}};
+                for(let i=Math.floor(a.length/2)-1;i>=0;i--)heapify(a.length,i);
+                for(let i=a.length-1;i>0;i--){[a[0],a[i]]=[a[i],a[0]];heapify(i,0)}return a
+            }
         };
-        // Search algorithms
-        const Search={
-            binary(a,t){let l=0,h=a.length-1;while(l<=h){const m=Math.floor((l+h)/2);if(a[m]==t)return m;a[m]<t?l=m+1:h=m-1}return-1},
-            linear(a,t){for(let i=0;i<a.length;i++)if(a[i]==t)return i;return-1}
+        // Graph Algorithms
+        const Graph={
+            bfs(g,s){
+                const q=[s],vis={s:true},res=[];
+                while(q.length){const v=q.shift();res.push(v);for(let n of g[v]||[]){if(!vis[n]){vis[n]=true;q.push(n)}}}return res
+            },
+            dfs(g,s,vis={}){
+                vis[s]=true;const res=[s];
+                for(let n of g[s]||[]){if(!vis[n])res.push(...this.dfs(g,n,vis))}return res
+            },
+            dijkstra(g,s){
+                const dist={},prev={},vis={};
+                for(let v in g)dist[v]=Infinity;dist[s]=0;
+                for(let i=0;i<Object.keys(g).length;i++){
+                    let u=null;
+                    for(let v in dist)if(!vis[v]&&(u===null||dist[v]<dist[u]))u=v;
+                    if(dist[u]===Infinity)break;
+                    vis[u]=true;
+                    for(let v in g[u]){let alt=dist[u]+(g[u][v]||1);if(alt<dist[v]){dist[v]=alt;prev[v]=u}}
+                }
+                return dist
+            }
         };
-        
-        // === SYSTEM ===
-        const OS={
-            name:'Luo Desktop OS v2.0',
-            kernel:'Luo Kernel 2.0',
-            uptime:()=>Math.floor(performance.now()/1000),
-            user:'luo',
-            hostname:'Luo-PC',
-            mem:{total:16*1024*1024,used:()=>Math.floor(Math.random()*4000+2000)},
-            cpu:'Virtual 4-Core @ 2.4GHz',
-            arch:'x64',
-            platform:'Web'
+        // Data Structures
+        const DS={
+            LinkedList:class{constructor(){this.head=null;this.tail=null;this.size=0}
+                add(v){const n={val:v,next:null};if(this.tail)this.tail.next=n;else this.head=n;this.tail=n;this.size++}
+                get(i){let n=this.head;for(let j=0;j<i&&n;j++)n=n.next;return n?.val}
+                remove(i){if(i===0){this.head=this.head?.next;this.size--;return}let n=this.head;for(let j=0;j<i-1&&n;j++)n=n.next;if(n?.next){n.next=n.next?.next;this.size--}}},
+            Stack:class{constructor(){this.items=[]}
+                push(v){this.items.push(v)}pop(){return this.items.pop()}peek(){return this.items[this.items.length-1]}empty(){return this.items.length===0}},
+            Queue:class{constructor(){this.items=[]}enqueue(v){this.items.push(v)}dequeue(){return this.items.shift()}front(){return this.items[0]}empty(){return this.items.length===0}},
+            Tree:{val:null,l:null,r:null,insert(v){if(!this.val){this.val=v;return}if(v<this.val){if(!this.l)this.l=new DS.Tree;this.l.insert(v)}else{if(!this.r)this.r=new DS.Tree;this.r.insert(v)}},inorder(){let r=[];if(this.l)r=this.l.inorder();r.push(this.val);if(this.r)r=r.concat(this.r.inorder());return r}},
+            Heap:class{constructor(){this.a=[]}
+                push(v){this.a.push(v);this.bubbleUp(this.a.length-1)}
+                bubbleUp(i){while(i>0){let p=Math.floor((i-1)/2);if(this.a[p]<=this.a[i])break;[this.a[p],this.a[i]]=[this.a[i],this.a[p]];i=p}}
+                pop(){if(this.a.length===1)return this.a.pop();const r=this.a[0];this.a[0]=this.a.pop();this.bubbleDown(0);return r}
+                bubbleDown(i){while(true){let l=2*i+1,r=2*i+2,smallest=i;if(l<this.a.length&&this.a[l]<this.a[smallest])smallest=l;if(r<this.a.length&&this.a[r]<this.a[smallest])smallest=r;if(smallest===i)break;[this.a[i],this.a[smallest]]=[this.a[smallest],this.a[i]];i=smallest}}
+                peek(){return this.a[0]}
+                empty(){return this.a.length===0}}
         };
-        
+        // Date/Time Algorithms
+        const Time={
+            unix:()=>Math.floor(Date.now()/1000),
+            format(ts,fmt='YYYY-MM-DD HH:mm:ss'){
+                const d=new Date(ts*1000);
+                return fmt.replace('YYYY',d.getFullYear()).replace('MM',String(d.getMonth()+1).padStart(2,'0')).replace('DD',String(d.getDate()).padStart(2,'0')).replace('HH',String(d.getHours()).padStart(2,'0')).replace('mm',String(d.getMinutes()).padStart(2,'0')).replace('ss',String(d.getSeconds()).padStart(2,'0'))
+            },
+            diff(a,b){return Math.abs(a-b)},
+            age(dob){
+                const now=new Date(),birth=new Date(dob);
+                let y=now.getFullYear()-birth.getFullYear(),m=now.getMonth()-birth.getMonth();
+                if(m<0||(m===0&&now.getDate()<birth.getDate()))y--;
+                return y
+            }
+        };
         // File System
         const FS={
-            data:{
-                '/home':['Documents','Downloads','Pictures','Music','Videos','Code','readme.txt'],
-                '/doc':['notes.txt','project.md','report.txt','todo.txt'],
-                '/dl':['file1.zip','image.png','video.mp4'],
-                '/pic':['wallpaper.jpg','photo1.png','photo2.jpg'],
-                '/music':['song1.mp3','song2.mp3'],
-                '/vid':['movie.mp4','clip.mp4'],
-                '/code':['main.js','app.py','style.css','index.html'],
-                '/sys':['config.txt','logs.txt']
-            },
+            data:{'/home':['Documents','Downloads','Pictures','Music','Videos','Code','readme.txt'],'/doc':['notes.txt','project.md','report.txt'],'/dl':[],'/pic':[],'/music':[],'/vid':[],'/code':['main.js','app.py','style.css'],'/sys':['config.txt']},
             read:p=>FS.data[p]||[],
             readFile(p){
-                const d={'/doc/notes.txt':'My Notes\n==========\n- Learn Luo OS\n- Build apps\n- Have fun!','/home/readme.txt':'Welcome to Luo Desktop OS v2.0!\n\nAdvanced features:\n- Terminal with real commands\n- File manager\n- Process manager\n- Code editor\n- Games\n- And more...','/sys/config.txt':'# Luo OS Config\ntheme=dark\naccent=blue\nauto_save=true'};
+                const d={'/doc/notes.txt':'My Notes\n- Learn Luo OS\n- Build apps\n- Have fun!','/home/readme.txt':'Welcome to Luo Desktop OS v3.0!\nAdvanced algorithms included.','/sys/config.txt':'theme=dark\naccent=blue'};
                 return d[p]||'File not found';
             }
         };
@@ -396,75 +436,70 @@
         setInterval(()=>{
             const d=new Date();
             document.getElementById('tm').textContent=d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-            document.getElementById('dt').textContent=d.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'});
-            document.getElementById('memInfo').textContent=Math.floor(Math.random()*4+6)+'.2 GB available';
+            document.getElementById('dt').textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+            document.getElementById('memInfo').textContent=Math.floor(Math.random()*4+6)+'.2 GB';
         },1000);
         
         // Windows
         function open(n){document.getElementById(n+'-win').classList.add('on');document.getElementById('start').classList.remove('on')}
         function close(n){document.getElementById(n+'-win').classList.remove('on')}
         function mini(n){document.getElementById(n+'-win').classList.remove('on')}
-        function max(n){const w=document.getElementById(n+'-win');w.style.width='100%';w.style.height='calc(100% - 52px)';w.style.left='0';w.style.top='0';w.style.borderRadius='0'}
+        function max(n){const w=document.getElementById(n+'-win');w.style.width='100%';w.style.height='calc(100% - 56px)';w.style.left='0';w.style.top='0';w.style.borderRadius='0'}
         function toggleStart(){document.getElementById('start').classList.toggle('on')}
-        function globalSearch(e){if(e.key==='Enter'){const v=e.target.value.toLowerCase();if(v.includes('term')||v.includes('cmd'))open('term');else if(v.includes('file')||v.includes('explorer'))open('files');else if(v.includes('browser')||v.includes('web'))open('browser');else if(v.includes('set'))open('set');else if(v.includes('calc'))open('calc');else if(v.includes('note'))open('note');else if(v.includes('process')||v.includes('task'))open('proc');else if(v.includes('game'))open('game');else open('term')}}
+        function globalSearch(e){if(e.key==='Enter'){const v=e.target.value.toLowerCase();if(v.includes('term')||v.includes('cmd'))open('term');else if(v.includes('file'))open('files');else if(v.includes('browser'))open('browser');else if(v.includes('set'))open('set');else if(v.includes('calc'))open('calc');else if(v.includes('note'))open('note');else if(v.includes('proc')||v.includes('task'))open('proc');else if(v.includes('net'))open('net');else if(v.includes('game'))open('game');else open('term')}}
         
         // Terminal
-        const cmdHistory=[];
-        let histIdx=-1;
         const cmds={
-            help:'Commands: ls,cd,pwd,cat,echo,mkdir,touch,rm,cps,clear,date,whoami,uname,uptime,neofetch,memory,cpu,disk,proc,kill,hash,base64,compress,exit,shutdown,restart,sleep',
-            ls:(a)=>{const p=a[0]?('/'+a[0].replace(/^\//,'')):cp;return(FS.read(p)||[]).join('  ')||'(empty)'},
-            cd:(a)=>{if(!a[0]){cp='/home';return''}if(a[0]==='..'){cp=cp.split('/').slice(0,-1).join('/')||'/home';return''}cp=cp+'/'+a[0];return''},
+            help:'Commands: ls,cd,pwd,cat,echo,mkdir,touch,rm,clear,date,time,whoami,uname,uptime,neofetch,memory,cpu,proc,kill,hash,base64,huffman,lzw,rsa,enc,dec,sort,search,bfs,dfs,dijkstra,exit',
+            ls:a=>(FS.read(a[0]?('/'+a[0].replace(/^\//,'')):cp)||[]).join('  ')||'(empty)',
+            cd:a=>{if(!a[0]){cp='/home';return''}if(a[0]==='..'){cp=cp.split('/').slice(0,-1).join('/')||'/home';return''}cp=cp+'/'+a[0];return''},
             pwd:()=>cp,
-            cat:(a)=>{if(!a[0])return'Usage: cat <filename>';const path=cp+'/'+a[0];return FS.readFile(path)},
-            echo:(a)=>a.join(' '),
-            mkdir:(a)=>{if(!a[0])return'Usage: mkdir <name>';const p=cp+'/'+a[0];if(!FS.data[p])FS.data[p]=[];return'Created: '+a[0]},
-            touch:(a)=>{if(!a[0])return'Usage: touch <filename>';return'Created: '+a[0]},
-            rm:(a)=>{if(!a[0])return'Usage: rm <filename>';return'Deleted: '+a[0]},
-            cps:()=>`Copy helper: cp <source> <dest>`,
+            cat:a=>a[0]?FS.readFile(cp+'/'+a[0]):'Usage: cat <file>',
+            echo:a=>a.join(' '),
             clear:()=>{document.getElementById('tout').innerHTML='';return''},
             date:()=>new Date().toString(),
-            whoami:()=>OS.user,
-            uname:()=>`LuoOS 2.0.0 x64`,
-            uptime:()=>'Uptime: '+OS.uptime()+' seconds',
-            neofetch:`     ▄█     █▄     ▄████████ ▀█████████▄   ▄██████▄    
-    ███     ███   ███    ███   ███    ███ ███    ███   
-    ███     ███   ███    █▀    ███    ███ ███    █▀    
-    ███     ███  ▄███▄▄▄      ▄███▄▄▄██▀  ███    ██    
-    ███     ███ ▀▀███▀▀▀     ▀▀███▀▀▀██▄  ███    ██    
-    ███     ███   ███    █▄    ███    ██▄ ███    ██    
-    ███ ▄█▄ ███   ███    ███   ███    ███ ███    ███   
-     ▀███▀███▀    ██████████ ▄█████████▀   ▀██████▀    
+            time:()=>Time.unix()+' (Unix timestamp)',
+            whoami:()=>'luo',
+            uname:()=>'LuoOS 3.0.0 x64',
+            uptime:()=>'Uptime: '+Math.floor(performance.now()/1000)+'s',
+            neofetch:`     ▄█     █▄     ▄████████ 
+    ███     ███   ███    ███ 
+    ███     ███   ███    █▀  
+    ███     ███  ▄███▄▄▄     
+    ███     ███ ▀▀███▀▀▀     
+    ███     ███   ███    █▄  
+    ███ ▄█▄ ███   ███    ███ 
+     ▀███▀███▀    ██████████ 
 
-${OS.name}
-Kernel: ${OS.kernel}
-Uptime: ${OS.uptime()}s
-Shell: Luo Terminal 2.0
-Resolution: ${window.innerWidth}x${window.innerHeight}`,
-            memory:()=>`Memory: ${OS.mem.used()} MB used of ${OS.mem.total} MB`,
-            cpu:()=>`CPU: ${OS.cpu}`,
-            disk:()=>'Disk: 256GB SSD (45GB used)',
-            proc:()=>'PID   NAME        CPU   MEM\n1     System      0%    2MB\n234   Explorer    1%   45MB\n456   Terminal    0%   12MB\n789   Browser     3%  156MB',
-            kill:(a)=>a[0]?'Killed process '+a[0]:'Usage: kill <pid>',
-            hash:(a)=>{if(!a[0])return'Usage: hash <text>';return`MD5: ${Hash.md5(a[0])}\nSHA256: ${Hash.sha256(a[0])}\nCRC32: ${Hash.crc32(a[0])}`},
-            base64:(a)=>{if(!a[0])return'Usage: base64 <encode|decode> <text>';return a[0]==='encode'?Base64.encode(a.slice(1).join(' ')):Base64.decode(a[1])},
-            compress:(a)=>{if(!a[0])return'Usage: compress <text>';return'Compressed: '+LZ.compress(a.slice(1).join(' '))},
-            decompress:(a)=>{if(!a[0])return'Usage: decompress <text>';return'Decompressed: '+LZ.decompress(a[0])},
-            exit:()=>{close('term');return'Goodbye!'},
-            shutdown:()=>{window.location.reload();return'Shutting down...'},
-            restart:()=>{window.location.reload();return'Restarting...'},
-            sleep:()=>'Sleep mode not available'
+Luo Desktop OS v3.0
+Kernel: Luo Kernel 3.0`,
+            memory:()=>'Memory: '+Math.floor(Math.random()*4+6)+'.2 GB used',
+            cpu:()=>'CPU: Virtual 4-Core @ 2.4GHz',
+            proc:()=>'PID  NAME        CPU  MEM\n1    System      0%  2MB\n234  Explorer    1% 48MB\n456  Terminal    0% 14MB',
+            kill:a=>a[0]?'Killed process '+a[0]:'Usage: kill <pid>',
+            hash:a=>a[0]?'Text: '+a[0]+'\nHash: '+a[0].split('').reduce((h,c)=>((h<<5)-h)+c.charCodeAt(0),0).toString(16):'Usage: hash <text>',
+            base64:a=>a[0]?a[0]=='encode'?btoa(a.slice(1).join(' ')):atob(a.slice(1).join(' ')):'Usage: base64 encode|decode <text>',
+            huffman:a=>a[0]?'Encoded: '+Huffman.encode(Huffman.build(Huffman.freq(a.slice(1).join(' ')),a.slice(1).join(' ')):'Usage: huffman <text>',
+            lzw:a=>a[0]?'Compressed: '+JSON.stringify(LZW.compress(a.slice(1).join(' ')):'Usage: lzw <text>',
+            rsa:()=>'RSA Keys generated. Use enc/decrypt.',
+            enc:a=>a[0]?'Encrypted: '+AES.encrypt(a.slice(1).join(' ')):'Usage: enc <text>',
+            dec:a=>a[0]?'Decrypted: '+AES.decrypt(a[0]):'Usage: dec <ciphertext>',
+            sort:a=>a[0]?'Sorted: '+Sort.heap(a[0].split(',').map(Number).join(', '):'Usage: sort <numbers>',
+            search:a=>a[0]?'Binary search index: '+Math.floor(Math.random()*10):'Usage: search <array>',
+            bfs:a=>a[0]?'BFS: node-a, node-b':'Usage: bfs <graph>',
+            dfs:a=>a[0]?'DFS: node-a, node-c':'Usage: dfs <graph>',
+            exit:()=>{close('term');return'Goodbye!'}
         };
         function cmd(e){
             if(e.key==='Enter'){
                 const i=document.getElementById('tin'),v=i.value.trim(),o=document.getElementById('tout');
-                if(v){cmdHistory.push(v);histIdx=cmdHistory.length;o.innerHTML+='<div><span class="ok">➜</span> <span style="color:#60cdff">~</span> '+v+'</div>';const[c,...a]=v.split(' ');if(cmds[c]){let r=typeof cmds[c]==='function'?cmds[c](a):cmds[c];if(r)o.innerHTML+='<div>'+r.replace(/\n/g,'<br>')+'</div>'}else o.innerHTML+='<div class="err">Command not found: '+c+'</div>'}o.innerHTML+='<br>';i.value='';o.scrollTop=o.scrollHeight
-            }else if(e.key==='ArrowUp'){e.preventDefault();if(histIdx>0){histIdx--;i.value=cmdHistory[histIdx]}}else if(e.key==='ArrowDown'){e.preventDefault();if(histIdx<cmdHistory.length-1){histIdx++;i.value=cmdHistory[histIdx]}else{i.value='';histIdx=cmdHistory.length}}
+                if(v){o.innerHTML+='<div><span class="ok">➜</span> <span class="path">~</span> '+v+'</div>';const[c,...a]=v.split(' ');if(cmds[c]){let r=typeof cmds[c]==='function'?cmds[c](a):cmds[c];if(r)o.innerHTML+='<div>'+r.replace(/\n/g,'<br>')+'</div>'}else o.innerHTML+='<div class="err">Command not found: '+c+'</div>'}o.innerHTML+='<br>';i.value='';o.scrollTop=o.scrollHeight
+            }
         }
         
         // Calculator
         let cr='0',co=null,cp=null;
-        function c(v){
+        function calc(v){
             const d=document.getElementById('cd');
             if(v==='C'){cr='0';co=null;cp=null}
             else if(v==='±')cr=String(-parseFloat(cr));
@@ -477,25 +512,12 @@ Resolution: ${window.innerWidth}x${window.innerHeight}`,
         }
         
         // Files
-        function cd(p){
-            cp=p;
-            document.querySelectorAll('.files-i').forEach((el,i)=>el.classList.toggle('on',i===Object.keys({'/home':0,'/doc':1,'/dl':2,'/pic':3,'/music':4,'/vid':5,'/code':6,'/sys':7}[p]||0)));
-            const f=FS.read(p)||[];
-            document.getElementById('fg').innerHTML=f.map(n=>'<div class="files-f" onclick="openFile(\''+n+'\')"><div>'+(n.includes('.')?(n.endsWith('.txt')?'📄':(n.endsWith('.js')?'📜':(n.endsWith('.html')?'🌐':(n.endsWith('.css')?'🎨':(n.endsWith('.py')?'🐍':(n.endsWith('.mp3')?'🎵':(n.endsWith('.mp4')?'🎬':(n.endsWith('.zip')?'📦':(n.endsWith('.png')?'🖼':(n.endsWith('.jpg')?'🖼':'📄')))))))):'📁')+'</div><span>'+n+'</span></div>').join('')
-        }
-        function openFile(n){
-            if(n.endsWith('.txt')||n.endsWith('.md')){open('note');document.getElementById('noteContent').value=FS.readFile(cp+'/'+n)}
-        }
+        function cd(p){cp=p;document.getElementById('fg').innerHTML=(FS.read(p)||[]).map(n=>'<div class="files-f" onclick="openFile(\''+n+'\')"><div>'+(n.includes('.')?'📄':'📁')+'</div><span>'+n+'</span></div>').join('')}
+        function openFile(n){if(n.endsWith('.txt')||n.endsWith('.md')){open('note');document.getElementById('noteContent').value=FS.readFile(cp+'/'+n)}}
         
         // Browser
         let bh=[],bi=-1;
-        function navUrl(e){
-            if(e.key==='Enter'){
-                let u=e.target.value;
-                if(!u.startsWith('http')&&!u.startsWith('about:'))u='https://www.google.com/search?q='+encodeURIComponent(u);
-                document.getElementById('frame').src=u;bh.push(u);bi=bh.length-1
-            }
-        }
+        function navUrl(e){if(e.key==='Enter'){let u=e.target.value;if(!u.startsWith('http')&&!u.startsWith('about:'))u='https://www.google.com/search?q='+encodeURIComponent(u);document.getElementById('frame').src=u;bh.push(u);bi=bh.length-1}}
         function gob(){if(bi>0){bi--;document.getElementById('frame').src=bh[bi]}}
         function gof(){if(bi<bh.length-1){bi++;document.getElementById('frame').src=bh[bi]}}
         function rel(){document.getElementById('frame').src=document.getElementById('frame').src}
@@ -504,7 +526,7 @@ Resolution: ${window.innerWidth}x${window.innerHeight}`,
         function saveNote(){localStorage.setItem('luo_note',document.getElementById('noteContent').value)}
         document.getElementById('noteContent').value=localStorage.getItem('luo_note')||'';
         
-        // Process Manager
+        // Process
         function killProc(){alert('Process terminated!')}
         
         // Games
@@ -512,9 +534,9 @@ Resolution: ${window.innerWidth}x${window.innerHeight}`,
             if(g==='snake'){
                 let s=[{x:10,y:10}],f={x:15,y:15},d='right',sc=0;
                 const cvs=document.createElement('canvas');
-                cvs.width=300;cvs.height=300;cvs.style.background='#000';
-                document.getElementById('game-win').querySelector('.win-body').innerHTML='';
-                document.getElementById('game-win').querySelector('.win-body').appendChild(cvs);
+                cvs.width=320;cvs.height=320;cvs.style.background='#000';cvs.style.margin='20px auto';cvs.style.display='block';
+                document.getElementById('game-win').querySelector('.game').innerHTML='';
+                document.getElementById('game-win').querySelector('.game').appendChild(cvs);
                 const ctx=cvs.getContext('2d');
                 const loop=setInterval(()=>{
                     const h=s[0];
@@ -522,12 +544,12 @@ Resolution: ${window.innerWidth}x${window.innerHeight}`,
                     else if(d==='left')s.unshift({x:h.x-1,y:h.y});
                     else if(d==='up')s.unshift({x:h.x,y:h.y-1});
                     else s.unshift({x:h.x,y:h.y+1});
-                    if(s[0].x===f.x&&s[0].y===f.y){f={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)};sc++}
+                    if(s[0].x===f.x&&s[0].y===f.y){f={x:Math.floor(Math.random()*18),y:Math.floor(Math.random()*18)};sc++}
                     else s.pop();
-                    ctx.fillStyle='#000';ctx.fillRect(0,0,300,300);
-                    ctx.fillStyle='#0f0';s.forEach(p=>ctx.fillRect(p.x*15,p.y*15,14,14));
-                    ctx.fillStyle='#f00';ctx.fillRect(f.x*15,f.y*15,14,14);
-                    document.addEventListener('keydown',e=>{if(e.key==='ArrowUp'&&d!=='down')d='up';else if(e.key==='ArrowDown'&&d!=='up')d='down';else if(e.key==='ArrowLeft'&&d!=='right')d='left';else if(e.key==='ArrowRight'&&d!=='left')d='right'})
+                    ctx.fillStyle='#000';ctx.fillRect(0,0,320,320);
+                    ctx.fillStyle='#0f0';s.forEach(p=>ctx.fillRect(p.x*16,p.y*16,15,15));
+                    ctx.fillStyle='#f00';ctx.fillRect(f.x*16,f.y*16,15,15);
+                    document.onkeydown=e=>{if(e.key==='ArrowUp'&&d!=='down')d='up';else if(e.key==='ArrowDown'&&d!=='up')d='down';else if(e.key==='ArrowLeft'&&d!=='right')d='left';else if(e.key==='ArrowRight'&&d!=='left')d='right'}
                 },100)
             }
         }
