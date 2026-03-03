@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>Luo Bookmarks</title>
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui;background:#0f172a;color:#f8fafc;min-height:100vh}.header{background:linear-gradient(135deg,#6366f1,#ec4899);padding:20px 30px}.logo{font-size:24px;font-weight:700}.container{max-width:800px;margin:0 auto;padding:30px}.folder{background:#1e293b;border-radius:15px;padding:20px;margin-bottom:15px}.folder-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;cursor:pointer}.folder-title{font-weight:600;display:flex;align-items:center;gap:10px}.bookmark{display:flex;align-items:center;gap:12px;padding:12px;background:#334155;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all 0.2s}.bookmark:hover{background:#475569}.bookmark-icon{font-size:20px}.bookmark-title{flex:1;font-weight:500}.bookmark-url{color:#94a3b8;font-size:13px;font-family:monospace}.add-btn{background:linear-gradient(135deg,#6366f1,#ec4899);border:none;color:white;padding:12px 25px;border-radius:25px;font-weight:600;cursor:pointer;margin-bottom:30px}</style>
+</head>
+<body>
+<div class="header"><div class="logo">🔖 Luo Bookmarks</div></div>
+<div class="container">
+<button class="add-btn">+ Add Bookmark</button>
+<div class="folder">
+<div class="folder-header"><div class="folder-title">📁 Quick Access</div></div>
+<div class="bookmark" onclick="window.location.href='luo://home'"><span class="bookmark-icon">🏠</span><span class="bookmark-title">Home</span><span class="bookmark-url">luo://home</span></div>
+<div class="bookmark" onclick="window.location.href='luo://search'"><span class="bookmark-icon">🔍</span><span class="bookmark-title">Search</span><span class="bookmark-url">luo://search</span></div>
+<div class="bookmark" onclick="window.location.href='luo://mail'"><span class="bookmark-icon">📧</span><span class="bookmark-title">Mail</span><span class="bookmark-url">luo://mail</span></div>
+<div class="bookmark" onclick="window.location.href='luo://chat'"><span class="bookmark-icon">💬</span><span class="bookmark-title">Chat</span><span class="bookmark-url">luo://chat</span></div>
+</div>
+<div class="folder">
+<div class="folder-header"><div class="folder-title">📁 AI Resources</div></div>
+<div class="bookmark"><span class="bookmark-icon">🤖</span><span class="bookmark-title">Luo AI</span><span class="bookmark-url">luo://ai</span></div>
+<div class="bookmark"><span class="bookmark-icon">📚</span><span class="bookmark-title">Documentation</span><span class="bookmark-url">luo://docs</span></div>
+</div>
+</div>
+</body>
+</html>

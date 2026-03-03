@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Media - Streaming & Entertainment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, #1e1b4b, #0f172a); padding: 20px 30px; border-bottom: 1px solid #334155; }
+        .logo { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .hero { background: linear-gradient(135deg, #6366f1, #ec4899); padding: 60px 30px; text-align: center; }
+        .hero h1 { font-size: 48px; margin-bottom: 15px; }
+        .hero p { font-size: 18px; opacity: 0.9; }
+        .categories { padding: 30px; display: flex; gap: 15px; overflow-x: auto; }
+        .category { background: #1e293b; padding: 15px 25px; border-radius: 25px; white-space: nowrap; cursor: pointer; transition: all 0.3s; }
+        .category:hover, .category.active { background: #6366f1; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 30px; }
+        .card { background: #1e293b; border-radius: 15px; overflow: hidden; cursor: pointer; transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2); }
+        .card-thumb { height: 150px; background: linear-gradient(135deg, #334155, #475569); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+        .card-info { padding: 15px; }
+        .card-title { font-weight: 600; margin-bottom: 5px; }
+        .card-meta { color: #94a3b8; font-size: 13px; display: flex; justify-content: space-between; }
+        .card-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🎬 Luo Media</div>
+    </div>
+    <div class="hero">
+        <h1>Unlimited Entertainment 🎥</h1>
+        <p>Stream movies, music, and more in the Luoverse</p>
+    </div>
+    <div class="categories">
+        <div class="category active">All</div>
+        <div class="category">Movies</div>
+        <div class="category">Music</div>
+        <div class="category">TV Shows</div>
+        <div class="category">Podcasts</div>
+        <div class="category">Live</div>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <div class="card-thumb">🎬</div>
+            <div class="card-info">
+                <div class="card-title">The Luo Adventure</div>
+                <div class="card-meta"><span>2024</span><span class="card-badge">NEW</span></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-thumb">🎵</div>
+            <div class="card-info">
+                <div class="card-title">Luo Beats Vol. 1</div>
+                <div class="card-meta"><span>Music Album</span><span>▶ 12 tracks</span></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-thumb">📺</div>
+            <div class="card-info">
+                <div class="card-title">AI Chronicles</div>
+                <div class="card-meta"><span>S1 E1</span><span class="card-badge">HOT</span></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-thumb">🎙️</div>
+            <div class="card-info">
+                <div class="card-title">Tech Talk Daily</div>
+                <div class="card-meta"><span>Podcast</span><span>Ep. 42</span></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-thumb">🎮</div>
+            <div class="card-info">
+                <div class="card-title">Luo Gaming Live</div>
+                <div class="card-meta"><span>Live</span><span style="color: #22c55e;">● ON AIR</span></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-thumb">🎥</div>
+            <div class="card-info">
+                <div class="card-title">Documentary: The Luoverse</div>
+                <div class="card-meta"><span>Documentary</span><span>1h 30m</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

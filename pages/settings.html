@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>Luo Settings</title>
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui;background:#0f172a;color:#f8fafc;min-height:100vh}.header{background:linear-gradient(135deg,#6366f1,#ec4899);padding:20px 30px}.logo{font-size:24px;font-weight:700}.container{max-width:700px;margin:0 auto;padding:30px}.section{background:#1e293b;border-radius:15px;padding:25px;margin-bottom:20px}.section h2{font-size:18px;margin-bottom:20px;display:flex;align-items:center;gap:10px}.setting{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid #334155}.setting:last-child{border:none}.setting-info h3{font-size:15px;margin-bottom:3px}.setting-info p{color:#94a3b8;font-size:13px}.toggle{width:50px;height:28px;background:#334155;border-radius:14px;position:relative;cursor:pointer;transition:background 0.3s}.toggle.active{background:#6366f1}.toggle::after{content:'';position:absolute;width:22px;height:22px;background:white;border-radius:50%;top:3px;left:3px;transition:transform 0.3s}.toggle.active::after{transform:translateX(22px)}.select{background:#334155;border:none;color:#f8fafc;padding:10px 15px;border-radius:8px;cursor:pointer}</style>
+</head>
+<body>
+<div class="header"><div class="logo">⚙️ Luo Settings</div></div>
+<div class="container">
+<div class="section"><h2>🔐 Privacy & Security</h2><div class="setting"><div class="setting-info"><h3>Block Trackers</h3><p>Prevent websites from tracking you</p></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div><div class="setting"><div class="setting-info"><h3>AI Access Control</h3><p>Allow AI agents to access browser</p></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div><div class="setting"><div class="setting-info"><h3>Clear History on Exit</h3><p>Automatically clear browsing data</p></div><div class="toggle" onclick="this.classList.toggle('active')"></div></div></div>
+<div class="section"><h2>🎨 Appearance</h2><div class="setting"><div class="setting-info"><h3>Theme</h3><p>Choose your preferred look</p></div><select class="select"><option>Dark</option><option>Light</option><option>Auto</option></select></div><div class="setting"><div class="setting-info"><h3>Default Page</h3><p>Page to show on new tabs</p></div><select class="select"><option>luo://home</option><option>luo://search</option><option>Blank</option></select></div></div>
+<div class="section"><h2>🤖 AI Settings</h2><div class="setting"><div class="setting-info"><h3>AI Agent API</h3><p>Enable API access for AI agents</p></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div><div class="setting"><div class="setting-info"><h3>Auto-Complete with AI</h3><p>Use AI to suggest URLs</p></div><div class="toggle active" onclick="this.classList.toggle('active')"></div></div></div>
+</div>
+</body>
+</html>
