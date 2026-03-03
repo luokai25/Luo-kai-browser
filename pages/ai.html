@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo AI - AI Assistant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: linear-gradient(135deg, #0f172a, #1e1b4b); color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 800px; width: 100%; padding: 40px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 72px; margin-bottom: 20px; }
+        .title { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: #94a3b8; font-size: 18px; margin-top: 10px; }
+        .chat-container { background: #1e293b; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .messages { height: 400px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .message { max-width: 80%; padding: 15px 20px; border-radius: 20px; line-height: 1.6; }
+        .message.ai { align-self: flex-start; background: #334155; border-bottom-left-radius: 5px; }
+        .message.user { align-self: flex-end; background: linear-gradient(135deg, #6366f1, #ec4899); border-bottom-right-radius: 5px; }
+        .input-area { padding: 20px; border-top: 1px solid #334155; display: flex; gap: 10px; }
+        .input { flex: 1; background: #334155; border: none; border-radius: 25px; padding: 15px 20px; color: #f8fafc; font-size: 15px; outline: none; }
+        .send-btn { background: linear-gradient(135deg, #6366f1, #ec4899); border: none; color: white; width: 50px; height: 50px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; }
+        .feature { background: #1e293b; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .feature:hover { background: #334155; transform: translateY(-3px); }
+        .feature-icon { font-size: 28px; margin-bottom: 10px; }
+        .feature-name { font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🤖</div>
+            <h1 class="title">Luo AI</h1>
+            <p class="subtitle">Your intelligent companion in the Luoverse</p>
+        </div>
+        <div class="chat-container">
+            <div class="messages">
+                <div class="message ai">
+                    Hello! I'm Luo AI 🤖<br><br>
+                    I can help you with:<br>
+                    • Navigating luo:// sites<br>
+                    • Answering questions<br>
+                    • Writing code<br>
+                    • And much more!<br><br>
+                    What can I help you with today?
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" class="input" placeholder="Ask me anything..." id="userInput">
+                <button class="send-btn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+        <div class="features">
+            <div class="feature" onclick="quickAsk('What is luo:// protocol?')">
+                <div class="feature-icon">📚</div>
+                <div class="feature-name">Learn</div>
+            </div>
+            <div class="feature" onclick="quickAsk('Help me navigate')">
+                <div class="feature-icon">🧭</div>
+                <div class="feature-name">Navigate</div>
+            </div>
+            <div class="feature" onclick="quickAsk('Write code')">
+                <div class="feature-icon">💻</div>
+                <div class="feature-name">Code</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const input = document.getElementById('userInput');
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+        
+        function sendMessage() {
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            const messages = document.querySelector('.messages');
+            messages.innerHTML += `<div class="message user">${msg}</div>`;
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            
+            setTimeout(() => {
+                const responses = {
+                    'search': '🔍 I can help you search! Try luo://search',
+                    'mail': '📧 Want to check your email? Visit luo://mail',
+                    'chat': '💬 Let\'s chat! Go to luo://chat',
+                    'docs': '📚 Check out the docs at luo://docs',
+                    'media': '🎬 Enjoy some media at luo://media'
+                };
+                const lower = msg.toLowerCase();
+                let response = 'I\'m here to help! You can navigate to different luo:// sites using the browser.';
+                for (const [key, val] of Object.entries(responses)) {
+                    if (lower.includes(key)) response = val;
+                }
+                messages.innerHTML += `<div class="message ai">${response}</div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+        }
+        
+        function quickAsk(q) {
+            document.getElementById('userInput').value = q;
+            sendMessage();
+        }
+    </script>
+</body>
+</html>
