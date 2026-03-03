@@ -191,18 +191,18 @@
         </div>
         
         <div class="desktop" id="icons">
-            <div class="icon" data-id="term" ondblclick="open('term')"><div>⬛</div><span>Terminal</span></div>
-            <div class="icon" data-id="files" ondblclick="open('files')"><div>📁</div><span>Files</span></div>
-            <div class="icon" data-id="browser" ondblclick="open('browser')"><div>🌐</div><span>Browser</span></div>
-            <div class="icon" data-id="calc" ondblclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
-            <div class="icon" data-id="note" ondblclick="open('note')"><div>📝</div><span>Notepad</span></div>
-            <div class="icon" data-id="set" ondblclick="open('set')"><div>⚙️</div><span>Settings</span></div>
-            <div class="icon" data-id="game" ondblclick="open('game')"><div>🎮</div><span>Games</span></div>
-            <div class="icon" data-id="music" ondblclick="open('music')"><div>🎵</div><span>Music</span></div>
-            <div class="icon" data-id="cal" ondblclick="open('cal')"><div>📅</div><span>Calendar</span></div>
-            <div class="icon" data-id="weather" ondblclick="open('weather')"><div>🌤️</div><span>Weather</span></div>
-            <div class="icon" data-id="email" ondblclick="open('email')"><div>📧</div><span>Email</span></div>
-            <div class="icon" data-id="store" ondblclick="open('store')"><div>🛒</div><span>Store</span></div>
+            <div class="icon" data-id="term" onclick="open('term')"><div>⬛</div><span>Terminal</span></div>
+            <div class="icon" data-id="files" onclick="open('files')"><div>📁</div><span>Files</span></div>
+            <div class="icon" data-id="browser" onclick="open('browser')"><div>🌐</div><span>Browser</span></div>
+            <div class="icon" data-id="calc" onclick="open('calc')"><div>🧮</div><span>Calculator</span></div>
+            <div class="icon" data-id="note" onclick="open('note')"><div>📝</div><span>Notepad</span></div>
+            <div class="icon" data-id="set" onclick="open('set')"><div>⚙️</div><span>Settings</span></div>
+            <div class="icon" data-id="game" onclick="open('game')"><div>🎮</div><span>Games</span></div>
+            <div class="icon" data-id="music" onclick="open('music')"><div>🎵</div><span>Music</span></div>
+            <div class="icon" data-id="cal" onclick="open('cal')"><div>📅</div><span>Calendar</span></div>
+            <div class="icon" data-id="weather" onclick="open('weather')"><div>🌤️</div><span>Weather</span></div>
+            <div class="icon" data-id="email" onclick="open('email')"><div>📧</div><span>Email</span></div>
+            <div class="icon" data-id="store" onclick="open('store')"><div>🛒</div><span>Store</span></div>
         </div>
         
         <div class="taskbar" id="taskbar"></div>
@@ -486,7 +486,7 @@
             cp=p;
             document.getElementById('fg').innerHTML=(FS[p]||[]).map(f=>{
                 const isDir=!f.includes('.');
-                return'<div class="files-f" ondblclick="'+(isDir?'cd(\''+p+'/'+f+'\'):openFile(\''+f+'\')')+'"><div>'+(isDir?'📁':'📄')+'</div><span>'+f+'</span></div>'
+                return'<div class="files-f" onclick="'+(isDir?'cd(\''+p+'/'+f+'\'):openFile(\''+f+'\')')+'"><div>'+(isDir?'📁':'📄')+'</div><span>'+f+'</span></div>'
             }).join('')||'<div style="color:#666;padding:20px">Empty</div>';
         }
         cd('/home');
@@ -725,7 +725,7 @@
             const name=prompt('Icon name:');
             if(name){
                 const icons=document.getElementById('icons');
-                icons.innerHTML+=`<div class="icon" data-id="new${Date.now()}" ondblclick="showNotif('Opening ${name}')"><div>📄</div><span>${name}</span></div>`;
+                icons.innerHTML+=`<div class="icon" data-id="new${Date.now()}" onclick="showNotif('Opening ${name}')"><div>📄</div><span>${name}</span></div>`;
             }
         }
         
