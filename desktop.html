@@ -1212,23 +1212,12 @@
             const bar = document.getElementById('boot-bar');
             const status = document.getElementById('boot-status');
             
-            const steps = [
-                {p: 10, s: 'Loading kernel...'},
-                {p: 25, s: 'Initializing file system...'},
-                {p: 40, s: 'Loading drivers...'},
-                {p: 55, s: 'Starting services...'},
-                {p: 70, s: 'Loading desktop...'},
-                {p: 85, s: 'Preparing environment...'},
-                {p: 100, s: 'Welcome!'}
-            ];
-            
-            for (const step of steps) {
-                bar.style.width = step.p + '%';
-                status.textContent = step.s;
-                await sleep(200 + Math.random() * 200);
-            }
-            
-            await sleep(500);
+            bar.style.width = '50%';
+            status.textContent = 'Loading...';
+            await sleep(200);
+            bar.style.width = '100%';
+            status.textContent = 'Ready!';
+            await sleep(200);
             document.getElementById('boot').classList.add('hidden');
         }
         
