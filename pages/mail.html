@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luo Mail - Your Luoverse Email</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .header {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 28px; font-weight: 700; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ec4899;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            padding: 20px;
+            height: calc(100vh - 80px);
+            position: fixed;
+        }
+        .compose-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+        .folder { padding: 12px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .folder:hover { background: #334155; }
+        .folder.active { background: #6366f1; }
+        .folder-icon { font-size: 18px; }
+        .folder-name { flex: 1; }
+        .folder-count { background: #6366f1; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+        .main { margin-left: 250px; padding: 30px; }
+        .email-list { background: #1e293b; border-radius: 15px; overflow: hidden; }
+        .email-item {
+            padding: 20px;
+            border-bottom: 1px solid #334155;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .email-item:hover { background: #334155; }
+        .email-item.unread { border-left: 3px solid #6366f1; }
+        .email-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .email-content { flex: 1; min-width: 0; }
+        .email-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .email-sender { font-weight: 600; }
+        .email-time { color: #94a3b8; font-size: 13px; }
+        .email-subject { font-weight: 600; margin-bottom: 5px; }
+        .email-preview { color: #94a3b8; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">📧 Luo Mail</div>
+        <div class="user-info">
+            <span>user@luo.mail</span>
+            <div class="avatar">U</div>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <button class="compose-btn">✏️ Compose</button>
+        <div class="folder active"><span class="folder-icon">📥</span><span class="folder-name">Inbox</span><span class="folder-count">12</span></div>
+        <div class="folder"><span class="folder-icon">📤</span><span class="folder-name">Sent</span></div>
+        <div class="folder"><span class="folder-icon">📝</span><span class="folder-name">Drafts</span></div>
+        <div class="folder"><span class="folder-icon">🗑️</span><span class="folder-name">Trash</span></div>
+        <div class="folder"><span class="folder-icon">⭐</span><span class="folder-name">Starred</span></div>
+    </div>
+    
+    <div class="main">
+        <h2 style="margin-bottom: 20px;">Inbox (12)</h2>
+        <div class="email-list">
+            <div class="email-item unread">
+                <div class="email-avatar" style="background: #22c55e;">AI</div>
+                <div class="email-content">
+                    <div class="email-header"><span class="email-sender">AI Assistant</span><span class="email-time">2 min ago</span></div>
+                    <div class="email-subject">Welcome to Luo Mail! 🎉</div>
+                    <div class="email-preview">Your new email is ready. Start communicating across the Luoverse...</div>
+                </div>
+            </div>
+            <div class="email-item unread">
+                <div class="email-avatar" style="background: #f59e0b;">N</div>
+                <div class="email-content">
+                    <div class="email-header"><span class="email-sender">Luo News</span><span class="email-time">1 hour ago</span></div>
+                    <div class="email-subject">Your daily Luoverse briefing</div>
+                    <div class="email-preview">Top stories: New AI features, community highlights, and more...</div>
+                </div>
+            </div>
+            <div class="email-item">
+                <div class="email-avatar" style="background: #ec4899;">C</div>
+                <div class="email-content">
+                    <div class="email-header"><span class="email-sender">Luo Chat</span><span class="email-time">3 hours ago</span></div>
+                    <div class="email-subject">New message from community</div>
+                    <div class="email-preview">You have new messages in your chats...</div>
+                </div>
+            </div>
+            <div class="email-item">
+                <div class="email-avatar" style="background: #6366f1;">S</div>
+                <div class="email-content">
+                    <div class="email-header"><span class="email-sender">Luo Store</span><span class="email-time">Yesterday</span></div>
+                    <div class="email-subject">Your order has shipped! 📦</div>
+                    <div class="email-preview">Great news! Your order is on its way...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
