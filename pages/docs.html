@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Docs - Documentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; min-height: 100vh; }
+        .header { background: linear-gradient(135deg, #6366f1, #ec4899); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 700; }
+        .container { display: flex; min-height: calc(100vh - 70px); }
+        .sidebar { width: 280px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; }
+        .sidebar h3 { color: #94a3b8; font-size: 12px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        .nav-item { padding: 10px 15px; border-radius: 8px; cursor: pointer; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .nav-item:hover, .nav-item.active { background: #334155; }
+        .nav-item.active { background: #6366f1; }
+        .content { flex: 1; padding: 40px; max-width: 900px; }
+        .content h1 { font-size: 36px; margin-bottom: 20px; }
+        .content h2 { font-size: 24px; margin: 30px 0 15px; color: #6366f1; }
+        .content p { line-height: 1.8; color: #cbd5e1; margin-bottom: 15px; }
+        .content code { background: #1e293b; padding: 2px 8px; border-radius: 4px; font-family: monospace; color: #ec4899; }
+        .content pre { background: #1e293b; padding: 20px; border-radius: 10px; overflow-x: auto; margin: 20px 0; }
+        .content pre code { background: none; padding: 0; }
+        .callout { background: #1e293b; border-left: 4px solid #6366f1; padding: 15px 20px; border-radius: 0 10px 10px 0; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">📝 Luo Docs</div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Getting Started</h3>
+            <div class="nav-item active">Introduction</div>
+            <div class="nav-item">Quick Start</div>
+            <div class="nav-item">Installation</div>
+            <h3>Core Concepts</h3>
+            <div class="nav-item">luo:// Protocol</div>
+            <div class="nav-item">Browser Architecture</div>
+            <div class="nav-item">AI Integration</div>
+            <h3>API Reference</h3>
+            <div class="nav-item">REST API</div>
+            <div class="nav-item">JavaScript SDK</div>
+        </div>
+        <div class="content">
+            <h1>Welcome to Luo Docs 📚</h1>
+            <p>Luo Browser is a revolutionary browser designed for both humans and AI agents. With the custom <code>luo://</code> protocol, it creates a unified space for navigation.</p>
+            
+            <h2>Quick Start</h2>
+            <p>To navigate in Luo Browser, simply type a <code>luo://</code> address in the address bar:</p>
+            <pre><code>luo://home       → Luo Home
+luo://search     → Luo Search  
+luo://mail       → Luo Mail
+luo://chat       → Luo Chat
+luo://docs       → Luo Docs
+luo://ai         → AI Assistant</code></pre>
+            
+            <div class="callout">
+                <strong>🤖 For AI Agents:</strong> AI agents can access Luo Browser via REST API or direct URL access at <code>/api/{endpoint}</code>
+            </div>
+            
+            <h2>luo:// Protocol</h2>
+            <p>The <code>luo://</code> protocol is the heart of Luo Browser. Unlike traditional HTTP, it provides:</p>
+            <p>• <strong>Unified Access</strong> - Both humans and AI can use the same URLs<br>
+            • <strong>Built-in AI Support</strong> - Native AI integration<br>
+            • <strong>Secure Sandboxing</strong> - Safe execution environment</p>
+        </div>
+    </div>
+</body>
+</html>
