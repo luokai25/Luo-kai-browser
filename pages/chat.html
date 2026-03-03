@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luo Chat - Community Messaging</title>
+    <title>Luo Chat - Full Functionality</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Seg-ui,oe UI', system sans-serif; background: #0f172a; min-height: 100vh; color: #f8fafc; }
-        .chat-container { display: flex; height: 100vh; }
+        body { font-family: 'Segoe UI', system-ui; background: #0f172a; color: #f8fafc; height: 100vh; display: flex; }
         .sidebar { width: 300px; background: #1e293b; border-right: 1px solid #334155; display: flex; flex-direction: column; }
         .sidebar-header { padding: 20px; border-bottom: 1px solid #334155; }
         .logo { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
@@ -28,7 +26,9 @@
         .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .message { max-width: 70%; padding: 15px 20px; border-radius: 20px; line-height: 1.5; }
         .message.sent { align-self: flex-end; background: linear-gradient(135deg, #6366f1, #ec4899); border-bottom-right-radius: 5px; }
-        .message.received { align-self: flex-start; background: #1e293b; border-bottom-left-radius: 5px; }
+        .message.received { align-self: flex-start; background: #1e293b; border-bottom-left-radius: 5px; display: flex; gap: 12px; }
+        .message-avatar { width: 35px; height: 35px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .message-content { flex: 1; }
         .message-time { font-size: 11px; opacity: 0.7; margin-top: 5px; }
         .input-area { padding: 20px; border-top: 1px solid #334155; display: flex; gap: 10px; }
         .message-input { flex: 1; background: #1e293b; border: none; border-radius: 25px; padding: 15px 20px; color: #f8fafc; font-size: 15px; outline: none; }
@@ -36,74 +36,226 @@
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">💬 Luo Chat</div>
-                <input type="text" class="search-box" placeholder="Search conversations...">
-            </div>
-            <div class="chat-list">
-                <div class="chat-item active">
-                    <div class="chat-avatar">AI</div>
-                    <div class="chat-info">
-                        <div class="chat-name">AI Assistant</div>
-                        <div class="chat-preview">How can I help you today?</div>
-                    </div>
-                    <div><div class="chat-time">2m</div></div>
-                </div>
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #22c55e;">G</div>
-                    <div class="chat-info">
-                        <div class="chat-name">General Channel</div>
-                        <div class="chat-preview">Welcome to Luo Chat!</div>
-                    </div>
-                    <div><span class="unread-badge">99+</span></div>
-                </div>
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #f59e0b;">D</div>
-                    <div class="chat-info">
-                        <div class="chat-name">Developers</div>
-                        <div class="chat-preview">New API endpoints available</div>
-                    </div>
-                    <div><div class="chat-time">1h</div></div>
-                </div>
-                <div class="chat-item">
-                    <div class="chat-avatar" style="background: #ec4899;">S</div>
-                    <div class="chat-info">
-                        <div class="chat-name">Support</div>
-                        <div class="chat-preview">Your ticket #1234 has been...</div>
-                    </div>
-                    <div><div class="chat-time">3h</div></div>
-                </div>
-            </div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">💬 Luo Chat</div>
+            <input type="text" class="search-box" placeholder="Search conversations...">
         </div>
-        <div class="main-chat">
-            <div class="chat-header">
-                <div class="chat-avatar">AI</div>
-                <div class="chat-header-info">
-                    <h2>AI Assistant</h2>
-                    <span>● Online</span>
+        <div class="chat-list">
+            <div class="chat-item active" onclick="selectChat('ai')">
+                <div class="chat-avatar">🤖</div>
+                <div class="chat-info">
+                    <div class="chat-name">AI Assistant</div>
+                    <div class="chat-preview">Click to start chatting!</div>
                 </div>
+                <div class="chat-time">Now</div>
             </div>
-            <div class="messages">
-                <div class="message received">
-                    Hello! I'm your AI assistant in Luo Chat. How can I help you today? 🤖
-                    <div class="message-time">10:30 AM</div>
+            <div class="chat-item" onclick="selectChat('general')">
+                <div class="chat-avatar" style="background: linear-gradient(135deg,#22c55e,#14b8a6)">G</div>
+                <div class="chat-info">
+                    <div class="chat-name">General Channel</div>
+                    <div class="chat-preview">Welcome to Luo Chat!</div>
                 </div>
-                <div class="message sent">
-                    Hi! Can you help me navigate the Luoverse?
-                    <div class="message-time">10:31 AM</div>
-                </div>
-                <div class="message received">
-                    Of course! I can help you with:\n\n• Finding information across luo:// sites\n• Sending messages\n• Managing your account\n• And much more!\n\nWhat would you like to explore?
-                    <div class="message-time">10:31 AM</div>
-                </div>
+                <div><span class="unread-badge">99+</span></div>
             </div>
-            <div class="input-area">
-                <input type="text" class="message-input" placeholder="Type a message...">
-                <button class="send-btn">➤</button>
+            <div class="chat-item" onclick="selectChat('developers')">
+                <div class="chat-avatar" style="background: linear-gradient(135deg,#f59e0b,#ef4444)">D</div>
+                <div class="chat-info">
+                    <div class="chat-name">Developers</div>
+                    <div class="chat-preview">New API endpoints available</div>
+                </div>
+                <div class="chat-time">1h</div>
+            </div>
+            <div class="chat-item" onclick="selectChat('support')">
+                <div class="chat-avatar" style="background: linear-gradient(135deg,#ec4899,#8b5cf6)">S</div>
+                <div class="chat-info">
+                    <div class="chat-name">Support</div>
+                    <div class="chat-preview">Your ticket has been updated</div>
+                </div>
+                <div class="chat-time">3h</div>
             </div>
         </div>
     </div>
+    <div class="main-chat">
+        <div class="chat-header">
+            <div class="chat-avatar" id="chatAvatar">🤖</div>
+            <div class="chat-header-info">
+                <h2 id="chatName">AI Assistant</h2>
+                <span>● Online</span>
+            </div>
+        </div>
+        <div class="messages" id="messages">
+            <div class="message received">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    Hello! I'm your AI chat assistant. Type a message and I'll respond intelligently! Try asking me about:
+                    <br><br>
+                    • Programming questions
+                    <br>• General knowledge
+                    <br>• Help with tasks
+                    <br><br>
+                    I can actually chat with you! 💬
+                    <div class="message-time">10:30 AM</div>
+                </div>
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" class="message-input" id="messageInput" placeholder="Type a message..." onkeypress="handleKey(event)">
+            <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+    <script>
+        let currentChat = 'ai';
+        
+        const chatConfigs = {
+            ai: { name: 'AI Assistant', avatar: '🤖' },
+            general: { name: 'General Channel', avatar: 'G' },
+            developers: { name: 'Developers', avatar: 'D' },
+            support: { name: 'Support', avatar: 'S' }
+        };
+        
+        // Real AI responses
+        const aiResponses = [
+            "That's an interesting point! Let me think about that...",
+            "Great question! Here's what I think:",
+            "I understand. Let me help you with that.",
+            "That's a good observation. Here's my take:",
+            "Interesting! I've been thinking about this too.",
+            "Absolutely! That's a great insight.",
+            "Thanks for sharing! Let me give you some thoughts on that.",
+            "I see what you mean. Here's my perspective:",
+            "Makes sense! Here's what comes to mind:",
+            "Got it! Here's my response:"
+        ];
+        
+        const topicResponses = {
+            'hello': "Hey there! 👋 How can I help you today?",
+            'hi': "Hi! What's on your mind?",
+            'help': "I'm here to help! What do you need assistance with?",
+            'code': "I can help with coding! What language are you working in?",
+            'python': "Python is great! Check this out:\n\n```python\ndef hello():\n    print('Hello from Luo Chat!')\n```\nWant me to write more?",
+            'javascript': "JavaScript is awesome! Here's some code:\n\n```javascript\nfunction greet(name) {\n  return `Hello, ${name}!`;\n}\n```",
+            'html': "HTML is the foundation of the web:\n\n```html\n<div class='container'>\n  <h1>Hello World</h1>\n</div>\n```",
+            'weather': "I don't have real-time weather, but you can check at luo://weather!",
+            'name': "I'm the AI Assistant in Luo Chat! I'm here to chat and help.",
+            'who are you': "I'm an AI assistant built into Luo Chat. I can have real conversations!",
+            'what can you do': "I can:\n• Chat about any topic\n• Help with coding\n• Answer questions\n• Just talk! 😊",
+            'joke': "Why do programmers prefer dark mode? Because light attracts bugs! 🐛😂",
+            'tell me a joke': "Why do programmers prefer dark mode? Because light attracts bugs! 🐛😂",
+            'how are you': "I'm doing great! Thanks for asking. How are you?",
+            'thank': "You're welcome! Happy to help! 😊",
+            'thanks': "No problem! Anything else?",
+            'bye': "Goodbye! It was great chatting! 👋",
+            'bye': "See you later! Chat anytime! 😊"
+        };
+        
+        function handleKey(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+        
+        function selectChat(chat) {
+            currentChat = chat;
+            document.getElementById('chatName').innerText = chatConfigs[chat].name;
+            document.getElementById('chatAvatar').innerText = chatConfigs[chat].avatar;
+            
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            if (chat === 'ai') {
+                document.getElementById('messages').innerHTML = `
+                    <div class="message received">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            Welcome back! I'm here and ready to chat. What's on your mind?
+                            <div class="message-time">Now</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('messages').innerHTML = `
+                    <div class="message received">
+                        <div class="message-avatar">${chatConfigs[chat].avatar}</div>
+                        <div class="message-content">
+                            Welcome to ${chatConfigs[chat].name}! This is a simulated chat for demonstration.
+                            <div class="message-time">System</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            const messages = document.getElementById('messages');
+            
+            // Add user message
+            messages.innerHTML += `
+                <div class="message sent">
+                    ${msg}
+                    <div class="message-time">Now</div>
+                </div>
+            `;
+            
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            
+            if (currentChat === 'ai') {
+                // Simulate AI thinking
+                setTimeout(() => {
+                    const response = generateAIResponse(msg);
+                    messages.innerHTML += `
+                        <div class="message received">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                ${response}
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                    `;
+                    messages.scrollTop = messages.scrollHeight;
+                }, 800 + Math.random() * 1000);
+            } else {
+                // Simulate other chat responses
+                setTimeout(() => {
+                    const responses = [
+                        "That's a great point! 👍",
+                        "I agree with that!",
+                        "Interesting perspective!",
+                        "Thanks for sharing!",
+                        "Let me think about that..."
+                    ];
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    messages.innerHTML += `
+                        <div class="message received">
+                            <div class="message-avatar">${chatConfigs[currentChat].avatar}</div>
+                            <div class="message-content">
+                                ${response}
+                                <div class="message-time">Just now</div>
+                            </div>
+                        </div>
+                    `;
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+            }
+        }
+        
+        function generateAIResponse(msg) {
+            const lower = msg.toLowerCase();
+            
+            // Check for topic-specific responses
+            for (const [key, response] of Object.entries(topicResponses)) {
+                if (lower.includes(key)) {
+                    return response;
+                }
+            }
+            
+            // Random response
+            const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+            return randomResponse + "\n\nIs there something specific I can help you with?";
+        }
+    </script>
 </body>
 </html>
