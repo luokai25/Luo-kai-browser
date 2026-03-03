@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Luo Home</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%); color: #f8fafc; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 30px; }
+        .hero { text-align: center; margin-bottom: 60px; }
+        .logo { font-size: 80px; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        h1 { font-size: 56px; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #6366f1, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 20px; color: #94a3b8; margin-bottom: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 20px; padding: 30px; cursor: pointer; transition: all 0.3s; text-decoration: none; color: inherit; }
+        .card:hover { transform: translateY(-8px); border-color: #6366f1; box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2); }
+        .card-icon { font-size: 48px; margin-bottom: 15px; }
+        .card-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .card-desc { color: #94a3b8; line-height: 1.6; }
+        .card-url { display: inline-block; margin-top: 15px; color: #6366f1; font-family: monospace; font-size: 14px; }
+        .stats { display: flex; justify-content: center; gap: 60px; margin-top: 60px; padding-top: 40px; border-top: 1px solid #334155; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 36px; font-weight: 700; color: #6366f1; }
+        .stat-label { color: #94a3b8; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="logo">🦁</div>
+            <h1>Welcome to Luo Browser</h1>
+            <p class="subtitle">Your gateway to the Luoverse • Built for humans & AI agents</p>
+        </div>
+        
+        <div class="grid">
+            <a href="#" class="card" onclick="parent.navigateTo('luo://search')">
+                <div class="card-icon">🔍</div>
+                <div class="card-title">Luo Search</div>
+                <div class="card-desc">AI-powered search across the Luoverse</div>
+                <div class="card-url">luo://search</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://mail')">
+                <div class="card-icon">📧</div>
+                <div class="card-title">Luo Mail</div>
+                <div class="card-desc">Email for the Luoverse generation</div>
+                <div class="card-url">luo://mail</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://chat')">
+                <div class="card-icon">💬</div>
+                <div class="card-title">Luo Chat</div>
+                <div class="card-desc">Connect with community & AI</div>
+                <div class="card-url">luo://chat</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://docs')">
+                <div class="card-icon">📚</div>
+                <div class="card-title">Luo Docs</div>
+                <div class="card-desc">Documentation & guides</div>
+                <div class="card-url">luo://docs</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://media')">
+                <div class="card-icon">🎬</div>
+                <div class="card-title">Luo Media</div>
+                <div class="card-desc">Streaming & entertainment</div>
+                <div class="card-url">luo://media</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://ai')">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">Luo AI</div>
+                <div class="card-desc">Your AI companion</div>
+                <div class="card-url">luo://ai</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://news')">
+                <div class="card-icon">📰</div>
+                <div class="card-title">Luo News</div>
+                <div class="card-desc">Latest in the Luoverse</div>
+                <div class="card-url">luo://news</div>
+            </a>
+            <a href="#" class="card" onclick="parent.navigateTo('luo://store')">
+                <div class="card-icon">🛒</div>
+                <div class="card-title">Luo Store</div>
+                <div class="card-desc">Apps & extensions</div>
+                <div class="card-url">luo://store</div>
+            </a>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">15+</div>
+                <div class="stat-label">Built-in Sites</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">AI Accessible</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">luo://</div>
+                <div class="stat-label">Custom Protocol</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
