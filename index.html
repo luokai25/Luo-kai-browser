@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luo Browser</title>
     <style>
-        /* PURE DARK THEME */
+        /* PURE BLACK DARK THEME - Step 1 */
         :root {
             --bg: #000000;
             --surface: #0a0a0a;
             --surface-1: #111111;
             --surface-2: #1a1a1a;
             --surface-3: #222222;
-            --border: #333333;
-            --border-light: #444444;
+            --border: #222222;
+            --border-light: #333333;
             --text: #ffffff;
             --text-secondary: #cccccc;
-            --text-muted: #888888;
+            --text-muted: #666666;
             --primary: #6366f1;
             --primary-hover: #818cf8;
             --secondary: #ec4899;
@@ -34,7 +34,6 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        /* Browser Container */
         .browser { display: flex; flex-direction: column; height: 100vh; background: var(--bg); }
         
         /* Title Bar */
@@ -62,14 +61,7 @@
         }
         .brand-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
         .window-controls { display: flex; gap: 8px; -webkit-app-region: no-drag; }
-        .window-btn { 
-            width: 12px; 
-            height: 12px; 
-            border-radius: 50%; 
-            border: none; 
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+        .window-btn { width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; }
         .window-btn:hover { opacity: 0.8; }
         .window-btn.close { background: #ff5f56; }
         .window-btn.minimize { background: #ffbd2e; }
@@ -94,14 +86,13 @@
             cursor: pointer;
             min-width: 100px;
             max-width: 180px;
-            transition: all 0.2s;
+            transition: all 0.15s;
             border: 1px solid transparent;
             border-bottom: none;
         }
         .tab.active { 
             background: var(--bg); 
             border-color: var(--border);
-            position: relative;
         }
         .tab.active::after {
             content: '';
@@ -136,7 +127,7 @@
             align-items: center; 
             justify-content: center;
             opacity: 0;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .tab:hover .tab-close { opacity: 1; }
         .tab-close:hover { background: var(--error); color: white; }
@@ -148,7 +139,7 @@
             border-radius: 8px 8px 0 0; 
             cursor: pointer; 
             font-size: 14px;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .new-tab:hover { border-color: var(--primary); color: var(--primary); }
         
@@ -173,7 +164,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .nav-btn:hover { background: var(--surface-3); color: var(--text); }
         .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
@@ -187,7 +178,7 @@
             font-size: 13px;
             font-family: 'SF Mono', Monaco, monospace;
             outline: none;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .address-bar:focus { 
             border-color: var(--primary); 
@@ -217,7 +208,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .bookmark:hover { background: var(--surface-2); color: var(--text); }
         
@@ -279,7 +270,7 @@
             padding: 16px 12px; 
             text-align: center; 
             cursor: pointer; 
-            transition: all 0.3s; 
+            transition: all 0.2s; 
             text-decoration: none; 
             color: var(--text);
         }
@@ -374,7 +365,7 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 13px;
-            transition: background 0.2s;
+            transition: background 0.15s;
         }
         .ai-submit:hover { background: var(--primary-hover); }
         
@@ -406,7 +397,7 @@
             cursor: pointer;
             font-size: 12px;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
         .agent-btn:hover { 
             border-color: var(--primary); 
@@ -673,11 +664,7 @@
             tabEl.className = 'tab';
             tabEl.dataset.id = id;
             tabEl.onclick = () => switchTab(id);
-            tabEl.innerHTML = `
-                <span class="tab-icon">🏠</span>
-                <span class="tab-title">New Tab</span>
-                <button class="tab-close" onclick="closeTab(event, ${id})">×</button>
-            `;
+            tabEl.innerHTML = `<span class="tab-icon">🏠</span><span class="tab-title">New Tab</span><button class="tab-close" onclick="closeTab(event, ${id})">×</button>`;
             tabBar.insertBefore(tabEl, newTabBtn);
             
             switchTab(id);
@@ -688,11 +675,9 @@
         function closeTab(e, id) {
             e.stopPropagation();
             if (tabs.length === 1) return;
-            
             tabs = tabs.filter(t => t.id !== id);
             document.getElementById('viewport-' + id).remove();
             document.querySelector(`.tab[data-id="${id}"]`).remove();
-            
             if (currentTab === id) {
                 currentTab = tabs[tabs.length - 1].id;
                 switchTab(currentTab);
@@ -704,13 +689,10 @@
             currentTab = id;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`.tab[data-id="${id}"]`).classList.add('active');
-            
             document.querySelectorAll('.viewport').forEach(v => v.classList.remove('active'));
             document.getElementById('viewport-' + id).classList.add('active');
-            
             const tab = tabs.find(t => t.id === id);
             document.getElementById('addressBar').value = tab.url;
-            
             const startPage = document.getElementById('startPage');
             if (tab.url === 'luo://home') {
                 startPage.style.display = 'flex';
@@ -719,7 +701,6 @@
                 startPage.style.display = 'none';
                 document.getElementById('viewport-' + id).style.display = 'block';
             }
-            
             document.getElementById('backBtn').disabled = !historyStack[id] || historyStack[id].length === 0;
             document.getElementById('forwardBtn').disabled = !forwardStack[id] || forwardStack[id].length === 0;
         }
@@ -731,7 +712,6 @@
         // ========== NAVIGATION ==========
         function navigateTo(url, tabId = currentTab) {
             if (!url.startsWith('luo://')) url = 'luo://' + url;
-            
             const path = url.replace('luo://', '');
             const pageName = path.split('/')[0];
             const pagePath = DB.sites[pageName];
@@ -739,35 +719,29 @@
             if (pagePath) {
                 if (!historyStack[tabId]) historyStack[tabId] = [];
                 if (!forwardStack[tabId]) forwardStack[tabId] = [];
-                
                 const currentUrl = tabs.find(t => t.id === tabId).url;
                 if (currentUrl !== url) {
                     historyStack[tabId].push(currentUrl);
                     forwardStack[tabId] = [];
                 }
-                
                 const tab = tabs.find(t => t.id === tabId);
                 tab.url = url;
                 tab.title = pageName.charAt(0).toUpperCase() + pageName.slice(1);
                 tab.icon = DB.icons[pageName] || '📄';
-                
                 document.getElementById('addressBar').value = url;
                 document.getElementById('viewport-' + tabId).src = pagePath;
-                
                 const tabEl = document.querySelector(`.tab[data-id="${tabId}"]`);
                 tabEl.querySelector('.tab-icon').textContent = tab.icon;
                 tabEl.querySelector('.tab-title').textContent = tab.title;
-                
                 document.getElementById('startPage').style.display = 'none';
                 document.getElementById('viewport-' + tabId).style.display = 'block';
-                
                 document.getElementById('loading').classList.remove('hidden');
                 setTimeout(() => document.getElementById('loading').classList.add('hidden'), 500);
-                
                 document.getElementById('backBtn').disabled = historyStack[tabId].length === 0;
                 document.getElementById('forwardBtn').disabled = forwardStack[tabId].length === 0;
-                
                 saveHistory(url, tab.title);
+            } else {
+                showError('Page not found: ' + url);
             }
         }
         
@@ -814,7 +788,7 @@
                 .e{text-align:center;padding:40px}
                 .i{font-size:48px;margin-bottom:20px}
                 .t{font-size:20px;color:#ef4444;margin-bottom:10px}
-                .m{color:#888}
+                .m{color:#666}
                 </style></head><body>
                 <div class="e"><div class="i">⚠️</div><div class="t">Oops!</div><div class="m">${msg}</div></div>
                 </body></html>`;
@@ -848,14 +822,11 @@
             const input = document.getElementById('aiCommandInput');
             const cmd = input.value.trim();
             if (!cmd) return;
-            
             const results = document.getElementById('aiResults');
             const result = document.createElement('div');
             result.className = 'ai-result';
-            
             const lower = cmd.toLowerCase();
             let response = '';
-            
             if (lower.includes('search')) {
                 const query = cmd.replace(/search/i, '').trim();
                 navigateTo('luo://search?q=' + encodeURIComponent(query));
@@ -872,7 +843,6 @@
                 navigateTo('luo://search?q=' + encodeURIComponent(cmd));
                 response = '🔍 Searched: ' + cmd;
             }
-            
             result.innerHTML = `<div class="ai-result-title">Command</div><div class="ai-result-content">${response}</div>`;
             results.insertBefore(result, results.firstChild);
             input.value = '';
@@ -888,7 +858,6 @@
         
         // ========== INITIALIZE ==========
         document.getElementById('addressBar').value = 'luo://home';
-        
         document.addEventListener('keydown', (e) => {
             if (e.altKey && e.key === 'ArrowLeft') goBack();
             if (e.altKey && e.key === 'ArrowRight') goForward();
