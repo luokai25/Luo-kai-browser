@@ -2,63 +2,100 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Infinite Vault</title>
+    <title>Infinite Vault - Compression + Encryption</title>
     <style>
         body { font-family: sans-serif; background: #000; color: #fff; padding: 20px; text-align: center; }
-        h1 { background: linear-gradient(90deg, #00d4ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { background: linear-gradient(90deg, #00d4ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; }
         input { padding: 12px; font-size: 16px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; width: 250px; margin: 10px; }
-        button { padding: 12px 24px; font-size: 16px; background: #00d4ff; border: none; border-radius: 6px; cursor: pointer; }
-        #app { display: none; text-align: left; max-width: 600px; margin: 20px auto; }
+        button { padding: 12px 24px; font-size: 16px; background: #00d4ff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { transform: translateY(-2px); }
+        #app { display: none; text-align: left; max-width: 650px; margin: 20px auto; }
         .stats { display: flex; gap: 10px; margin: 20px 0; }
-        .stat { background: #111; padding: 15px; border-radius: 8px; flex: 1; text-align: center; }
-        .stat .val { font-size: 24px; color: #00d4ff; }
-        .stat .lbl { font-size: 12px; color: #666; }
-        .btn { padding: 10px 20px; background: #222; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin: 5px; }
-        .btn-danger { background: #ff4444; }
-        .zone { border: 2px dashed #333; padding: 40px; border-radius: 10px; margin: 20px 0; cursor: pointer; }
-        .zone:hover { border-color: #00d4ff; }
-        .file { background: #111; padding: 10px; margin: 5px 0; border-radius: 6px; display: flex; justify-content: space-between; }
-        .error { color: red; margin: 10px; }
-        .info { color: #666; font-size: 14px; margin-top: 30px; }
+        .stat { background: #111; padding: 15px; border-radius: 8px; flex: 1; text-align: center; border: 1px solid #222; }
+        .stat .val { font-size: 22px; color: #00d4ff; font-weight: bold; }
+        .stat .lbl { font-size: 11px; color: #666; text-transform: uppercase; }
+        .stat .saved { color: #00ff88; font-size: 11px; margin-top: 5px; }
+        .toolbar { margin: 15px 0; }
+        .btn { padding: 10px 18px; background: #222; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin: 3px; font-size: 14px; }
+        .btn:hover { background: #333; }
+        .btn-primary { background: #00d4ff; color: #000; }
+        .zone { border: 2px dashed #333; padding: 35px; border-radius: 10px; margin: 15px 0; cursor: pointer; }
+        .zone:hover { border-color: #00d4ff; background: rgba(0,212,255,0.05); }
+        .file { background: #111; padding: 12px; margin: 6px 0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        .file:hover { border-color: #00d4ff; }
+        .file-info { text-align: left; }
+        .file-name { font-weight: 600; }
+        .file-size { font-size: 12px; color: #888; }
+        .file-compressed { color: #00ff88; font-size: 11px; }
+        .progress { background: #111; padding: 15px; margin: 10px 0; border-radius: 8px; display: none; }
+        .progress.show { display: block; }
+        .progress-bar { height: 8px; background: #222; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #00d4ff, #a855f7); width: 0%; transition: width 0.3s; }
+        .progress-text { margin-top: 8px; color: #888; font-size: 13px; }
+        .info { color: #666; font-size: 13px; margin-top: 30px; }
+        .lock-icon { font-size: 50px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <h1>∞ Infinite Vault</h1>
+    <p style="color:#666;margin-bottom:20px">Compression + Encryption = Maximum Storage</p>
     
     <div id="lock">
-        <input type="password" id="pass" placeholder="Password">
+        <input type="password" id="pass" placeholder="Master Password">
         <br>
-        <button onclick="unlock()">Unlock / Create</button>
-        <p class="error" id="err"></p>
-        <p class="info">Type any password to create new vault</p>
+        <button onclick="unlock()">🔓 Unlock / Create Vault</button>
+        <p class="info">Files are compressed THEN encrypted for maximum efficiency</p>
     </div>
     
     <div id="app">
         <div class="stats">
-            <div class="stat"><div class="val" id="cnt">0</div><div class="lbl">Files</div></div>
-            <div class="stat"><div class="val" id="size">0 B</div><div class="lbl">Size</div></div>
+            <div class="stat">
+                <div class="val" id="cnt">0</div>
+                <div class="lbl">Files</div>
+            </div>
+            <div class="stat">
+                <div class="val" id="origSize">0 B</div>
+                <div class="lbl">Original</div>
+            </div>
+            <div class="stat">
+                <div class="val" id="compSize">0 B</div>
+                <div class="lbl">Compressed</div>
+                <div class="saved" id="savedPct"></div>
+            </div>
         </div>
         
-        <button class="btn" onclick="lock()">🔒 Lock</button>
-        <button class="btn" onclick="document.getElementById('fi').click()">📤 Upload</button>
-        <button class="btn" onclick="document.getElementById('fd').click()">📂 Folder</button>
-        <input type="file" id="fi" multiple hidden>
-        <input type="file" id="fd" webkitdirectory multiple hidden>
+        <div class="toolbar">
+            <button class="btn" onclick="lock()">🔒 Lock</button>
+            <button class="btn btn-primary" onclick="document.getElementById('fi').click()">📤 Upload Files</button>
+            <button class="btn" onclick="document.getElementById('fd').click()">📂 Upload Folder</button>
+            <input type="file" id="fi" multiple hidden>
+            <input type="file" id="fd" webkitdirectory multiple hidden>
+        </div>
         
         <div class="zone" onclick="document.getElementById('fi').click()">
-            Click to upload files (unlimited!)
+            <div style="font-size:35px">📦</div>
+            <div>Click or drag files here</div>
+            <div style="font-size:12px;color:#666">Files will be compressed → then encrypted</div>
+        </div>
+        
+        <div class="progress" id="progress">
+            <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+            <div class="progress-text" id="progText">Processing...</div>
         </div>
         
         <div id="list"></div>
     </div>
 
     <script>
+        // ============ INFINITE VAULT WITH COMPRESSION ============
+        
         let files = [];
         let pwd = '';
         let db = null;
         
-        const DB_NAME = 'VaultDB';
+        const DB_NAME = 'VaultDB_Compressed';
         
+        // Open IndexedDB
         function openDB() {
             return new Promise((resolve, reject) => {
                 const r = indexedDB.open(DB_NAME, 1);
@@ -76,24 +113,169 @@
         }
         init();
         
+        // ============ COMPRESSION (GZIP via CompressionStream API) ============
+        
+        async function compress(data) {
+            // data is Uint8Array
+            const cs = new CompressionStream('gzip');
+            const writer = cs.writable.getWriter();
+            writer.write(data);
+            writer.close();
+            const reader = cs.readable.getReader();
+            let chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+            }
+            return concatenateUint8Arrays(chunks);
+        }
+        
+        async function decompress(data) {
+            const cs = new DecompressionStream('gzip');
+            const writer = cs.writable.getWriter();
+            writer.write(data);
+            writer.close();
+            const reader = cs.readable.getReader();
+            let chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+            }
+            return concatenateUint8Arrays(chunks);
+        }
+        
+        function concatenateUint8Arrays(arrays) {
+            let totalLength = arrays.reduce((sum, arr) => sum + arr.length, 0);
+            let result = new Uint8Array(totalLength);
+            let offset = 0;
+            for (let arr of arrays) {
+                result.set(arr, offset);
+                offset += arr.length;
+            }
+            return result;
+        }
+        
+        // ============ ENCRYPTION (AES-GCM) ============
+        
+        async function encrypt(data, password) {
+            const encoder = new TextEncoder();
+            const salt = encoder.encode('vault2024_compressed');
+            
+            const km = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' },
+                km, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
+            );
+            
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const enc = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, data);
+            
+            // Prepend IV
+            const result = new Uint8Array(iv.length + enc.byteLength);
+            result.set(iv, 0);
+            result.set(new Uint8Array(enc), iv.length);
+            
+            return result;
+        }
+        
+        async function decrypt(data, password) {
+            try {
+                const encoder = new TextEncoder();
+                const salt = encoder.encode('vault2024_compressed');
+                
+                const iv = data.slice(0, 12);
+                const encrypted = data.slice(12);
+                
+                const km = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+                const key = await crypto.subtle.deriveKey(
+                    { name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' },
+                    km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+                );
+                
+                const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, encrypted);
+                return dec;
+            } catch(e) {
+                console.log('Decrypt error:', e);
+                return null;
+            }
+        }
+        
+        // ============ COMPRESS + ENCRYPT ============
+        
+        async function processFile(fileData) {
+            // 1. Compress original data
+            const originalData = fileData.original;
+            const compressedData = await compress(originalData);
+            
+            // 2. Encrypt compressed data
+            const encryptedData = await encrypt(compressedData, pwd);
+            
+            return {
+                id: fileData.id,
+                name: fileData.name,
+                type: fileData.type,
+                originalSize: fileData.original.length,
+                compressedSize: compressedData.length,
+                encryptedData: encryptedData
+            };
+        }
+        
+        async function restoreFile(storedFile) {
+            // 1. Decrypt
+            const decrypted = await decrypt(storedFile.encryptedData, pwd);
+            if (!decrypted) return null;
+            
+            // 2. Decompress
+            const decompressed = await decompress(decrypted);
+            
+            return {
+                name: storedFile.name,
+                type: storedFile.type,
+                originalSize: storedFile.originalSize,
+                data: decompressed
+            };
+        }
+        
+        // ============ UI ============
+        
         async function unlock() {
             pwd = document.getElementById('pass').value;
-            if (!pwd) { document.getElementById('err').innerText = 'Enter password'; return; }
+            if (!pwd) return;
             
             try {
                 if (!db) await openDB();
                 
-                // Load files
+                // Load and decrypt all files
                 const tx = db.transaction('files', 'readonly');
                 const req = tx.objectStore('files').getAll();
-                req.onsuccess = () => {
-                    files = req.result || [];
+                
+                req.onsuccess = async () => {
+                    const stored = req.result || [];
+                    
+                    // Decrypt and decompress each file
+                    files = [];
+                    for (const sf of stored) {
+                        const restored = await restoreFile(sf);
+                        if (restored) {
+                            files.push({
+                                id: sf.id,
+                                name: sf.name,
+                                type: sf.type,
+                                originalSize: sf.originalSize,
+                                compressedSize: sf.compressedSize,
+                                data: restored.data
+                            });
+                        }
+                    }
+                    
                     document.getElementById('lock').style.display = 'none';
                     document.getElementById('app').style.display = 'block';
                     render();
                 };
             } catch(e) {
-                document.getElementById('err').innerText = 'Error: ' + e.message;
+                console.log(e);
             }
         }
         
@@ -108,49 +290,104 @@
         async function upload(list) {
             if (!list || !list.length) return;
             
+            const prog = document.getElementById('progress');
+            const progFill = document.getElementById('progFill');
+            const progText = document.getElementById('progText');
+            prog.classList.add('show');
+            
             for (let i = 0; i < list.length; i++) {
                 const file = list[i];
+                progFill.style.width = ((i / list.length) * 100) + '%';
+                progText.innerText = `Processing ${i+1}/${list.length}: ${file.name}`;
                 
                 await new Promise(resolve => {
                     const reader = new FileReader();
                     reader.onload = async (e) => {
-                        const data = e.target.result;
-                        const f = {
-                            id: Date.now() + Math.random(),
-                            name: file.name,
-                            type: file.type,
-                            size: file.size,
-                            data: btoa(String.fromCharCode(...new Uint8Array(data)))
-                        };
-                        files.push(f);
-                        
-                        // Save to DB
-                        const tx = db.transaction('files', 'readwrite');
-                        tx.objectStore('files').add(f);
-                        
+                        try {
+                            const original = new Uint8Array(e.target.result);
+                            
+                            // Compress
+                            progText.innerText = `Compressing: ${file.name}`;
+                            const compressed = await compress(original);
+                            
+                            // Encrypt
+                            progText.innerText = `Encrypting: ${file.name}`;
+                            const encrypted = await encrypt(compressed, pwd);
+                            
+                            // Store
+                            const f = {
+                                id: Date.now() + Math.random(),
+                                name: file.name,
+                                type: file.type,
+                                originalSize: original.length,
+                                compressedSize: compressed.length,
+                                encryptedData: encrypted
+                            };
+                            
+                            files.push({
+                                id: f.id,
+                                name: f.name,
+                                type: f.type,
+                                originalSize: f.originalSize,
+                                compressedSize: f.compressedSize,
+                                data: original // Keep original for download
+                            });
+                            
+                            // Save encrypted version to DB
+                            const tx = db.transaction('files', 'readwrite');
+                            tx.objectStore('files').add(f);
+                            
+                        } catch(err) {
+                            console.log('Error:', err);
+                        }
                         resolve();
                     };
+                    reader.onerror = () => resolve();
                     reader.readAsArrayBuffer(file);
                 });
             }
+            
+            progFill.style.width = '100%';
+            progText.innerText = `✅ Done! ${list.length} files processed.`;
+            
+            setTimeout(() => prog.classList.remove('show'), 2000);
+            
+            document.getElementById('fi').value = '';
+            document.getElementById('fd').value = '';
             render();
         }
         
         function render() {
             document.getElementById('cnt').innerText = files.length;
-            const total = files.reduce((s, f) => s + (f.size || 0), 0);
-            document.getElementById('size').innerText = fmtSize(total);
             
-            document.getElementById('list').innerHTML = files.slice().reverse().map(f => 
-                '<div class="file"><span>' + f.name + ' (' + fmtSize(f.size) + ')</span><button class="btn" onclick="down(' + f.id + ')">⬇</button></div>'
-            ).join('') || '<p style="color:#666;text-align:center">No files</p>';
+            const orig = files.reduce((s, f) => s + (f.originalSize || 0), 0);
+            const comp = files.reduce((s, f) => s + (f.compressedSize || 0), 0);
+            
+            document.getElementById('origSize').innerText = fmtSize(orig);
+            document.getElementById('compSize').innerText = fmtSize(comp);
+            
+            if (orig > 0 && comp > 0) {
+                const saved = ((orig - comp) / orig * 100).toFixed(1);
+                document.getElementById('savedPct').innerText = saved + '% saved!';
+            }
+            
+            document.getElementById('list').innerHTML = files.slice().reverse().map(f => {
+                const saved = f.originalSize > 0 ? ((f.originalSize - f.compressedSize) / f.originalSize * 100).toFixed(0) : 0;
+                return '<div class="file">' +
+                    '<div class="file-info">' +
+                        '<div class="file-name">' + f.name + '</div>' +
+                        '<div class="file-size">' + fmtSize(f.originalSize) + ' → ' + fmtSize(f.compressedSize) + ' (' + saved + '% smaller)</div>' +
+                    '</div>' +
+                    '<button class="btn" onclick="down(' + f.id + ')">⬇️ Download</button>' +
+                '</div>';
+            }).join('') || '<p style="color:#666;text-align:center;padding:30px">No files yet</p>';
         }
         
-        function down(id) {
+        async function down(id) {
             const f = files.find(x => x.id === id);
-            if (!f) return;
-            const bytes = Uint8Array.from(atob(f.data), c => c.charCodeAt(0));
-            const blob = new Blob([bytes], { type: f.type });
+            if (!f || !f.data) return;
+            
+            const blob = new Blob([f.data], { type: f.type });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = f.name;
@@ -160,13 +397,12 @@
         function fmtSize(b) {
             if (!b) return '0 B';
             const s = ['B', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(b) / 1e3);
+            const i = Math.floor(Math.log(b) / Math.LN1e3);
             return (b / Math.pow(1e3, i)).toFixed(1) + ' ' + s[i];
         }
         
         document.getElementById('fi').onchange = (e) => upload(e.target.files);
         document.getElementById('fd').onchange = (e) => upload(e.target.files);
-        
         document.getElementById('pass').onkeypress = (e) => { if (e.key === 'Enter') unlock(); };
     </script>
 </body>
