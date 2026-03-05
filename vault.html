@@ -3,103 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Vault</title>
+    <title>Infinite Vault - Unlimited Storage</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; min-height: 100vh; padding: 20px; }
         
-        .bg {
-            position: fixed; inset: 0; z-index: -1;
+        .bg { position: fixed; inset: 0; z-index: -1;
             background: radial-gradient(ellipse at 20% 80%, rgba(120, 0, 255, 0.15) 0%, transparent 50%),
                         radial-gradient(ellipse at 80% 20%, rgba(0, 150, 255, 0.1) 0%, transparent 50%),
-                        linear-gradient(180deg, #0a0a0f 0%, #000 100%);
-        }
+                        linear-gradient(180deg, #0a0a0f 0%, #000 100%); }
         
-        .container { max-width: 600px; margin: 30px auto; }
+        .container { max-width: 700px; margin: 20px auto; }
         
-        h1 { 
-            font-size: 2.2rem; text-align: center; margin-bottom: 30px;
+        h1 { font-size: 2rem; text-align: center; margin-bottom: 25px;
             background: linear-gradient(90deg, #00d4ff, #a855f7, #ff00ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        input { 
-            width: 100%; padding: 15px; font-size: 1rem; background: #111; 
-            border: 2px solid #222; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none;
-        }
+        input { width: 100%; padding: 14px; font-size: 1rem; background: #111; 
+            border: 2px solid #222; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; }
         input:focus { border-color: #00d4ff; }
         
-        button { 
-            padding: 15px 30px; font-size: 1rem; 
+        button { padding: 14px 25px; font-size: 0.95rem; 
             background: linear-gradient(90deg, #00d4ff, #0080ff); 
-            border: none; border-radius: 10px; color: #000; cursor: pointer; font-weight: bold;
-        }
+            border: none; border-radius: 10px; color: #000; cursor: pointer; font-weight: bold; }
         button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3); }
         
         .error { color: #ff4444; margin-top: 10px; text-align: center; }
         
         #app { display: none; }
         
-        /* Stats Bar */
-        .stats {
-            display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;
-        }
-        .stat-box {
-            flex: 1; min-width: 120px; background: #111; border: 1px solid #222;
-            border-radius: 12px; padding: 15px; text-align: center;
-        }
-        .stat-box .value { font-size: 1.8rem; font-weight: bold; color: #00d4ff; }
-        .stat-box .label { font-size: 0.75rem; color: #666; text-transform: uppercase; margin-top: 5px; }
+        .stats { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-box { flex: 1; min-width: 100px; background: #111; border: 1px solid #222;
+            border-radius: 10px; padding: 12px; text-align: center; }
+        .stat-box .value { font-size: 1.5rem; font-weight: bold; color: #00d4ff; }
+        .stat-box .label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-top: 3px; }
         
-        /* Toolbar */
-        .toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .toolbar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
         .btn-secondary { background: #222; color: #fff; }
         .btn-danger { background: #ff4444; }
+        .btn-big { padding: 18px 35px; font-size: 1.1rem; }
         
-        /* Upload Zone */
-        .upload-zone {
-            border: 2px dashed #333; border-radius: 12px; padding: 30px;
-            text-align: center; margin-bottom: 20px; cursor: pointer; transition: all 0.3s;
-        }
+        .upload-zone { border: 2px dashed #333; border-radius: 12px; padding: 25px;
+            text-align: center; margin-bottom: 15px; cursor: pointer; transition: all 0.3s; }
         .upload-zone:hover { border-color: #00d4ff; background: rgba(0, 212, 255, 0.05); }
-        .upload-zone .icon { font-size: 40px; margin-bottom: 10px; }
-        .upload-zone p { color: #666; }
+        .upload-zone .icon { font-size: 35px; margin-bottom: 8px; }
+        .upload-zone p { color: #666; font-size: 0.9rem; }
         
-        /* Progress */
-        .progress-container { margin-bottom: 20px; display: none; }
+        .progress-container { margin-bottom: 15px; display: none; }
         .progress-container.show { display: block; }
-        .progress-bar { height: 8px; background: #222; border-radius: 4px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #00d4ff, #a855f7); width: 0%; transition: width 0.3s; }
-        .progress-text { text-align: center; margin-top: 8px; color: #888; font-size: 0.9rem; }
+        .progress-bar { height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #00d4ff, #a855f7); width: 0%; transition: width 0.2s; }
+        .progress-text { text-align: center; margin-top: 8px; color: #888; font-size: 0.85rem; }
+        .progress-detail { text-align: center; color: #666; font-size: 0.8rem; margin-top: 4px; }
         
-        /* Files */
-        .files-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #222;
-        }
-        .files-header h2 { font-size: 1.2rem; color: #888; }
+        .files-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .files-header h2 { font-size: 1.1rem; color: #888; }
         
-        .file-list { display: flex; flex-direction: column; gap: 10px; }
+        .file-list { display: flex; flex-direction: column; gap: 8px; max-height: 500px; overflow-y: auto; }
         
-        .file-item {
-            background: #111; border: 1px solid #222; border-radius: 10px;
-            padding: 15px; display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.2s;
-        }
-        .file-item:hover { border-color: #00d4ff; transform: translateX(5px); }
-        .file-info { display: flex; align-items: center; gap: 12px; }
-        .file-icon { font-size: 1.5rem; }
-        .file-name { font-weight: 600; }
-        .file-size { font-size: 0.85rem; color: #666; }
-        .file-actions { display: flex; gap: 8px; }
-        .file-actions button { padding: 8px 15px; font-size: 0.85rem; }
+        .file-item { background: #111; border: 1px solid #222; border-radius: 8px;
+            padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .file-item:hover { border-color: #00d4ff; }
+        .file-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+        .file-icon { font-size: 1.3rem; }
+        .file-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+        .file-size { font-size: 0.8rem; color: #666; }
+        .file-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .file-actions button { padding: 6px 10px; font-size: 0.75rem; }
         
-        .empty { text-align: center; padding: 40px; color: #444; }
+        .empty { text-align: center; padding: 30px; color: #444; }
         
-        /* Lock Screen */
-        #lock-screen { text-align: center; padding: 40px; }
-        #lock-screen h1 { margin-bottom: 10px; }
-        #lock-screen .subtitle { color: #666; margin-bottom: 30px; }
+        #lock-screen { text-align: center; padding: 30px; }
+        #lock-screen h1 { margin-bottom: 8px; }
+        #lock-screen .subtitle { color: #666; margin-bottom: 25px; }
+        
+        .info-box { margin-top: 25px; padding: 15px; background: #111; border-radius: 10px; text-align: left; }
+        .info-box p { color: #888; font-size: 0.85rem; margin-bottom: 8px; }
+        
+        /* Delete mode */
+        .delete-mode .file-item { border-color: #ff4444; background: rgba(255, 68, 68, 0.1); }
     </style>
 </head>
 <body>
@@ -112,60 +94,49 @@
         <button id="unlockBtn" style="width:100%">🔓 Unlock / Create Vault</button>
         <p class="error" id="error"></p>
         
-        <div style="margin-top: 30px; padding: 20px; background: #111; border-radius: 10px; text-align: left;">
-            <p style="color:#888; font-size: 0.9rem; margin-bottom: 10px;">🔐 How it works:</p>
-            <ul style="color:#666; font-size: 0.85rem; padding-left: 20px; line-height: 1.8;">
-                <li>Files are encrypted client-side before storage</li>
-                <li>Without your password, data is just random noise</li>
-                <li>No server - everything stays in your browser</li>
-                <li>Unlimited file size & quantity</li>
-            </ul>
+        <div class="info-box">
+            <p>🔐 <strong>How it works:</strong></p>
+            <p>• Files encrypted client-side before storage</p>
+            <p>• Without password = random noise (impossible to crack)</p>
+            <p>• <strong>Unlimited files</strong> - upload 10,000+ at once</p>
+            <p>• Upload entire folder or device storage at once</p>
         </div>
     </div>
     
     <div class="container" id="app">
         <h1>∞ Your Vault</h1>
         
-        <!-- Stats -->
         <div class="stats">
-            <div class="stat-box">
-                <div class="value" id="fileCount">0</div>
-                <div class="label">Total Files</div>
-            </div>
-            <div class="stat-box">
-                <div class="value" id="totalSize">0 B</div>
-                <div class="label">Total Size</div>
-            </div>
-            <div class="stat-box">
-                <div class="value" id="vaultSize">0 B</div>
-                <div class="label">Vault Size</div>
-            </div>
+            <div class="stat-box"><div class="value" id="fileCount">0</div><div class="label">Total Files</div></div>
+            <div class="stat-box"><div class="value" id="totalSize">0 B</div><div class="label">Total Size</div></div>
+            <div class="stat-box"><div class="value" id="vaultSize">0 B</div><div class="label">Vault Size</div></div>
         </div>
         
-        <!-- Toolbar -->
         <div class="toolbar">
             <button class="btn-secondary" onclick="lockVault()">🔒 Lock</button>
             <button onclick="document.getElementById('fileInput').click()">📤 Upload Files</button>
-            <input type="file" id="fileInput" hidden multiple onchange="uploadFiles()">
+            <button onclick="document.getElementById('folderInput').click()">📂 Upload Folder</button>
+            <input type="file" id="fileInput" hidden multiple>
+            <input type="file" id="folderInput" hidden webkitdirectory multiple>
         </div>
         
-        <!-- Upload Zone -->
         <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
             <div class="icon">📁</div>
-            <p>Click to upload or drag & drop files here</p>
-            <p style="font-size: 0.8rem; margin-top: 5px;">Supports unlimited file size & quantity</p>
+            <p><strong>Click to upload</strong> - or drag & drop files here</p>
+            <p style="font-size: 0.75rem; margin-top: 5px;">Upload 10,000+ files at once! 📦</p>
         </div>
         
-        <!-- Progress -->
         <div class="progress-container" id="progressContainer">
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <p class="progress-text" id="progressText">Uploading...</p>
+            <p class="progress-text" id="progressText">Preparing...</p>
+            <p class="progress-detail" id="progressDetail"></p>
         </div>
         
-        <!-- File List -->
         <div class="files-header">
-            <h2>📄 Your Files</h2>
-            <span style="color:#666; font-size: 0.9rem;" id="fileCountLabel">0 files</span>
+            <h2>📄 Files</h2>
+            <div>
+                <button class="btn-danger" onclick="toggleDeleteMode()" id="deleteModeBtn" style="padding: 8px 15px;">🗑️ Delete Mode</button>
+            </div>
         </div>
         <div class="file-list" id="fileList"></div>
     </div>
@@ -179,28 +150,20 @@
     
     let files = [];
     let currentPassword = '';
+    let deleteMode = false;
     
-    function hasVault() {
-        return localStorage.getItem('vaultData') !== null;
-    }
+    function hasVault() { return localStorage.getItem('vaultData') !== null; }
     
-    // Simple encryption
     async function encrypt(data, password) {
         const encoder = new TextEncoder();
-        const salt = encoder.encode('InfiniteVaultSalt2024');
+        const salt = encoder.encode('InfiniteVault2024');
         
-        const keyMaterial = await crypto.subtle.importKey(
-            'raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']
-        );
-        const key = await crypto.subtle.deriveKey(
-            { name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' },
-            keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
-        );
+        const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+        const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
         
         const iv = crypto.getRandomValues(new Uint8Array(12));
         const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(data));
         
-        // Combine IV + encrypted data
         const combined = new Uint8Array(iv.length + encrypted.byteLength);
         combined.set(iv);
         combined.set(new Uint8Array(encrypted), iv.length);
@@ -211,34 +174,23 @@
     async function decrypt(data, password) {
         try {
             const encoder = new TextEncoder();
-            const salt = encoder.encode('InfiniteVaultSalt2024');
+            const salt = encoder.encode('InfiniteVault2024');
             
             const combined = Uint8Array.from(atob(data), c => c.charCodeAt(0));
             const iv = combined.slice(0, 12);
             const encryptedData = combined.slice(12);
             
-            const keyMaterial = await crypto.subtle.importKey(
-                'raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']
-            );
-            const key = await crypto.subtle.deriveKey(
-                { name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' },
-                keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
-            );
+            const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
             
             const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, encryptedData);
             return new TextDecoder().decode(decrypted);
-        } catch (e) {
-            console.error('Decrypt error:', e);
-            return null;
-        }
+        } catch (e) { console.error(e); return null; }
     }
     
     async function unlockVault() {
         const password = passwordEl.value;
-        if (!password) {
-            errorEl.textContent = 'Please enter a password';
-            return;
-        }
+        if (!password) { errorEl.textContent = 'Please enter a password'; return; }
         
         currentPassword = password;
         errorEl.textContent = '';
@@ -247,12 +199,7 @@
             if (hasVault()) {
                 const stored = localStorage.getItem('vaultData');
                 const decrypted = await decrypt(stored, password);
-                
-                if (decrypted === null) {
-                    errorEl.textContent = '❌ Wrong password!';
-                    return;
-                }
-                
+                if (decrypted === null) { errorEl.textContent = '❌ Wrong password!'; return; }
                 files = JSON.parse(decrypted);
             } else {
                 files = [];
@@ -264,78 +211,78 @@
             document.getElementById('app').style.display = 'block';
             renderFiles();
             
-        } catch (e) {
-            console.error('Error:', e);
-            errorEl.textContent = 'Error: ' + e.message;
-        }
+        } catch (e) { errorEl.textContent = 'Error: ' + e.message; }
     }
     
     function lockVault() {
-        files = [];
-        currentPassword = '';
+        files = []; currentPassword = ''; deleteMode = false;
         document.getElementById('app').style.display = 'none';
         document.getElementById('lock-screen').style.display = 'block';
-        passwordEl.value = '';
-        errorEl.textContent = '';
+        passwordEl.value = ''; errorEl.textContent = '';
     }
     
-    async function uploadFiles() {
-        const input = document.getElementById('fileInput');
-        const fileList = input.files;
+    async function uploadFiles(fileList) {
+        if (!fileList || fileList.length === 0) return;
         
-        if (fileList.length === 0) return;
-        
-        // Show progress
         const progressContainer = document.getElementById('progressContainer');
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
+        const progressDetail = document.getElementById('progressDetail');
         
         progressContainer.classList.add('show');
-        progressText.textContent = `Uploading ${fileList.length} file(s)...`;
         
+        const total = fileList.length;
         let uploaded = 0;
+        let failed = 0;
         
-        for (let i = 0; i < fileList.length; i++) {
+        progressText.textContent = `🚀 Uploading ${total} files...`;
+        
+        for (let i = 0; i < total; i++) {
             const file = fileList[i];
             
-            progressFill.style.width = ((i / fileList.length) * 100) + '%';
-            progressText.textContent = `Uploading ${i + 1}/${fileList.length}: ${file.name}`;
+            progressFill.style.width = ((i / total) * 100) + '%';
+            progressDetail.textContent = `📤 ${i + 1}/${total}: ${file.name}`;
             
             await new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onload = async function(e) {
-                    const data = e.target.result;
-                    const fileData = {
-                        id: Date.now() + Math.random(),
-                        name: file.name,
-                        type: file.type || 'application/octet-stream',
-                        size: file.size,
-                        data: btoa(String.fromCharCode(...new Uint8Array(data)))
-                    };
-                    files.push(fileData);
+                    try {
+                        const data = e.target.result;
+                        const fileData = {
+                            id: Date.now() + Math.random(),
+                            name: file.name,
+                            path: file.webkitRelativePath || file.name,
+                            type: file.type || 'application/octet-stream',
+                            size: file.size,
+                            data: btoa(String.fromCharCode(...new Uint8Array(data)))
+                        };
+                        files.push(fileData);
+                        uploaded++;
+                    } catch (err) { failed++; }
                     resolve();
                 };
+                reader.onerror = () => { failed++; resolve(); };
                 reader.readAsArrayBuffer(file);
             });
+            
+            // Save every 100 files to prevent memory issues
+            if ((i + 1) % 100 === 0 || i === total - 1) {
+                progressText.textContent = `💾 Saving batch ${Math.floor(i/100)+1}...`;
+                const encrypted = await encrypt(JSON.stringify(files), currentPassword);
+                localStorage.setItem('vaultData', encrypted);
+            }
         }
         
-        // Save to localStorage
-        progressText.textContent = 'Encrypting and saving...';
-        const encrypted = await encrypt(JSON.stringify(files), currentPassword);
-        localStorage.setItem('vaultData', encrypted);
-        
-        // Update vault size
         updateVaultSize();
         
         progressFill.style.width = '100%';
-        progressText.textContent = `✅ ${fileList.length} file(s) uploaded successfully!`;
+        progressText.textContent = `✅ Complete! Uploaded: ${uploaded}`;
+        progressDetail.textContent = `Total: ${total} files | Failed: ${failed}`;
         
-        setTimeout(() => {
-            progressContainer.classList.remove('show');
-            progressFill.style.width = '0%';
-        }, 2000);
+        setTimeout(() => { progressContainer.classList.remove('show'); progressFill.style.width = '0%'; }, 3000);
         
-        input.value = '';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('folderInput').value = '';
         renderFiles();
     }
     
@@ -343,34 +290,47 @@
         const list = document.getElementById('fileList');
         const fileCountEl = document.getElementById('fileCount');
         const totalSizeEl = document.getElementById('totalSize');
-        const fileCountLabel = document.getElementById('fileCountLabel');
         
-        // Update stats
         fileCountEl.textContent = files.length;
-        const totalSize = files.reduce((sum, f) => sum + f.size, 0);
+        const totalSize = files.reduce((sum, f) => sum + (f.size || 0), 0);
         totalSizeEl.textContent = formatSize(totalSize);
-        fileCountLabel.textContent = `${files.length} file${files.length !== 1 ? 's' : ''}`;
+        
+        if (deleteMode) {
+            document.getElementById('app').classList.add('delete-mode');
+            document.getElementById('deleteModeBtn').textContent = '✅ Done';
+        } else {
+            document.getElementById('app').classList.remove('delete-mode');
+            document.getElementById('deleteModeBtn').textContent = '🗑️ Delete Mode';
+        }
         
         if (files.length === 0) {
             list.innerHTML = '<div class="empty">📂 No files yet.<br>Click Upload to add files.</div>';
             return;
         }
         
-        list.innerHTML = files.map(f => `
+        // Sort by newest first
+        const sortedFiles = [...files].reverse();
+        
+        list.innerHTML = sortedFiles.map(f => `
             <div class="file-item">
                 <div class="file-info">
                     <span class="file-icon">${getFileIcon(f.type)}</span>
                     <div>
-                        <div class="file-name">${escapeHtml(f.name)}</div>
+                        <div class="file-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</div>
                         <div class="file-size">${formatSize(f.size)}</div>
                     </div>
                 </div>
                 <div class="file-actions">
-                    <button class="btn-secondary" onclick="downloadFile(${f.id})">⬇️ Download</button>
+                    <button class="btn-secondary" onclick="downloadFile(${f.id})">⬇️</button>
                     <button class="btn-danger" onclick="deleteFile(${f.id})">🗑️</button>
                 </div>
             </div>
         `).join('');
+    }
+    
+    function toggleDeleteMode() {
+        deleteMode = !deleteMode;
+        renderFiles();
     }
     
     function updateVaultSize() {
@@ -390,10 +350,7 @@
         const url = URL.createObjectURL(blob);
         
         const a = document.createElement('a');
-        a.href = url;
-        a.download = file.name;
-        a.click();
-        
+        a.href = url; a.download = file.name; a.click();
         URL.revokeObjectURL(url);
     }
     
@@ -401,16 +358,14 @@
         if (!confirm('Delete this file permanently?')) return;
         
         files = files.filter(f => f.id !== id);
-        
         const encrypted = await encrypt(JSON.stringify(files), currentPassword);
         localStorage.setItem('vaultData', encrypted);
-        
         updateVaultSize();
         renderFiles();
     }
     
     function formatSize(bytes) {
-        if (bytes === 0) return '0 B';
+        if (!bytes || bytes === 0) return '0 B';
         const k = 1024;
         const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -424,7 +379,6 @@
         if (type.startsWith('audio/')) return '🎵';
         if (type.includes('pdf')) return '📕';
         if (type.includes('zip') || type.includes('rar') || type.includes('tar')) return '📦';
-        if (type.includes('text')) return '📝';
         return '📄';
     }
     
@@ -436,34 +390,20 @@
     
     // Event listeners
     unlockBtn.addEventListener('click', unlockVault);
-    passwordEl.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') unlockVault();
-    });
+    passwordEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') unlockVault(); });
+    
+    // File inputs
+    document.getElementById('fileInput').addEventListener('change', (e) => uploadFiles(e.target.files));
+    document.getElementById('folderInput').addEventListener('change', (e) => uploadFiles(e.target.files));
     
     // Drag and drop
     const uploadZone = document.querySelector('.upload-zone');
-    
-    uploadZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadZone.style.borderColor = '#00d4ff';
-        uploadZone.style.background = 'rgba(0, 212, 255, 0.1)';
-    });
-    
-    uploadZone.addEventListener('dragleave', () => {
-        uploadZone.style.borderColor = '#333';
-        uploadZone.style.background = '';
-    });
-    
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.style.borderColor = '#00d4ff'; });
+    uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor = '#333'; });
     uploadZone.addEventListener('drop', (e) => {
         e.preventDefault();
         uploadZone.style.borderColor = '#333';
-        uploadZone.style.background = '';
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            document.getElementById('fileInput').files = files;
-            uploadFiles();
-        }
+        if (e.dataTransfer.files.length > 0) uploadFiles(e.dataTransfer.files);
     });
     
     console.log('Vault ready');
