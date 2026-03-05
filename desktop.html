@@ -6,130 +6,282 @@
     <title>Luo Desktop OS</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Segoe UI,sans-serif;background:#000;color:#fff;height:100vh;overflow:hidden}
+        *{margin:0;padding:0;box-sizing:border-box;user-select:none}
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:#000;color:#fff;height:100vh;overflow:hidden;touch-action:none}
+        
+        /* Wallpaper */
+        #wallpaper{
+            position:fixed;inset:0;z-index:0;
+            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+            background-size:cover;
+        }
+        #wallpaper::before{
+            content:'';position:absolute;inset:0;
+            background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="60" r="0.5" fill="rgba(255,255,255,0.08)"/><circle cx="50" cy="80" r="0.8" fill="rgba(255,255,255,0.06)"/></svg>');
+            background-size:200px;
+            animation:twinkle 8s ease-in-out infinite;
+        }
+        @keyframes twinkle{0%,100%{opacity:0.5}50%{opacity:1}}
         
         /* Desktop */
-        #desktop{position:fixed;inset:0;background:linear-gradient(135deg,#0a1628,#0f1f35);padding:15px;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:10px}
+        #desktop{
+            position:fixed;inset:0;z-index:1;padding:15px;
+            display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;
+            gap:8px;align-items:flex-start;
+        }
         
-        /* Icons */
-        .icon{width:70px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border-radius:8px}
-        .icon:hover{background:rgba(255,255,255,0.1)}
-        .icon div{width:44px;height:44px;border-radius:10px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:24px}
-        .icon span{font-size:11px;color:#aaa;text-align:center}
+        /* Desktop Icons */
+        .icon{
+            width:72px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;
+            cursor:pointer;border-radius:10px;transition:all 0.15s;position:relative;
+        }
+        .icon:hover{background:rgba(255,255,255,0.15);transform:scale(1.05)}
+        .icon:active{transform:scale(0.95)}
+        .icon.selected{background:rgba(0,150,255,0.3);box-shadow:0 0 0 2px rgba(0,150,255,0.6)}
+        .icon div{width:48px;height:48px;border-radius:12px;background:linear-gradient(145deg,#2a2a3a,#1a1a2a);
+            display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 8px rgba(0,0,0,0.3)}
+        .icon span{font-size:11px;color:#e0e0e0;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,0.8);max-width:68px;overflow:hidden;
+            white-space:nowrap;text-overflow:ellipsis}
         
-        /* Window */
-        .window{position:fixed;background:#0c0c0c;border:1px solid #444;border-radius:10px;display:none;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,0.8);z-index:100;min-width:300px;min-height:250px}
-        .window.show{display:flex}
-        .w-head{height:32px;background:#1a1a1a;border-bottom:1px solid #333;display:flex;align-items:center;padding:0 10px;border-radius:10px 10px 0 0}
-        .w-btns{display:flex;gap:8px}
-        .w-btn{width:12px;height:12px;border-radius:50%;border:none;cursor:pointer}
-        .w-btn.r{background:#ff5f56}.w-btn.c{background:#1a1a1a}
-        .w-title{flex:1;text-align:center;font-size:12px;color:#888}
-        .w-body{flex:1;background:#000;overflow:auto}
+        /* Window Base */
+        .window{
+            position:fixed;background:#0d0d12;border:1px solid #2a2a3a;border-radius:12px;
+            display:none;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 1px rgba(255,255,255,0.1);
+            z-index:100;min-width:300px;min-height:220px;overflow:hidden;
+        }
+        .window.show{display:flex;animation:windowIn 0.2s ease-out}
+        @keyframes windowIn{from{opacity:0;transform:scale(0.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        
+        /* Window Header */
+        .w-head{
+            height:38px;background:linear-gradient(180deg,#1a1a24,#14141a);border-bottom:1px solid #2a2a3a;
+            display:flex;align-items:center;padding:0 12px;border-radius:12px 12px 0 0;cursor:move;
+        }
+        .w-btns{display:flex;gap:8px;align-items:center}
+        .w-btn{width:14px;height:14px;border-radius:50%;border:none;cursor:pointer;transition:filter 0.15s}
+        .w-btn:hover{filter:brightness(1.2)}
+        .w-btn.r{background:#ff5f57}.w-btn.y{background:#febc2e}.w-btn.g{background:#28c840}
+        .w-title{flex:1;text-align:center;font-size:12px;color:#888;margin-right:60px;font-weight:500}
+        
+        /* Window Controls */
+        .w-controls{display:flex;gap:6px;margin-left:auto}
+        .w-ctrl{width:28px;height:22px;background:#1a1a24;border:1px solid #333;border-radius:4px;
+            display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;color:#666}
+        .w-ctrl:hover{background:#252530;color:#aaa}
+        .w-ctrl.max:hover{color:#4f4}
+        
+        /* Window Body */
+        .w-body{flex:1;background:#08080a;overflow:hidden;position:relative}
         
         /* Calculator */
         .calc{display:flex;flex-direction:column;height:100%}
-        .calc-d{background:#1a1a1a;padding:16px;text-align:right;font-size:28px}
-        .calc-g{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#333;flex:1}
-        .calc-g button{background:#0c0c0c;border:0;color:#fff;font-size:16px;cursor:pointer}
-        .calc-g button.o{background:#0067c0}
+        .calc-d{background:#121218;padding:16px;text-align:right;font-size:26px;color:#fff;font-family:'Consolas',monospace}
+        .calc-g{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a1a24;flex:1}
+        .calc-g button{background:#0d0d12;border:0;color:#ccc;font-size:16px;cursor:pointer;transition:background 0.1s}
+        .calc-g button:hover{background:#1a1a24}
+        .calc-g button:active{background:#252530}
+        .calc-g button.o{background:#0067c0;color:#fff}
+        .calc-g button.o:hover{background:#0078e0}
         
         /* Terminal */
-        .term{background:#080808;padding:12px;font-family:Consolas,monospace;font-size:14px;color:#ccc;height:100%}
-        .term input{background:0;border:0;color:#fff;font-family:inherit;font-size:inherit;outline:0;width:80%}
+        .term{background:#080808;padding:12px;font-family:'Cascadia Code','Consolas',monospace;font-size:13px;color:#ccc;height:100%;overflow-y:auto}
+        .term-line{display:flex;margin-bottom:4px;flex-wrap:wrap}
+        .term-prompt{color:#6ccb5f;margin-right:8px}
+        .term-input{background:0;border:0;color:#fff;font-family:inherit;font-size:inherit;outline:0;flex:1;min-width:100px}
+        .term-output{color:#888;white-space:pre-wrap;margin-bottom:8px}
+        .term-output.error{color:#f55}
         
         /* Files */
         .files{display:flex;height:100%}
-        .files-s{width:120px;background:#1a1a1a;padding:10px}
-        .files-i{padding:8px 10px;border-radius:4px;font-size:12px;cursor:pointer}
-        .files-i:hover{background:rgba(255,255,255,0.1)}
-        .files-m{flex:1;padding:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
-        .files-f{padding:8px;text-align:center;cursor:pointer;border-radius:4px}
+        .files-s{width:130px;background:#0d0d12;border-right:1px solid #1a1a24;padding:10px}
+        .files-i{padding:10px 12px;border-radius:6px;font-size:12px;cursor:pointer;margin-bottom:4px;color:#aaa}
+        .files-i:hover{background:rgba(255,255,255,0.08);color:#fff}
+        .files-i.active{background:#0067c0;color:#fff}
+        .files-m{flex:1;padding:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px;align-content:start}
+        .files-f{padding:12px 8px;text-align:center;cursor:pointer;border-radius:8px;transition:background 0.15s}
         .files-f:hover{background:rgba(255,255,255,0.1)}
-        .files-f div{font-size:28px}
-        .files-f span{font-size:10px;color:#888}
+        .files-f div{font-size:32px;margin-bottom:6px}
+        .files-f span{font-size:10px;color:#999;display:block;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        
+        /* Browser */
+        .browser{height:100%;display:flex;flex-direction:column;background:#fff}
+        .browser-bar{display:flex;gap:8px;padding:10px;background:#f5f5f5;border-bottom:1px solid #ddd;align-items:center}
+        .browser-btn{width:32px;height:32px;background:#fff;border:1px solid #ddd;border-radius:6px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;font-size:14px}
+        .browser-btn:hover{background:#eee}
+        .browser-url{flex:1;height:32px;background:#fff;border:1px solid #ddd;border-radius:6px;padding:0 12px;font-size:13px;outline:none}
+        .browser-url:focus{border-color:#0067c0}
+        .browser-frame{flex:1;background:#fff;border:0}
+        .browser-nav{display:flex;gap:4px}
         
         /* Notepad */
-        .note{width:100%;height:100%;background:#1a1a1a;border:0;color:#fff;padding:12px;font-family:Consolas,monospace;font-size:14px;resize:none;outline:0}
+        .note{width:100%;height:100%;background:#1a1a24;border:0;color:#e0e0e0;padding:14px;font-family:'Consolas',monospace;font-size:13px;resize:none;outline:0;line-height:1.5}
+        .note::placeholder{color:#555}
         
         /* Settings */
         .set{display:flex;height:100%}
-        .set-s{width:140px;background:#1a1a1a;padding:10px}
-        .set-i{padding:10px 12px;border-radius:4px;font-size:12px;cursor:pointer}
-        .set-i:hover{background:rgba(255,255,255,0.1)}
-        .set-m{padding:20px;flex:1}
-        .set-h{font-size:22px;margin-bottom:16px}
-        .set-r{background:#1a1a1a;padding:12px 16px;border-radius:6px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between}
+        .set-s{width:140px;background:#0d0d12;border-right:1px solid #1a1a24;padding:10px}
+        .set-i{padding:10px 12px;border-radius:6px;font-size:12px;cursor:pointer;margin-bottom:4px;color:#aaa}
+        .set-i:hover{background:rgba(255,255,255,0.08);color:#fff}
+        .set-i.active{background:#0067c0;color:#fff}
+        .set-m{padding:20px;flex:1;overflow-y:auto}
+        .set-h{font-size:20px;margin-bottom:20px;color:#fff}
+        .set-r{background:#15151c;padding:14px 18px;border-radius:8px;margin-bottom:10px;font-size:13px;
+            display:flex;justify-content:space-between;align-items:center}
+        .set-r span{color:#888}
+        .set-r b{color:#fff}
+        .set-toggle{width:44px;height:24px;background:#333;border-radius:12px;position:relative;cursor:pointer}
+        .set-toggle.on{background:#0067c0}
+        .set-toggle::after{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left 0.2s}
+        .set-toggle.on::after{left:22px}
         
         /* Games */
         .games{padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-        .game{background:#1a1a1a;padding:16px;border-radius:8px;text-align:center;cursor:pointer}
-        .game:hover{background:#252525}
-        .game div{font-size:36px}
-        .game span{font-size:12px}
+        .game{background:#15151c;padding:20px;border-radius:12px;text-align:center;cursor:pointer;transition:all 0.15s}
+        .game:hover{background:#1a1a24;transform:translateY(-2px)}
+        .game div{font-size:40px;margin-bottom:10px}
+        .game span{font-size:12px;color:#999}
         
-        /* Browser */
-        .browser{height:100%;display:flex;flex-direction:column}
-        .browser input{flex:1;background:#1a1a1a;border:1px solid #333;color:#fff;padding:8px;font-size:14px}
-        .browser iframe{flex:10;background:#fff;border:0}
+        /* Music Player */
+        .music{padding:24px;text-align:center;display:flex;flex-direction:column;height:100%;background:linear-gradient(180deg,#1a1a24,#0d0d12)}
+        .music-cover{width:120px;height:120px;background:linear-gradient(135deg,#0067c0,#003366);border-radius:12px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:50px}
+        .music-t{font-size:15px;font-weight:600;margin-bottom:4px}
+        .music-a{font-size:12px;color:#666;margin-bottom:20px}
+        .music-progress{height:4px;background:#333;border-radius:2px;margin-bottom:20px;position:relative}
+        .music-progress-bar{width:30%;height:100%;background:#0067c0;border-radius:2px}
+        .music-ctrl{display:flex;justify-content:center;gap:16px;align-items:center}
+        .music-ctrl button{background:0;border:0;font-size:20px;cursor:pointer;color:#888;transition:color 0.15s}
+        .music-ctrl button:hover{color:#fff}
+        .music-ctrl button.play{width:48px;height:48px;background:#0067c0;border-radius:50%;font-size:18px;color:#fff}
         
         /* Calendar */
-        .cal{padding:16px}
+        .cal{padding:16px;height:100%;display:flex;flex-direction:column}
         .cal-h{display:flex;justify-content:space-between;margin-bottom:16px;font-size:16px}
-        .cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:12px}
-        .cal-d{padding:8px;border-radius:4px}
-        .cal-d:hover{background:rgba(255,255,255,0.1)}
-        .cal-d.cur{background:#0067c0}
+        .cal-h button{background:0;border:0;color:#888;font-size:18px;cursor:pointer;padding:4px 10px}
+        .cal-h button:hover{color:#fff}
+        .cal-title{font-size:16px;color:#fff}
+        .cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;flex:1}
+        .cal-d{padding:8px;border-radius:6px;font-size:12px;color:#888}
+        .cal-d:hover{background:rgba(255,255,255,0.1);color:#fff}
+        .cal-d.header{color:#555;font-weight:600}
+        .cal-d.today{background:#0067c0;color:#fff}
+        .cal-d.other{color:#444}
         
-        /* Music */
-        .music{padding:20px;text-align:center}
-        .music-c{font-size:60px;margin-bottom:16px}
-        .music-t{font-size:16px;font-weight:600}
-        .music-a{font-size:12px;color:#888;margin-bottom:20px}
-        .music-ctrl{display:flex;justify-content:center;gap:20px}
-        .music-ctrl button{background:0;border:0;font-size:24px;cursor:pointer}
+        /* Email */
+        .email-list{flex:1;overflow-y:auto}
+        .email-item{padding:14px 16px;border-bottom:1px solid #1a1a24;cursor:pointer}
+        .email-item:hover{background:rgba(255,255,255,0.05)}
+        .email-item.unread{background:rgba(0,100,200,0.1)}
+        .email-from{font-size:13px;color:#fff;margin-bottom:2px}
+        .email-sub{font-size:12px;color:#888}
+        .email-time{font-size:10px;color:#555;float:right}
         
         /* Taskbar */
-        #taskbar{position:fixed;left:0;right:0;bottom:0;height:40px;background:rgba(0,0,0,0.9);display:flex;align-items:center;padding:0 10px;gap:6px;border-top:1px solid #333}
-        .task{height:28px;padding:0 12px;display:flex;align-items:center;gap:6px;background:#1a1a1a;border-radius:6px;font-size:11px;cursor:pointer}
-        .task:hover{background:#333}
+        #taskbar{
+            position:fixed;left:0;right:0;bottom:0;height:46px;z-index:50;
+            background:rgba(13,13,18,0.95);backdrop-filter:blur(10px);
+            display:flex;align-items:center;padding:0 12px;gap:6px;
+            border-top:1px solid #2a2a3a;
+        }
+        .task{
+            height:34px;padding:0 14px;display:flex;align-items:center;gap:8px;background:#1a1a24;
+            border-radius:8px;font-size:11px;cursor:pointer;transition:all 0.15s;
+            max-width:160px;overflow:hidden;white-space:nowrap;
+        }
+        .task:hover{background:#252530}
         .task.active{background:#0067c0}
+        .task-icon{font-size:14px}
+        
+        /* Start Menu */
+        #start-btn{
+            width:36px;height:36px;background:#1a1a24;border-radius:8px;display:flex;align-items:center;justify-content:center;
+            font-size:18px;cursor:pointer;margin-right:8px
+        }
+        #start-btn:hover{background:#252530}
         
         /* Clock */
-        #clock{position:fixed;top:10px;right:15px;font-size:14px;z-index:50}
+        #clock{position:fixed;top:12px;right:16px;font-size:13px;z-index:51;color:#888}
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar{width:8px;height:8px}
+        ::-webkit-scrollbar-track{background:#0d0d12}
+        ::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+        ::-webkit-scrollbar-thumb:hover{background:#444}
+        
+        /* Context Menu */
+        #context-menu{position:fixed;background:#1a1a24;border:1px solid #333;border-radius:8px;padding:6px 0;
+            min-width:180px;z-index:1000;display:none;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+        .ctx-item{padding:10px 16px;font-size:12px;cursor:pointer;color:#ccc}
+        .ctx-item:hover{background:#0067c0;color:#fff}
+        .ctx-divider{height:1px;background:#333;margin:6px 0}
     </style>
 </head>
 <body>
+    <div id="wallpaper"></div>
     <div id="clock">12:00</div>
     
+    <!-- Desktop Icons -->
     <div id="desktop">
-        <div class="icon" onclick="openApp('terminal')"><div>⬛</div><span>Terminal</span></div>
-        <div class="icon" onclick="openApp('files')"><div>📁</div><span>Files</span></div>
-        <div class="icon" onclick="openApp('browser')"><div>🌐</div><span>Browser</span></div>
-        <div class="icon" onclick="openApp('calculator')"><div>🧮</div><span>Calculator</span></div>
-        <div class="icon" onclick="openApp('notepad')"><div>📝</div><span>Notepad</span></div>
-        <div class="icon" onclick="openApp('settings')"><div>⚙️</div><span>Settings</span></div>
-        <div class="icon" onclick="openApp('games')"><div>🎮</div><span>Games</span></div>
-        <div class="icon" onclick="openApp('music')"><div>🎵</div><span>Music</span></div>
-        <div class="icon" onclick="openApp('calendar')"><div>📅</div><span>Calendar</span></div>
-        <div class="icon" onclick="openApp('email')"><div>📧</div><span>Email</span></div>
+        <div class="icon" data-app="terminal"><div>⬛</div><span>Terminal</span></div>
+        <div class="icon" data-app="files"><div>📁</div><span>Files</span></div>
+        <div class="icon" data-app="browser"><div>🌐</div><span>Browser</span></div>
+        <div class="icon" data-app="calculator"><div>🧮</div><span>Calculator</span></div>
+        <div class="icon" data-app="notepad"><div>📝</div><span>Notepad</span></div>
+        <div class="icon" data-app="settings"><div>⚙️</div><span>Settings</span></div>
+        <div class="icon" data-app="games"><div>🎮</div><span>Games</span></div>
+        <div class="icon" data-app="music"><div>🎵</div><span>Music</span></div>
+        <div class="icon" data-app="calendar"><div>📅</div><span>Calendar</span></div>
+        <div class="icon" data-app="email"><div>📧</div><span>Email</span></div>
+        <div class="icon" data-app="weather"><div>🌤️</div><span>Weather</span></div>
+        <div class="icon" data-app="clock"><div>🕐</div><span>Clock</span></div>
     </div>
     
-    <div id="taskbar"></div>
+    <div id="taskbar">
+        <div id="start-btn">🪟</div>
+    </div>
     
+    <!-- Context Menu -->
+    <div id="context-menu">
+        <div class="ctx-item" onclick="openApp('terminal')">Open Terminal</div>
+        <div class="ctx-item" onclick="openApp('browser')">Open Browser</div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item" onclick="refreshDesktop()">Refresh</div>
+        <div class="ctx-item" onclick="openApp('settings')">Display Settings</div>
+    </div>
+
     <!-- Terminal -->
-    <div class="window" id="terminal" style="width:550px;height:380px;left:100px;top:50px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('terminal')"></button></div><div class="w-title">⬛ Terminal</div></div>
-        <div class="w-body term">
-            <div id="term-out"></div>
-            <div><span style="color:#6ccb5f">➜</span> <input id="term-in" onkeydown="runCmd(event)"></div>
+    <div class="window" id="terminal" style="width:600px;height:400px;left:15%;top:10%">
+        <div class="w-head" onmousedown="startDrag(event,'terminal')">
+            <div class="w-btns">
+                <button class="w-btn r" onclick="closeApp('terminal')"></button>
+                <button class="w-btn y" onclick="minimizeApp('terminal')"></button>
+                <button class="w-btn g" onclick="maximizeApp('terminal')"></button>
+            </div>
+            <div class="w-title">Terminal</div>
+            <div class="w-controls">
+                <div class="w-ctrl" onclick="minimizeApp('terminal')">─</div>
+                <div class="w-ctrl max" onclick="maximizeApp('terminal')">□</div>
+                <div class="w-ctrl" onclick="closeApp('terminal')">✕</div>
+            </div>
+        </div>
+        <div class="w-body term" id="terminal-body">
+            <div class="term-output" style="color:#6ccb5f">Luo Terminal v1.0</div>
+            <div class="term-output">Type 'help' for available commands.</div>
+            <div id="term-output"></div>
+            <div class="term-line">
+                <span class="term-prompt">➜</span>
+                <input class="term-input" id="term-input" onkeydown="runCmd(event)" autocomplete="off" autofocus>
+            </div>
         </div>
     </div>
     
     <!-- Calculator -->
-    <div class="window" id="calculator" style="width:240px;height:320px;right:60px;bottom:60px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('calculator')"></button></div><div class="w-title">🧮 Calculator</div></div>
+    <div class="window" id="calculator" style="width:260px;height:380px;right:80px;bottom:60px">
+        <div class="w-head" onmousedown="startDrag(event,'calculator')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('calculator')"></button></div>
+            <div class="w-title">Calculator</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('calculator')">✕</div></div>
+        </div>
         <div class="w-body calc">
             <div class="calc-d" id="calc-display">0</div>
             <div class="calc-g">
@@ -143,121 +295,361 @@
     </div>
     
     <!-- Files -->
-    <div class="window" id="files" style="width:550px;height:380px;left:80px;top:40px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('files')"></button></div><div class="w-title">📁 Files</div></div>
+    <div class="window" id="files" style="width:580px;height:400px;left:10%;top:8%">
+        <div class="w-head" onmousedown="startDrag(event,'files')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('files')"></button></div>
+            <div class="w-title">Files</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('files')">✕</div></div>
+        </div>
         <div class="w-body files">
             <div class="files-s">
-                <div class="files-i" onclick="showFolder('home')">🏠 Home</div>
-                <div class="files-i" onclick="showFolder('docs')">📄 Docs</div>
-                <div class="files-i" onclick="showFolder('downloads')">⬇ Downloads</div>
-                <div class="files-i" onclick="showFolder('pictures')">🖼 Pictures</div>
+                <div class="files-i active" data-folder="home" onclick="showFolder('home')">🏠 Home</div>
+                <div class="files-i" data-folder="docs" onclick="showFolder('docs')">📄 Documents</div>
+                <div class="files-i" data-folder="downloads" onclick="showFolder('downloads')">⬇ Downloads</div>
+                <div class="files-i" data-folder="pictures" onclick="showFolder('pictures')">🖼 Pictures</div>
+                <div class="files-i" data-folder="music" onclick="showFolder('music-folder')">🎵 Music</div>
             </div>
             <div class="files-m" id="files-content"></div>
         </div>
     </div>
     
     <!-- Browser -->
-    <div class="window" id="browser" style="width:650px;height:450px;left:60px;top:20px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('browser')"></button></div><div class="w-title">🌐 Browser</div></div>
+    <div class="window" id="browser" style="width:700px;height:480px;left:8%;top:5%">
+        <div class="w-head" onmousedown="startDrag(event,'browser')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('browser')"></button></div>
+            <div class="w-title">Browser</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('browser')">✕</div></div>
+        </div>
         <div class="w-body browser">
-            <input id="url-input" placeholder="Search or enter URL..." onkeydown="loadUrl(event)">
-            <iframe id="browser-frame"></iframe>
+            <div class="browser-bar">
+                <div class="browser-nav">
+                    <button class="browser-btn" onclick="goBack()">←</button>
+                    <button class="browser-btn" onclick="goForward()">→</button>
+                    <button class="browser-btn" onclick="reloadPage()">↻</button>
+                </div>
+                <input class="browser-url" id="url-input" placeholder="Search or enter URL..." onkeydown="loadUrl(event)">
+                <button class="browser-btn" onclick="goHome()">🏠</button>
+            </div>
+            <div class="browser-frame" id="browser-content">
+                <div style="padding:40px;text-align:center;color:#666">
+                    <div style="font-size:48px;margin-bottom:20px">🌐</div>
+                    <div style="font-size:18px;margin-bottom:10px">Luo Browser</div>
+                    <div>Enter a URL or search term above</div>
+                </div>
+            </div>
         </div>
     </div>
     
     <!-- Notepad -->
-    <div class="window" id="notepad" style="width:450px;height:350px;left:120px;top:60px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('notepad')"></button></div><div class="w-title">📝 Notepad</div></div>
-        <textarea class="note" id="notepad-content" placeholder="Type here..."></textarea>
+    <div class="window" id="notepad" style="width:500px;height:380px;left:20%;top:15%">
+        <div class="w-head" onmousedown="startDrag(event,'notepad')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('notepad')"></button></div>
+            <div class="w-title">Notepad</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="saveNotepad()">💾</div><div class="w-ctrl" onclick="closeApp('notepad')">✕</div></div>
+        </div>
+        <textarea class="note" id="notepad-content" placeholder="Start typing..."></textarea>
     </div>
     
     <!-- Settings -->
-    <div class="window" id="settings" style="width:500px;height:380px;left:140px;top:80px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('settings')"></button></div><div class="w-title">⚙️ Settings</div></div>
+    <div class="window" id="settings" style="width:520px;height:420px;left:25%;top:12%">
+        <div class="w-head" onmousedown="startDrag(event,'settings')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('settings')"></button></div>
+            <div class="w-title">Settings</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('settings')">✕</div></div>
+        </div>
         <div class="w-body set">
             <div class="set-s">
-                <div class="set-i">🖥️ Display</div>
-                <div class="set-i">🔊 Sound</div>
-                <div class="set-i">🌐 Network</div>
+                <div class="set-i active" data-section="display" onclick="showSettings('display')">🖥️ Display</div>
+                <div class="set-i" data-section="sound" onclick="showSettings('sound')">🔊 Sound</div>
+                <div class="set-i" data-section="wallpaper" onclick="showSettings('wallpaper')">🖼️ Wallpaper</div>
+                <div class="set-i" data-section="about" onclick="showSettings('about')">ℹ️ About</div>
             </div>
-            <div class="set-m">
+            <div class="set-m" id="settings-content">
                 <div class="set-h">Display</div>
-                <div class="set-r"><span>Theme</span><span>Dark</span></div>
-                <div class="set-r"><span>OS</span><span>Luo Desktop v12</span></div>
+                <div class="set-r"><span>Theme</span><b>Dark</b></div>
+                <div class="set-r"><span>Wallpaper</span><b>Default</b></div>
+                <div class="set-r">
+                    <span>Show Clock</span>
+                    <div class="set-toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="set-r">
+                    <span>Smooth Animations</span>
+                    <div class="set-toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="set-r"><span>OS Version</span><b>Luo Desktop v12</b></div>
             </div>
         </div>
     </div>
     
     <!-- Games -->
-    <div class="window" id="games" style="width:400px;height:350px;left:160px;top:100px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('games')"></button></div><div class="w-title">🎮 Games</div></div>
+    <div class="window" id="games" style="width:420px;height:380px;left:30%;top:18%">
+        <div class="w-head" onmousedown="startDrag(event,'games')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('games')"></button></div>
+            <div class="w-title">Games</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('games')">✕</div></div>
+        </div>
         <div class="w-body games">
             <div class="game" onclick="startGame('snake')"><div>🐍</div><span>Snake</span></div>
             <div class="game" onclick="startGame('pong')"><div>🏓</div><span>Pong</span></div>
-            <div class="game" onclick="startGame('dice')"><div>🎲</div><span>Dice</span></div>
+            <div class="game" onclick="startGame('tetris')"><div>🧱</div><span>Tetris</span></div>
+            <div class="game" onclick="startGame('minesweeper')"><div>💣</div><span>Minesweeper</span></div>
+            <div class="game" onclick="startGame('tic')"><div>⭕</div><span>Tic Tac Toe</span></div>
+            <div class="game" onclick="startGame('memory')"><div>🧠</div><span>Memory</span></div>
         </div>
     </div>
     
     <!-- Music -->
-    <div class="window" id="music" style="width:300px;height:360px;left:180px;top:120px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('music')"></button></div><div class="w-title">🎵 Music</div></div>
+    <div class="window" id="music" style="width:320px;height:400px;left:35%;top:22%">
+        <div class="w-head" onmousedown="startDrag(event,'music')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('music')"></button></div>
+            <div class="w-title">Music</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('music')">✕</div></div>
+        </div>
         <div class="w-body music">
-            <div class="music-c">🎵</div>
-            <div class="music-t">No Music Playing</div>
-            <div class="music-a">Select a track</div>
+            <div class="music-cover">🎵</div>
+            <div class="music-t">No Track Playing</div>
+            <div class="music-a">Select a track below</div>
+            <div class="music-progress"><div class="music-progress-bar"></div></div>
             <div class="music-ctrl">
-                <button>⏮</button><button>▶</button><button>⏭</button>
+                <button>⏮</button><button class="play" onclick="this.textContent=this.textContent==='▶'?'⏸':'▶'">▶</button><button>⏭</button>
+            </div>
+            <div style="margin-top:20px;text-align:left">
+                <div style="font-size:11px;color:#666;margin-bottom:8px">PLAYLIST</div>
+                <div style="padding:8px;background:#15151c;border-radius:6px;font-size:12px">🎵 Demo Track 1</div>
+                <div style="padding:8px;background:#15151c;border-radius:6px;font-size:12px;margin-top:6px">🎵 Demo Track 2</div>
             </div>
         </div>
     </div>
     
     <!-- Calendar -->
-    <div class="window" id="calendar" style="width:300px;height:340px;left:200px;top:140px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('calendar')"></button></div><div class="w-title">📅 Calendar</div></div>
+    <div class="window" id="calendar" style="width:340px;height:380px;left:40%;top:25%">
+        <div class="w-head" onmousedown="startDrag(event,'calendar')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('calendar')"></button></div>
+            <div class="w-title">Calendar</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('calendar')">✕</div></div>
+        </div>
         <div class="w-body cal" id="calendar-content"></div>
     </div>
     
     <!-- Email -->
-    <div class="window" id="email" style="width:500px;height:380px;left:220px;top:160px">
-        <div class="w-head"><div class="w-btns"><button class="w-btn r" onclick="closeApp('email')"></button></div><div class="w-title">📧 Email</div></div>
-        <div class="w-body" style="padding:20px">
-            <div style="font-size:16px;margin-bottom:10px">Welcome to Luo Email!</div>
-            <div style="color:#888;font-size:13px">You have 3 new messages.</div>
+    <div class="window" id="email" style="width:520px;height:400px;left:12%;top:10%">
+        <div class="w-head" onmousedown="startDrag(event,'email')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('email')"></button></div>
+            <div class="w-title">Email</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('email')">✕</div></div>
+        </div>
+        <div class="w-body" style="display:flex;flex-direction:column;background:#0d0d12">
+            <div class="email-list" id="email-list">
+                <div class="email-item unread">
+                    <span class="email-time">10:30</span>
+                    <div class="email-from">System</div>
+                    <div class="email-sub">Welcome to Luo Desktop Email!</div>
+                </div>
+                <div class="email-item unread">
+                    <span class="email-time">Yesterday</span>
+                    <div class="email-from">Wayne OS</div>
+                    <div class="email-sub">I'm now running in the background...</div>
+                </div>
+                <div class="email-item">
+                    <span class="email-time">Mar 3</span>
+                    <div class="email-from">Notifications</div>
+                    <div class="email-sub">Your daily summary is ready</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Weather -->
+    <div class="window" id="weather" style="width:300px;height:320px;left:45%;top:28%">
+        <div class="w-head" onmousedown="startDrag(event,'weather')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('weather')"></button></div>
+            <div class="w-title">Weather</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('weather')">✕</div></div>
+        </div>
+        <div class="w-body" style="padding:20px;text-align:center;background:linear-gradient(180deg,#1a3a5c,#0d1f30)">
+            <div style="font-size:50px;margin-bottom:10px">⛅</div>
+            <div style="font-size:28px;font-weight:300">22°C</div>
+            <div style="color:#888;margin-bottom:20px">Partly Cloudy</div>
+            <div style="display:flex;justify-content:space-around;color:#888;font-size:12px">
+                <div>💧 45%</div>
+                <div>💨 12 km/h</div>
+                <div>☀️ 12h</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Clock App -->
+    <div class="window" id="clock-app" style="width:280px;height:280px;left:50%;top:30%">
+        <div class="w-head" onmousedown="startDrag(event,'clock-app')">
+            <div class="w-btns"><button class="w-btn r" onclick="closeApp('clock-app')"></button></div>
+            <div class="w-title">Clock</div>
+            <div class="w-controls"><div class="w-ctrl" onclick="closeApp('clock-app')">✕</div></div>
+        </div>
+        <div class="w-body" style="display:flex;align-items:center;justify-content:center;background:#0d0d12">
+            <div id="app-clock" style="font-size:48px;font-weight:300;font-family:'Segoe UI',sans-serif">12:00:00</div>
         </div>
     </div>
 
     <script>
-        // Clock
+        // ============ CLOCK ============
         setInterval(() => {
-            document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+            document.getElementById('clock').textContent = now.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' + time;
+            
+            const appClock = document.getElementById('app-clock');
+            if(appClock) appClock.textContent = time;
         }, 1000);
         
-        // Open App
+        // ============ DESKTOP ICONS ============
+        document.querySelectorAll('.icon').forEach(icon => {
+            icon.addEventListener('dblclick', () => openApp(icon.dataset.app));
+            icon.addEventListener('click', (e) => {
+                document.querySelectorAll('.icon').forEach(i => i.classList.remove('selected'));
+                icon.classList.add('selected');
+            });
+        });
+        
+        // Desktop click deselects
+        document.getElementById('desktop').addEventListener('click', (e) => {
+            if(e.target.id === 'desktop') {
+                document.querySelectorAll('.icon').forEach(i => i.classList.remove('selected'));
+            }
+        });
+        
+        // Desktop icons draggable
+        let iconDrag = null, iconX, iconY;
+        document.querySelectorAll('.icon').forEach(icon => {
+            icon.addEventListener('mousedown', (e) => {
+                if(e.detail === 2) return; // Don't drag on double click
+                iconDrag = icon;
+                const rect = icon.getBoundingClientRect();
+                iconX = e.clientX - rect.left;
+                iconY = e.clientY - rect.top;
+                document.addEventListener('mousemove', moveIcon);
+                document.addEventListener('mouseup', stopIconDrag);
+            });
+        });
+        
+        function moveIcon(e) {
+            if(!iconDrag) return;
+            iconDrag.style.position = 'fixed';
+            iconDrag.style.left = (e.clientX - iconX) + 'px';
+            iconDrag.style.top = (e.clientY - iconY) + 'px';
+            iconDrag.style.zIndex = 10;
+        }
+        
+        function stopIconDrag() {
+            if(iconDrag) iconDrag.style.zIndex = '';
+            iconDrag = null;
+            document.removeEventListener('mousemove', moveIcon);
+            document.removeEventListener('mouseup', stopIconDrag);
+        }
+        
+        // ============ WINDOW MANAGEMENT ============
+        let zIndex = 100;
+        let maximizedWindows = {};
+        
         function openApp(appName) {
-            console.log('Opening:', appName);
+            const win = document.getElementById(appName);
+            if(!win) return;
+            
+            win.classList.add('show');
+            win.style.zIndex = ++zIndex;
+            
+            // Update taskbar
+            updateTaskbar(appName);
+            
+            // App-specific init
+            if(appName === 'calendar') renderCalendar();
+            if(appName === 'files') showFolder('home');
+            if(appName === 'notepad') {
+                const saved = localStorage.getItem('luo_notepad') || '';
+                document.getElementById('notepad-content').value = saved;
+            }
+            
+            // Bring to front on click
+            win.addEventListener('mousedown', () => win.style.zIndex = ++zIndex);
+        }
+        
+        function closeApp(appName) {
             const win = document.getElementById(appName);
             if(win) {
-                win.classList.add('show');
-                updateTaskbar(appName);
-                if(appName === 'calendar') renderCalendar();
-            } else {
-                alert('App not found: ' + appName);
+                win.classList.remove('show');
+                removeTask(appName);
             }
         }
         
-        // Close App
-        function closeApp(appName) {
+        function minimizeApp(appName) {
             const win = document.getElementById(appName);
             if(win) win.classList.remove('show');
-            removeTask(appName);
         }
         
-        // Taskbar
+        function maximizeApp(appName) {
+            const win = document.getElementById(appName);
+            if(!win) return;
+            
+            if(maximizedWindows[appName]) {
+                // Restore
+                win.style.width = maximizedWindows[appName].width;
+                win.style.height = maximizedWindows[appName].height;
+                win.style.left = maximizedWindows[appName].left;
+                win.style.top = maximizedWindows[appName].top;
+                delete maximizedWindows[appName];
+            } else {
+                // Maximize
+                maximizedWindows[appName] = {
+                    width: win.style.width,
+                    height: win.style.height,
+                    left: win.style.left,
+                    top: win.style.top
+                };
+                win.style.width = '100%';
+                win.style.height = 'calc(100% - 46px)';
+                win.style.left = '0';
+                win.style.top = '0';
+            }
+        }
+        
+        // ============ DRAG WINDOWS ============
+        let dragWin = null, dragStartX, dragStartY, winStartX, winStartY;
+        
+        function startDrag(e, appName) {
+            if(e.target.classList.contains('w-btn') || e.target.classList.contains('w-ctrl')) return;
+            dragWin = document.getElementById(appName);
+            dragWin.style.zIndex = ++zIndex;
+            
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            winStartX = dragWin.offsetLeft;
+            winStartY = dragWin.offsetTop;
+            
+            document.addEventListener('mousemove', doDrag);
+            document.addEventListener('mouseup', stopDrag);
+        }
+        
+        function doDrag(e) {
+            if(!dragWin) return;
+            const dx = e.clientX - dragStartX;
+            const dy = e.clientY - dragStartY;
+            dragWin.style.left = (winStartX + dx) + 'px';
+            dragWin.style.top = Math.max(0, winStartY + dy) + 'px';
+        }
+        
+        function stopDrag() {
+            dragWin = null;
+            document.removeEventListener('mousemove', doDrag);
+            document.removeEventListener('mouseup', stopDrag);
+        }
+        
+        // ============ TASKBAR ============
         function updateTaskbar(appName) {
             const tb = document.getElementById('taskbar');
             const id = 'task-' + appName;
             if(!document.getElementById(id)) {
-                tb.innerHTML += '<div class="task active" id="' + id + '" onclick="openApp(\'' + appName + '\')">' + appName + '</div>';
+                const icons = {terminal:'⬛',files:'📁',browser:'🌐',calculator:'🧮',notepad:'📝',
+                    settings:'⚙️',games:'🎮',music:'🎵',calendar:'📅',email:'📧',weather:'🌤️','clock-app':'🕐'};
+                tb.innerHTML += `<div class="task" id="${id}" onclick="openApp('${appName}')"><span class="task-icon">${icons[appName]||'📄'}</span>${appName}</div>`;
             }
             document.querySelectorAll('.task').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -268,7 +660,7 @@
             if(t) t.remove();
         }
         
-        // Calculator
+        // ============ CALCULATOR ============
         let calcResult = '0', calcOp = null, calcPrev = null;
         function calc(val) {
             const d = document.getElementById('calc-display');
@@ -282,97 +674,262 @@
             d.textContent = calcResult;
         }
         
-        // Terminal
-        const commands = {
-            help: 'ls pwd date whoami echo clear exit',
-            ls: () => folderContent.join('  ') || '(empty)',
-            pwd: () => '/' + currentFolder,
-            date: () => new Date().toString(),
-            whoami: 'luo',
-            echo: (args) => args.join(' '),
-            clear: () => { document.getElementById('term-out').innerHTML = ''; return ''; },
-            exit: () => { closeApp('terminal'); return 'Bye!'; }
-        };
+        // ============ TERMINAL ============
+        const termHistory = [];
+        let termHistIndex = -1;
         
         function runCmd(e) {
             if(e.key === 'Enter') {
-                const input = document.getElementById('term-in');
-                const output = document.getElementById('term-out');
+                const input = document.getElementById('term-input');
+                const output = document.getElementById('term-output');
                 const cmd = input.value.trim();
+                
                 if(cmd) {
-                    output.innerHTML += '<div>➜ ' + cmd + '</div>';
-                    const parts = cmd.split(' ');
-                    const c = parts[0];
-                    const args = parts.slice(1);
-                    if(commands[c]) {
-                        let result = commands[c](args);
-                        if(result) output.innerHTML += '<div>' + result + '</div>';
-                    } else {
-                        output.innerHTML += '<div style="color:#f55">Command not found: ' + c + '</div>';
+                    termHistory.push(cmd);
+                    termHistIndex = termHistory.length;
+                    
+                    output.innerHTML += `<div class="term-line"><span class="term-prompt">➜</span><span>${cmd}</span></div>`;
+                    
+                    const result = executeCmd(cmd);
+                    if(result) {
+                        output.innerHTML += `<div class="term-output">${result}</div>`;
                     }
-                    output.innerHTML += '<br>';
+                    
                     input.value = '';
-                    output.scrollTop = output.scrollHeight;
+                    document.getElementById('terminal-body').scrollTop = document.getElementById('terminal-body').scrollHeight;
+                }
+            } else if(e.key === 'ArrowUp') {
+                e.preventDefault();
+                if(termHistIndex > 0) {
+                    termHistIndex--;
+                    document.getElementById('term-input').value = termHistory[termHistIndex];
+                }
+            } else if(e.key === 'ArrowDown') {
+                e.preventDefault();
+                if(termHistIndex < termHistory.length - 1) {
+                    termHistIndex++;
+                    document.getElementById('term-input').value = termHistory[termHistIndex];
+                } else {
+                    termHistIndex = termHistory.length;
+                    document.getElementById('term-input').value = '';
                 }
             }
         }
         
-        // Files
+        function executeCmd(cmd) {
+            const parts = cmd.split(' ');
+            const c = parts[0].toLowerCase();
+            const args = parts.slice(1).join(' ');
+            
+            const commands = {
+                help: 'Available: help, ls, pwd, date, whoami, echo, clear, neofetch, cat, mkdir, history, exit',
+                ls: 'Documents  Downloads  Pictures  Music  Desktop',
+                pwd: '/home/luo',
+                date: new Date().toString(),
+                whoami: 'luo',
+                echo: args,
+                clear: () => { document.getElementById('term-output').innerHTML = ''; return ''; },
+                neofetch: `<div style="color:#0067c0">
+       _nnnn_      luo@luo-desktop<br>
+      dGGGGMMb     -----------<br>
+     @p~qp~~qMb    OS: Luo Desktop v12<br>
+     M|@||@) M|    Kernel: Web<br>
+     @,----.JM|    Shell: luo-term<br>
+    JS^\\__/  qKL   Resolution: ${window.innerWidth}x${window.innerHeight}<br>
+   dZP        qKR  Theme: Dark<br>
+  dZP          qKKb<br>
+ dZP            SMMb<br>
+ dZM            MMMM<br>
+</div>`,
+                history: () => termHistory.map((c,i) => `<div style="color:#666">  ${i+1}  ${c}</div>`).join(''),
+                cat: args ? `Content of ${args}:\n[Simulated file content]` : 'Usage: cat <filename>',
+                mkdir: args ? `Created directory: ${args}` : 'Usage: mkdir <dirname>',
+                exit: () => { closeApp('terminal'); return 'Session closed.'; }
+            };
+            
+            if(commands[c]) {
+                return typeof commands[c] === 'function' ? commands[c]() : commands[c];
+            }
+            return `<span class="error">Command not found: ${c}</span>`;
+        }
+        
+        // ============ FILES ============
         const folders = {
-            home: ['Documents', 'Downloads', 'Pictures', 'Music'],
-            docs: ['notes.txt', 'project.txt'],
-            downloads: [],
-            pictures: ['photo1.jpg', 'photo2.png']
+            home: ['Documents', 'Downloads', 'Pictures', 'Music', 'Desktop'],
+            docs: ['notes.txt', 'project.md', 'readme.txt'],
+            downloads: ['file1.pdf', 'image.png', 'archive.zip'],
+            pictures: ['photo1.jpg', 'photo2.png', 'screenshot.png'],
+            'music-folder': ['song1.mp3', 'song2.mp3']
         };
         let currentFolder = 'home';
         
         function showFolder(name) {
             currentFolder = name;
+            document.querySelectorAll('.files-i').forEach(i => {
+                i.classList.toggle('active', i.dataset.folder === name);
+            });
+            
             const content = folders[name] || [];
-            document.getElementById('files-content').innerHTML = content.map(f => 
-                '<div class="files-f"><div>📄</div><span>' + f + '</span></div>'
-            ).join('') || '<div style="color:#666;padding:20px">Empty folder</div>';
+            const icons = {txt:'📄',md:'📝',pdf:'📕',png:'🖼️',jpg:'🖼️',zip:'📦',mp3:'🎵'};
+            
+            document.getElementById('files-content').innerHTML = content.map(f => {
+                const ext = f.split('.').pop();
+                const icon = icons[ext] || '📄';
+                return `<div class="files-f"><div>${icon}</div><span>${f}</span></div>`;
+            }).join('') || '<div style="color:#555;padding:20px">Empty folder</div>';
         }
-        showFolder('home');
         
-        // Browser
+        // ============ BROWSER ============
         function loadUrl(e) {
             if(e.key === 'Enter') {
-                let url = e.target.value;
-                if(!url.startsWith('http')) url = 'https://www.google.com/search?q=' + encodeURIComponent(url);
-                document.getElementById('browser-frame').src = url;
+                let url = e.target.value.trim();
+                if(!url) return;
+                
+                if(!url.startsWith('http') && !url.includes('.')) {
+                    url = 'https://www.google.com/search?q=' + encodeURIComponent(url);
+                } else if(!url.startsWith('http')) {
+                    url = 'https://' + url;
+                }
+                
+                const content = document.getElementById('browser-content');
+                content.innerHTML = `<iframe src="${url}" style="width:100%;height:100%;border:0" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>`;
             }
         }
         
-        // Calendar
+        function goBack() { /* Would need history stack */ }
+        function goForward() { /* Would need history stack */ }
+        function reloadPage() {
+            const iframe = document.querySelector('#browser-content iframe');
+            if(iframe) iframe.src = iframe.src;
+        }
+        function goHome() {
+            document.getElementById('browser-content').innerHTML = `<div style="padding:40px;text-align:center;color:#666"><div style="font-size:48px;margin-bottom:20px">🌐</div><div style="font-size:18px;margin-bottom:10px">Luo Browser</div><div>Enter a URL or search term above</div></div>`;
+        }
+        
+        // ============ CALENDAR ============
+        let calDate = new Date();
         function renderCalendar() {
-            const d = new Date();
+            const d = calDate;
+            const today = new Date();
             const month = d.getMonth();
             const year = d.getFullYear();
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             
-            let html = '<div class="cal-h"><span>' + d.toLocaleString('en-US',{month:'long',year:'numeric'}) + '</span></div>';
+            let html = `<div class="cal-h">
+                <button onclick="calDate.setMonth(calDate.getMonth()-1);renderCalendar()">◀</button>
+                <span class="cal-title">${d.toLocaleString('en-US',{month:'long',year:'numeric'})}</span>
+                <button onclick="calDate.setMonth(calDate.getMonth()+1);renderCalendar()">▶</button>
+            </div>`;
             html += '<div class="cal-g">';
-            ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(day => html += '<div class="cal-d">' + day + '</div>');
-            for(let i=0;i<firstDay;i++) html += '<div class="cal-d"></div>';
-            for(let i=1;i<=daysInMonth;i++) {
-                html += '<div class="cal-d' + (i === d.getDate() ? ' cur' : '') + '">' + i + '</div>';
+            ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(day => html += `<div class="cal-d header">${day}</div>`);
+            
+            // Previous month days
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            for(let i=firstDay-1;i>=0;i--) {
+                html += `<div class="cal-d other">${prevMonthDays-i}</div>`;
             }
+            
+            // Current month
+            for(let i=1;i<=daysInMonth;i++) {
+                const isToday = i === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                html += `<div class="cal-d${isToday?' today':''}">${i}</div>`;
+            }
+            
+            // Next month days
+            const remaining = 42 - (firstDay + daysInMonth);
+            for(let i=1;i<=remaining;i++) {
+                html += `<div class="cal-d other">${i}</div>`;
+            }
+            
             html += '</div>';
             document.getElementById('calendar-content').innerHTML = html;
         }
         
-        // Games
-        function startGame(game) {
-            alert('Starting ' + game + '!');
+        // ============ NOTEPAD ============
+        function saveNotepad() {
+            const content = document.getElementById('notepad-content').value;
+            localStorage.setItem('luo_notepad', content);
+            alert('Saved!');
         }
         
-        // Notepad save
-        document.getElementById('notepad-content').addEventListener('input', function() {
-            localStorage.setItem('luo_notepad', this.value);
+        // ============ SETTINGS ============
+        function showSettings(section) {
+            document.querySelectorAll('.set-i').forEach(i => {
+                i.classList.toggle('active', i.dataset.section === section);
+            });
+            
+            const content = document.getElementById('settings-content');
+            const sections = {
+                display: `<div class="set-h">Display</div>
+                    <div class="set-r"><span>Theme</span><b>Dark</b></div>
+                    <div class="set-r"><span>Wallpaper</span><b>Default</b></div>
+                    <div class="set-r"><span>Show Clock</span><div class="set-toggle on" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="set-r"><span>Smooth Animations</span><div class="set-toggle on" onclick="this.classList.toggle('on')"></div></div>`,
+                sound: `<div class="set-h">Sound</div>
+                    <div class="set-r"><span>System Sounds</span><div class="set-toggle on" onclick="this.classList.toggle('on')"></div></div>
+                    <div class="set-r"><span>Volume</span><b>75%</b></div>`,
+                wallpaper: `<div class="set-h">Wallpaper</div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
+                        <div style="height:60px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:8px;cursor:pointer;border:2px solid #0067c0"></div>
+                        <div style="height:60px;background:linear-gradient(135deg,#0f3460,#16213e);border-radius:8px;cursor:pointer"></div>
+                        <div style="height:60px;background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:8px;cursor:pointer"></div>
+                    </div>`,
+                about: `<div class="set-h">About</div>
+                    <div style="text-align:center;padding:20px">
+                        <div style="font-size:48px;margin-bottom:10px">🪟</div>
+                        <div style="font-size:20px;margin-bottom:5px">Luo Desktop OS</div>
+                        <div style="color:#666;margin-bottom:20px">Version 12.0.0</div>
+                        <div style="color:#555;font-size:12px">Built with 💻 by Luo</div>
+                    </div>`
+            };
+            content.innerHTML = sections[section] || sections.display;
+        }
+        
+        // ============ GAMES ============
+        function startGame(game) {
+            const games = {
+                snake: '<div style="padding:20px;text-align:center">🐍 Snake - Use arrow keys!</div>',
+                pong: '<div style="padding:20px;text-align:center">🏓 Pong - Click to start</div>',
+                tetris: '<div style="padding:20px;text-align:center">🧱 Tetris - Coming soon!</div>',
+                minesweeper: '<div style="padding:20px;text-align:center">💣 Minesweeper - Coming soon!</div>',
+                tic: `<div style="padding:20px">
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:150px;margin:0 auto">
+                        ${[...Array(9)].map((_,i)=>`<div onclick="this.textContent=this.textContent||'X'" style="width:48px;height:48px;background:#1a1a24;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer"> </div>`).join('')}
+                    </div>
+                </div>`,
+                memory: '<div style="padding:20px;text-align:center">🧠 Memory - Click to flip!</div>'
+            };
+            alert('Starting ' + game + '!\n\n' + (games[game] || 'Coming soon!'));
+        }
+        
+        // ============ CONTEXT MENU ============
+        document.getElementById('desktop').addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const menu = document.getElementById('context-menu');
+            menu.style.display = 'block';
+            menu.style.left = e.clientX + 'px';
+            menu.style.top = e.clientY + 'px';
         });
-        document.getElementById('notepad-content').value = localStorage.getItem('luo_notepad') || '';
+        
+        document.addEventListener('click', () => {
+            document.getElementById('context-menu').style.display = 'none';
+        });
+        
+        // ============ START BUTTON ============
+        document.getElementById('start-btn').addEventListener('click', () => {
+            openApp('settings');
+        });
+        
+        // ============ REFRESH DESKTOP ============
+        function refreshDesktop() {
+            location.reload();
+        }
+        
+        // ============ WAYNE OS ============
+        const wayneScript = document.createElement('script');
+        wayneScript.src = '../wayne-os/wayne-client.js';
+        document.body.appendChild(wayneScript);
     </script>
 </body>
 </html>
