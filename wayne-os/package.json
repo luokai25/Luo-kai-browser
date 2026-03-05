@@ -1,0 +1,16 @@
+{
+  "name": "wayne-os",
+  "version": "1.0.0",
+  "description": "Wayne OS - Your ever-present AI companion",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "better-sqlite3": "^9.2.2",
+    "uuid": "^9.0.1"
+  }
+}

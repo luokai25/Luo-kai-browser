@@ -1,0 +1,21 @@
+[Unit]
+Description=Wayne OS - Your Ever-Present AI Companion
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/.openclaw/workspace/wayne-os
+ExecStart=/usr/bin/node /root/.openclaw/workspace/wayne-os/src/server.js
+Restart=always
+RestartSec=10
+
+# Environment
+Environment=NODE_ENV=production
+
+# Logging
+StandardOutput=append:/root/.openclaw/workspace/wayne-os/data/wayne.log
+StandardError=append:/root/.openclaw/workspace/wayne-os/data/wayne-error.log
+
+[Install]
+WantedBy=multi-user.target
