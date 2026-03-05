@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #000; color: #fff; min-height: 100vh; padding: 20px; }
+        .container { max-width: 500px; margin: 50px auto; text-align: center; }
+        h1 { font-size: 2rem; margin-bottom: 30px; background: linear-gradient(90deg, #00d4ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input { width: 100%; padding: 15px; font-size: 1.1rem; background: #111; border: 2px solid #333; border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none; }
+        input:focus { border-color: #00d4ff; }
+        button { padding: 15px 30px; font-size: 1rem; background: linear-gradient(90deg, #00d4ff, #0080ff); border: none; border-radius: 8px; color: #000; cursor: pointer; font-weight: bold; }
+        button:hover { transform: translateY(-2px); }
+        .error { color: #ff4444; margin-top: 10px; }
+        #app { display: none; }
+        .files { margin-top: 30px; text-align: left; }
+        .file-item { background: #111; padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .toolbar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn-secondary { background: #333; color: #fff; }
+        .btn-danger { background: #ff4444; }
+    </style>
+</head>
+<body>
+    <div class="container" id="lock-screen">
+        <h1>∞ Infinite Vault</h1>
+        <input type="password" id="password" placeholder="Enter Master Password">
+        <button id="unlockBtn">Unlock Vault</button>
+        <p class="error" id="error"></p>
+    </div>
+    
+    <div class="container" id="app">
+        <h1>∞ Your Vault</h1>
+        <div class="toolbar">
+            <button class="btn-secondary" onclick="lockVault()">🔒 Lock</button>
+            <button onclick="document.getElementById('fileInput').click()">📤 Upload</button>
+            <input type="file" id="fileInput" hidden multiple onchange="uploadFiles()">
+        </div>
+        <div class="files" id="fileList"></div>
+    </div>
+
+    <script>
+    console.log('Vault script starting...');
+    
+    const errorEl = document.getElementById('error');
+    const passwordEl = document.getElementById('password');
+    const unlockBtn = document.getElementById('unlockBtn');
+    
+    let vaultData = null;
+    let files = [];
+    
+    // Check if vault exists
+    function hasVault() {
+        return localStorage.getItem('vaultData') !== null;
+    }
+    
+    // Simple encryption using Web Crypto
+    async function encrypt(data, password) {
+        const encoder = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']
+        );
+        const key = await crypto.subtle.deriveKey(
+            { name: 'PBKDF2', salt: encoder.encode('vaultSalt'), iterations: 10000, hash: 'SHA-256' },
+            keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
+        );
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(data));
+        return btoa(String.fromCharCode(...iv)) + ':' + btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+    }
+    
+    async function decrypt(data, password) {
+        try {
+            const encoder = new TextEncoder();
+            const [ivB64, dataB64] = data.split(':');
+            const iv = new Uint8Array(atob(ivB64).split('').map(c => c.charCodeAt(0)));
+            const encryptedData = new Uint8Array(atob(dataB64).split('').map(c => c.charCodeAt(0)));
+            
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']
+            );
+            const key = await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: encoder.encode('vaultSalt'), iterations: 10000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+            );
+            
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, encryptedData);
+            return new TextDecoder().decode(decrypted);
+        } catch (e) {
+            console.error('Decrypt error:', e);
+            return null;
+        }
+    }
+    
+    async function unlockVault() {
+        const password = passwordEl.value;
+        if (!password) {
+            errorEl.textContent = 'Please enter a password';
+            return;
+        }
+        
+        console.log('Attempting to unlock...');
+        
+        try {
+            if (hasVault()) {
+                // Try to decrypt existing vault
+                const stored = localStorage.getItem('vaultData');
+                const decrypted = await decrypt(stored, password);
+                
+                if (decrypted === null) {
+                    errorEl.textContent = 'Wrong password!';
+                    return;
+                }
+                
+                files = JSON.parse(decrypted);
+                console.log('Vault unlocked, files:', files.length);
+            } else {
+                // Create new vault
+                files = [];
+                const encrypted = await encrypt(JSON.stringify(files), password);
+                localStorage.setItem('vaultData', encrypted);
+                console.log('New vault created');
+            }
+            
+            // Show app
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            renderFiles();
+            
+        } catch (e) {
+            console.error('Error:', e);
+            errorEl.textContent = 'Error: ' + e.message;
+        }
+    }
+    
+    function lockVault() {
+        files = [];
+        document.getElementById('app').style.display = 'none';
+        document.getElementById('lock-screen').style.display = 'block';
+        passwordEl.value = '';
+        errorEl.textContent = '';
+    }
+    
+    async function uploadFiles() {
+        const input = document.getElementById('fileInput');
+        const password = passwordEl.value;
+        
+        for (const file of input.files) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const data = e.target.result;
+                // Store file data as base64
+                const fileData = {
+                    id: Date.now() + Math.random(),
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: btoa(String.fromCharCode(...new Uint8Array(data)))
+                };
+                files.push(fileData);
+                
+                // Re-encrypt vault
+                const encrypted = await encrypt(JSON.stringify(files), password);
+                localStorage.setItem('vaultData', encrypted);
+                renderFiles();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        input.value = '';
+    }
+    
+    function renderFiles() {
+        const list = document.getElementById('fileList');
+        
+        if (files.length === 0) {
+            list.innerHTML = '<p style="color:#666">No files yet. Click Upload to add files.</p>';
+            return;
+        }
+        
+        list.innerHTML = files.map(f => `
+            <div class="file-item">
+                <span>📄 ${f.name} (${formatSize(f.size)})</span>
+                <button class="btn-danger" onclick="downloadFile(${f.id})">⬇️</button>
+            </div>
+        `).join('');
+    }
+    
+    function downloadFile(id) {
+        const file = files.find(f => f.id === id);
+        if (!file) return;
+        
+        const bytes = Uint8Array.from(atob(file.data), c => c.charCodeAt(0));
+        const blob = new Blob([bytes], { type: file.type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+        return (bytes/(1024*1024)).toFixed(1) + ' MB';
+    }
+    
+    // Event listeners
+    unlockBtn.addEventListener('click', unlockVault);
+    passwordEl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') unlockVault();
+    });
+    
+    console.log('Vault script loaded');
+    </script>
+</body>
+</html>
