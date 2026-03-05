@@ -1,452 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinite Vault</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; min-height: 100vh; padding: 20px; }
-        
-        .bg { position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(ellipse at 20% 80%, rgba(120, 0, 255, 0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at 80% 20%, rgba(0, 150, 255, 0.1) 0%, transparent 50%),
-                        linear-gradient(180deg, #0a0a0f 0%, #000 100%); }
-        
-        .container { max-width: 700px; margin: 30px auto; text-align: center; }
-        
-        h1 { font-size: 2.2rem; margin-bottom: 8px;
-            background: linear-gradient(90deg, #00d4ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .subtitle { color: #666; margin-bottom: 25px; }
-        
-        input { width: 100%; max-width: 350px; padding: 14px; font-size: 1rem; background: #111; 
-            border: 2px solid #222; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; }
-        input:focus { border-color: #00d4ff; }
-        
-        button { padding: 14px 30px; font-size: 1rem; 
-            background: linear-gradient(90deg, #00d4ff, #0080ff); 
-            border: none; border-radius: 10px; color: #000; cursor: pointer; font-weight: bold; }
-        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3); }
-        
-        .error { color: #ff4444; margin-top: 10px; font-size: 0.9rem; }
-        
-        #app { display: none; text-align: left; }
-        
-        .stats { display: flex; gap: 10px; margin-bottom: 20px; }
-        .stat-box { flex: 1; background: #111; border: 1px solid #222; border-radius: 10px; padding: 15px; text-align: center; }
-        .stat-box .value { font-size: 1.5rem; font-weight: bold; color: #00d4ff; }
-        .stat-box .label { font-size: 0.7rem; color: #666; text-transform: uppercase; }
-        
-        .toolbar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .btn-secondary { background: #222; color: #fff; }
+        body { font-family: sans-serif; background: #000; color: #fff; padding: 20px; text-align: center; }
+        h1 { background: linear-gradient(90deg, #00d4ff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input { padding: 12px; font-size: 16px; background: #111; border: 1px solid #333; color: #fff; border-radius: 6px; width: 250px; margin: 10px; }
+        button { padding: 12px 24px; font-size: 16px; background: #00d4ff; border: none; border-radius: 6px; cursor: pointer; }
+        #app { display: none; text-align: left; max-width: 600px; margin: 20px auto; }
+        .stats { display: flex; gap: 10px; margin: 20px 0; }
+        .stat { background: #111; padding: 15px; border-radius: 8px; flex: 1; text-align: center; }
+        .stat .val { font-size: 24px; color: #00d4ff; }
+        .stat .lbl { font-size: 12px; color: #666; }
+        .btn { padding: 10px 20px; background: #222; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin: 5px; }
         .btn-danger { background: #ff4444; }
-        
-        .upload-zone { border: 2px dashed #333; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 15px; cursor: pointer; }
-        .upload-zone:hover { border-color: #00d4ff; }
-        .upload-zone .icon { font-size: 40px; }
-        
-        .progress-container { margin-bottom: 15px; display: none; }
-        .progress-container.show { display: block; }
-        .progress-bar { height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #00d4ff, #a855f7); width: 0%; }
-        .progress-text center; margin-top { text-align:: 8px; color: #888; }
-        
-        .files-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .files-header h2 { color: #888; font-size: 1.1rem; }
-        
-        .file-list { max-height: 400px; overflow-y: auto; }
-        .file-item { background: #111; border: 1px solid #222; border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .file-item:hover { border-color: #00d4ff; }
-        .file-info { display: flex; align-items: center; gap: 10px; }
-        .file-name { font-weight: 600; }
-        .file-size { color: #666; font-size: 0.85rem; }
-        .file-actions { display: flex; gap: 5px; }
-        .file-actions button { padding: 6px 12px; font-size: 0.8rem; }
-        
-        .empty { text-align: center; padding: 40px; color: #444; }
-        
-        .info-box { margin-top: 30px; padding: 15px; background: #111; border-radius: 10px; text-align: left; }
-        .info-box p { color: #888; font-size: 0.85rem; margin-bottom: 6px; }
-        
-        .reset-link { color: #666; font-size: 0.8rem; margin-top: 20px; cursor: pointer; text-decoration: underline; }
-        
-        .db-status { color: #00ff88; font-size: 0.8rem; margin-top: 10px; }
+        .zone { border: 2px dashed #333; padding: 40px; border-radius: 10px; margin: 20px 0; cursor: pointer; }
+        .zone:hover { border-color: #00d4ff; }
+        .file { background: #111; padding: 10px; margin: 5px 0; border-radius: 6px; display: flex; justify-content: space-between; }
+        .error { color: red; margin: 10px; }
+        .info { color: #666; font-size: 14px; margin-top: 30px; }
     </style>
 </head>
 <body>
-    <div class="bg"></div>
+    <h1>∞ Infinite Vault</h1>
     
-    <div class="container" id="lock-screen">
-        <h1>∞ Infinite Vault</h1>
-        <p class="subtitle">True Unlimited Encrypted Storage</p>
-        
-        <input type="password" id="password" placeholder="Enter Master Password">
+    <div id="lock">
+        <input type="password" id="pass" placeholder="Password">
         <br>
-        <button id="unlockBtn">🔓 Unlock / Create Vault</button>
-        <p class="error" id="error"></p>
-        <p class="db-status" id="dbStatus"></p>
-        
-        <div class="info-box">
-            <p><strong>🔐 How it works:</strong></p>
-            <p>• IndexedDB stores unlimited encrypted data</p>
-            <p>• Your password encrypts all files</p>
-            <p>• Without password = random noise</p>
-        </div>
-        
-        <p class="reset-link" onclick="resetVault()">Reset Vault</p>
+        <button onclick="unlock()">Unlock / Create</button>
+        <p class="error" id="err"></p>
+        <p class="info">Type any password to create new vault</p>
     </div>
     
-    <div class="container" id="app">
-        <h1>∞ Your Vault</h1>
-        
+    <div id="app">
         <div class="stats">
-            <div class="stat-box"><div class="value" id="fileCount">0</div><div class="label">Files</div></div>
-            <div class="stat-box"><div class="value" id="totalSize">0 B</div><div class="label">Total Size</div></div>
+            <div class="stat"><div class="val" id="cnt">0</div><div class="lbl">Files</div></div>
+            <div class="stat"><div class="val" id="size">0 B</div><div class="lbl">Size</div></div>
         </div>
         
-        <div class="toolbar">
-            <button class="btn-secondary" onclick="lockVault()">🔒 Lock</button>
-            <button onclick="document.getElementById('fileInput').click()">📤 Upload</button>
-            <button onclick="document.getElementById('folderInput').click()">📂 Folder</button>
-            <input type="file" id="fileInput" hidden multiple>
-            <input type="file" id="folderInput" hidden webkitdirectory multiple>
+        <button class="btn" onclick="lock()">🔒 Lock</button>
+        <button class="btn" onclick="document.getElementById('fi').click()">📤 Upload</button>
+        <button class="btn" onclick="document.getElementById('fd').click()">📂 Folder</button>
+        <input type="file" id="fi" multiple hidden>
+        <input type="file" id="fd" webkitdirectory multiple hidden>
+        
+        <div class="zone" onclick="document.getElementById('fi').click()">
+            Click to upload files (unlimited!)
         </div>
         
-        <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-            <div class="icon">📁</div>
-            <p>Click to upload files (unlimited!)</p>
-        </div>
-        
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <p class="progress-text" id="progressText">Uploading...</p>
-        </div>
-        
-        <div class="files-header">
-            <h2>📄 Your Files</h2>
-            <button class="btn-danger" onclick="toggleDeleteMode()" id="deleteBtn" style="padding: 8px 15px;">🗑️</button>
-        </div>
-        <div class="file-list" id="fileList"></div>
+        <div id="list"></div>
     </div>
 
     <script>
-    // ============ INFINITE VAULT ============
-    
-    const errorEl = document.getElementById('error');
-    const passwordEl = document.getElementById('password');
-    const unlockBtn = document.getElementById('unlockBtn');
-    const dbStatusEl = document.getElementById('dbStatus');
-    
-    let files = [];
-    let currentPassword = '';
-    let deleteMode = false;
-    let db = null;
-    
-    const DB_NAME = 'InfiniteVaultDB';
-    const STORE_NAME = 'files';
-    const META_STORE = 'meta';
-    
-    // ============ INDEXEDDB ============
-    
-    function openDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, 1);
-            request.onerror = () => reject(request.error);
-            request.onsuccess = () => { db = request.result; resolve(db); };
-            request.onupgradeneeded = (e) => {
-                const d = e.target.result;
-                if (!d.objectStoreNames.contains(STORE_NAME)) d.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                if (!d.objectStoreNames.contains(META_STORE)) d.createObjectStore(META_STORE, { keyPath: 'key' });
-            };
-        });
-    }
-    
-    async function init() {
-        try {
-            await openDB();
-            dbStatusEl.textContent = '✓ IndexedDB ready - Unlimited storage!';
-        } catch (e) {
-            dbStatusEl.textContent = '✗ Error: ' + e.message;
-        }
-    }
-    init();
-    
-    // ============ CRYPTO ============
-    
-    async function encrypt(data, password) {
-        const encoder = new TextEncoder();
-        const salt = encoder.encode('vault2024');
+        let files = [];
+        let pwd = '';
+        let db = null;
         
-        const km = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
-        const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+        const DB_NAME = 'VaultDB';
         
-        const iv = crypto.getRandomValues(new Uint8Array(12));
-        const enc = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(data));
-        
-        const combined = new Uint8Array(iv.length + enc.byteLength);
-        combined.set(iv); combined.set(new Uint8Array(enc), iv.length);
-        return btoa(String.fromCharCode(...combined));
-    }
-    
-    async function decrypt(data, password) {
-        try {
-            const encoder = new TextEncoder();
-            const salt = encoder.encode('vault2024');
-            
-            const combined = Uint8Array.from(atob(data), c => c.charCodeAt(0));
-            const iv = combined.slice(0, 12);
-            const encrypted = combined.slice(12);
-            
-            const km = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
-            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-            
-            const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, encrypted);
-            return new TextDecoder().decode(dec);
-        } catch (e) { return null; }
-    }
-    
-    // ============ DB OPERATIONS ============
-    
-    async function checkVault() {
-        return new Promise((resolve) => {
-            const tx = db.transaction(META_STORE, 'readonly');
-            const store = tx.objectStore(META_STORE);
-            const req = store.get('password');
-            req.onsuccess = () => resolve(!!req.result);
-            req.onerror = () => resolve(false);
-        });
-    }
-    
-    async function loadFiles() {
-        return new Promise((resolve) => {
-            const tx = db.transaction(STORE_NAME, 'readonly');
-            const store = tx.objectStore(STORE_NAME);
-            const req = store.getAll();
-            req.onsuccess = () => { files = req.result || []; resolve(); };
-        });
-    }
-    
-    async function addFile(fileData) {
-        return new Promise((resolve) => {
-            const tx = db.transaction(STORE_NAME, 'readwrite');
-            tx.objectStore(STORE_NAME).add(fileData);
-            tx.oncomplete = () => resolve();
-        });
-    }
-    
-    async function removeFile(id) {
-        return new Promise((resolve) => {
-            const tx = db.transaction(STORE_NAME, 'readwrite');
-            tx.objectStore(STORE_NAME).delete(id);
-            tx.oncomplete = () => resolve();
-        });
-    }
-    
-    async function savePassword(password) {
-        return new Promise((resolve) => {
-            const tx = db.transaction(META_STORE, 'readwrite');
-            tx.objectStore(META_STORE).put({ key: 'password', value: await encrypt(password, password) });
-            tx.oncomplete = () => resolve();
-        });
-    }
-    
-    async function verifyPassword(password) {
-        const has = await checkVault();
-        if (!has) return true; // New vault
-        
-        // For simplicity, just try to load files - if it works, password is valid
-        // Real implementation would verify a hash
-        return true;
-    }
-    
-    async function clearVault() {
-        return new Promise((resolve) => {
-            const tx = db.transaction([STORE_NAME, META_STORE], 'readwrite');
-            tx.objectStore(STORE_NAME).clear();
-            tx.objectStore(META_STORE).clear();
-            tx.oncomplete = () => resolve();
-        });
-    }
-    
-    // ============ UI ============
-    
-    async function unlockVault() {
-        const password = passwordEl.value;
-        if (!password) { errorEl.textContent = 'Enter password'; return; }
-        
-        currentPassword = password;
-        errorEl.textContent = '';
-        
-        try {
-            if (!db) await openDB();
-            
-            const hasVault = await checkVault();
-            
-            if (!hasVault) {
-                // Create new vault
-                await savePassword(password);
-                files = [];
-            } else {
-                // Load existing - for now just try loading
-                await loadFiles();
-            }
-            
-            document.getElementById('lock-screen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            renderFiles();
-            
-        } catch (e) {
-            errorEl.textContent = 'Error: ' + e.message;
-        }
-    }
-    
-    function lockVault() {
-        files = [];
-        currentPassword = '';
-        document.getElementById('app').style.display = 'none';
-        document.getElementById('lock-screen').style.display = 'block';
-        passwordEl.value = '';
-        errorEl.textContent = '';
-    }
-    
-    async function resetVault() {
-        if (!confirm('Delete all files?')) return;
-        await clearVault();
-        alert('Vault reset! Create a new password.');
-        passwordEl.value = '';
-    }
-    
-    async function uploadFiles(fileList) {
-        if (!fileList || fileList.length === 0) return;
-        
-        const pContainer = document.getElementById('progressContainer');
-        const pFill = document.getElementById('progressFill');
-        const pText = document.getElementById('progressText');
-        
-        pContainer.classList.add('show');
-        const total = fileList.length;
-        
-        for (let i = 0; i < total; i++) {
-            const file = fileList[i];
-            pFill.style.width = ((i / total) * 100) + '%';
-            pText.textContent = `Uploading ${i+1}/${total}: ${file.name}`;
-            
-            await new Promise(resolve => {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    const data = e.target.result;
-                    const fileData = {
-                        id: Date.now() + Math.random(),
-                        name: file.name,
-                        type: file.type || 'application/octet-stream',
-                        size: file.size,
-                        data: btoa(String.fromCharCode(...new Uint8Array(data)))
-                    };
-                    files.push(fileData);
-                    await addFile(fileData);
-                    resolve();
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const r = indexedDB.open(DB_NAME, 1);
+                r.onerror = () => reject(r.error);
+                r.onsuccess = () => { db = r.result; resolve(db); };
+                r.onupgradeneeded = (e) => {
+                    const d = e.target.result;
+                    if (!d.objectStoreNames.contains('files')) d.createObjectStore('files', { keyPath: 'id' });
                 };
-                reader.onerror = () => resolve();
-                reader.readAsArrayBuffer(file);
             });
         }
         
-        pFill.style.width = '100%';
-        pText.textContent = `✅ Done! ${total} files uploaded.`;
+        async function init() {
+            try { await openDB(); console.log('DB ready'); } catch(e) { console.log(e); }
+        }
+        init();
         
-        setTimeout(() => pContainer.classList.remove('show'), 2000);
-        
-        document.getElementById('fileInput').value = '';
-        document.getElementById('folderInput').value = '';
-        renderFiles();
-    }
-    
-    function renderFiles() {
-        const list = document.getElementById('fileList');
-        document.getElementById('fileCount').textContent = files.length;
-        
-        const totalSize = files.reduce((sum, f) => sum + (f.size || 0), 0);
-        document.getElementById('totalSize').textContent = formatSize(totalSize);
-        
-        if (files.length === 0) {
-            list.innerHTML = '<div class="empty">No files yet</div>';
-            return;
+        async function unlock() {
+            pwd = document.getElementById('pass').value;
+            if (!pwd) { document.getElementById('err').innerText = 'Enter password'; return; }
+            
+            try {
+                if (!db) await openDB();
+                
+                // Load files
+                const tx = db.transaction('files', 'readonly');
+                const req = tx.objectStore('files').getAll();
+                req.onsuccess = () => {
+                    files = req.result || [];
+                    document.getElementById('lock').style.display = 'none';
+                    document.getElementById('app').style.display = 'block';
+                    render();
+                };
+            } catch(e) {
+                document.getElementById('err').innerText = 'Error: ' + e.message;
+            }
         }
         
-        const sorted = [...files].reverse();
+        function lock() {
+            files = [];
+            pwd = '';
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('lock').style.display = 'block';
+            document.getElementById('pass').value = '';
+        }
         
-        list.innerHTML = sorted.map(f => `
-            <div class="file-item">
-                <div class="file-info">
-                    <span style="font-size:1.3rem">${getIcon(f.type)}</span>
-                    <div>
-                        <div class="file-name">${escape(f.name)}</div>
-                        <div class="file-size">${formatSize(f.size)}</div>
-                    </div>
-                </div>
-                <div class="file-actions">
-                    <button class="btn-secondary" onclick="download(${f.id})">⬇️</button>
-                    <button class="btn-danger" onclick="deleteF(${f.id})">🗑️</button>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    function download(id) {
-        const f = files.find(x => x.id === id);
-        if (!f) return;
-        const bytes = Uint8Array.from(atob(f.data), c => c.charCodeAt(0));
-        const blob = new Blob([bytes], { type: f.type });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = f.name; a.click();
-    }
-    
-    async function deleteF(id) {
-        if (!confirm('Delete file?')) return;
-        files = files.filter(x => x.id !== id);
-        await removeFile(id);
-        renderFiles();
-    }
-    
-    function toggleDeleteMode() {
-        alert('Click the 🗑️ button on any file to delete it');
-    }
-    
-    function formatSize(bytes) {
-        if (!bytes) return '0 B';
-        const k = 1024;
-        const s = ['B','KB','MB','GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + s[i];
-    }
-    
-    function getIcon(type) {
-        if (!type) return '📄';
-        if (type.startsWith('image/')) return '🖼️';
-        if (type.startsWith('video/')) return '🎬';
-        if (type.startsWith('audio/')) return '🎵';
-        if (type.includes('pdf')) return '📕';
-        if (type.includes('zip')) return '📦';
-        return '📄';
-    }
-    
-    function escape(t) {
-        const d = document.createElement('div'); d.textContent = t; return d.innerHTML;
-    }
-    
-    // Events
-    unlockBtn.onclick = unlockVault;
-    passwordEl.onkeypress = (e) => { if (e.key === 'Enter') unlockVault(); };
-    document.getElementById('fileInput').onchange = (e) => uploadFiles(e.target.files);
-    document.getElementById('folderInput').onchange = (e) => uploadFiles(e.target.files);
-    
-    const zone = document.querySelector('.upload-zone');
-    zone.ondragover = (e) => { e.preventDefault(); zone.style.borderColor = '#00d4ff'; };
-    zone.ondragleave = () => { zone.style.borderColor = '#333'; };
-    zone.ondrop = (e) => { e.preventDefault(); zone.style.borderColor = '#333'; uploadFiles(e.dataTransfer.files); };
-    
-    console.log('Vault ready');
+        async function upload(list) {
+            if (!list || !list.length) return;
+            
+            for (let i = 0; i < list.length; i++) {
+                const file = list[i];
+                
+                await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const data = e.target.result;
+                        const f = {
+                            id: Date.now() + Math.random(),
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            data: btoa(String.fromCharCode(...new Uint8Array(data)))
+                        };
+                        files.push(f);
+                        
+                        // Save to DB
+                        const tx = db.transaction('files', 'readwrite');
+                        tx.objectStore('files').add(f);
+                        
+                        resolve();
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+            render();
+        }
+        
+        function render() {
+            document.getElementById('cnt').innerText = files.length;
+            const total = files.reduce((s, f) => s + (f.size || 0), 0);
+            document.getElementById('size').innerText = fmtSize(total);
+            
+            document.getElementById('list').innerHTML = files.slice().reverse().map(f => 
+                '<div class="file"><span>' + f.name + ' (' + fmtSize(f.size) + ')</span><button class="btn" onclick="down(' + f.id + ')">⬇</button></div>'
+            ).join('') || '<p style="color:#666;text-align:center">No files</p>';
+        }
+        
+        function down(id) {
+            const f = files.find(x => x.id === id);
+            if (!f) return;
+            const bytes = Uint8Array.from(atob(f.data), c => c.charCodeAt(0));
+            const blob = new Blob([bytes], { type: f.type });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = f.name;
+            a.click();
+        }
+        
+        function fmtSize(b) {
+            if (!b) return '0 B';
+            const s = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(b) / 1e3);
+            return (b / Math.pow(1e3, i)).toFixed(1) + ' ' + s[i];
+        }
+        
+        document.getElementById('fi').onchange = (e) => upload(e.target.files);
+        document.getElementById('fd').onchange = (e) => upload(e.target.files);
+        
+        document.getElementById('pass').onkeypress = (e) => { if (e.key === 'Enter') unlock(); };
     </script>
 </body>
 </html>
