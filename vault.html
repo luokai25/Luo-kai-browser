@@ -16,7 +16,8 @@
         .btn-danger { background: #ff4444; }
         .btn-danger:hover { background: #ff6666; }
         .btn-success { background: #00ff88; color: #000; }
-        #app { display: none; text-align: left; max-width: 700px; margin: 0 auto; }
+        .btn-zip { background: #a855f7; color: #fff; }
+        #app { display: none; text-align: left; max-width: 750px; margin: 0 auto; }
         
         .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
         .stat { background: #111; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #222; }
@@ -49,6 +50,7 @@
         .file-sizes .original { color: #ff6666; }
         .file-sizes .compressed { color: #00ff88; }
         .file-sizes .saved { color: #00d4ff; }
+        .file-folder { color: #a855f7; font-size: 11px; }
         .file-actions { display: flex; gap: 5px; flex-shrink: 0; }
         .file-actions .btn { padding: 8px 12px; }
         
@@ -57,6 +59,8 @@
         .info { color: #666; font-size: 13px; margin-top: 30px; text-align: center; }
         
         #lock { max-width: 400px; margin: 50px auto; }
+        
+        .folder-badge { background: #a855f7; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 8px; }
     </style>
 </head>
 <body>
@@ -95,7 +99,8 @@
         <div class="toolbar">
             <button class="btn" onclick="lockVault()">🔒 Lock</button>
             <button class="btn" onclick="document.getElementById('fi').click()">📤 Upload Files</button>
-            <button class="btn" onclick="document.getElementById('fd').click()">📂 Upload Folder</button>
+            <button class="btn btn-zip" onclick="document.getElementById('fd').click()">📂 Upload Folder (ZIP)</button>
+            <button class="btn btn-success" onclick="downloadAllAsZip()">⬇️ Download All as ZIP</button>
             <button class="btn btn-danger" onclick="clearAll()">🗑️ Clear All</button>
             <input type="file" id="fi" multiple hidden>
             <input type="file" id="fd" webkitdirectory multiple hidden>
@@ -119,11 +124,14 @@
         <div class="file-list" id="fileList"></div>
     </div>
 
+    <!-- JSZip Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
     <script>
         // ============ CONFIG ============
-        const DB_NAME = 'VaultDB_v3';
+        const DB_NAME = 'VaultDB_v4';
         let db = null;
-        let files = []; // {id, name, type, originalSize, compressedSize, encryptedData}
+        let files = []; // {id, name, path, type, originalSize, compressedSize, encryptedData}
         let pwd = '';
         
         // ============ DB ============
@@ -186,7 +194,7 @@
         // ============ ENCRYPTION (AES-256-GCM) ============
         async function encrypt(data, password) {
             const encoder = new TextEncoder();
-            const salt = encoder.encode('vault_v3_2024');
+            const salt = encoder.encode('vault_v4_2024');
             
             const km = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
             const key = await crypto.subtle.deriveKey(
@@ -206,7 +214,7 @@
         async function decrypt(data, password) {
             try {
                 const encoder = new TextEncoder();
-                const salt = encoder.encode('vault_v3_2024');
+                const salt = encoder.encode('vault_v4_2024');
                 
                 const iv = data.slice(0, 12);
                 const encrypted = data.slice(12);
@@ -231,31 +239,28 @@
             try {
                 if (!db) await openDB();
                 
-                // Load all files from DB
                 const tx = db.transaction('files', 'readonly');
                 const req = tx.objectStore('files').getAll();
                 
                 req.onsuccess = async () => {
                     const stored = req.result || [];
                     
-                    // Decrypt and decompress each file
                     files = [];
                     for (const sf of stored) {
                         try {
-                            // Decrypt
                             const decrypted = await decrypt(new Uint8Array(sf.encryptedData), pwd);
                             if (!decrypted) continue;
                             
-                            // Decompress
                             const decompressed = await decompress(decrypted);
                             
                             files.push({
                                 id: sf.id,
                                 name: sf.name,
+                                path: sf.path || sf.name,
                                 type: sf.type,
                                 originalSize: sf.originalSize,
                                 compressedSize: sf.compressedSize,
-                                data: decompressed // Keep original uncompressed data in memory for download
+                                data: decompressed
                             });
                         } catch(e) { console.log('Error loading:', e); }
                     }
@@ -288,16 +293,14 @@
         async function deleteFile(id) {
             if (!confirm('Delete this file?')) return;
             
-            // Remove from DB
             const tx = db.transaction('files', 'readwrite');
             tx.objectStore('files').delete(id);
             
-            // Remove from memory
             files = files.filter(f => f.id !== id);
             render();
         }
         
-        // ============ UPLOAD ============
+        // ============ UPLOAD (Handles Large Files) ============
         
         async function upload(fileList) {
             if (!fileList || fileList.length === 0) return;
@@ -310,16 +313,20 @@
             prog.classList.add('show');
             const total = fileList.length;
             
-            for (let i = 0; i < total; i++) {
-                const file = fileList[i];
+            // Convert FileList to Array for easier handling
+            const fileArray = Array.from(fileList);
+            
+            for (let i = 0; i < fileArray.length; i++) {
+                const file = fileArray[i];
                 
                 progFill.style.width = ((i / total) * 100) + '%';
                 progText.innerText = `Processing ${i + 1}/${total}`;
                 progDetail.innerText = file.name;
                 
                 try {
-                    // Read file
-                    const buffer = await file.arrayBuffer();
+                    // Read file - handle large files with streaming if needed
+                    progDetail.innerText = `Reading: ${file.name}`;
+                    const buffer = await readFileAsArrayBuffer(file);
                     const originalData = new Uint8Array(buffer);
                     
                     // Compress
@@ -330,28 +337,32 @@
                     progDetail.innerText = `Encrypting: ${file.name}`;
                     const encryptedData = await encrypt(compressedData, pwd);
                     
-                    // Create file record
+                    // Get folder path if exists
+                    const path = file.webkitRelativePath || file.name;
+                    
                     const fileRec = {
                         id: Date.now() + Math.random(),
                         name: file.name,
+                        path: path,
                         type: file.type || 'application/octet-stream',
                         originalSize: originalData.length,
                         compressedSize: compressedData.length,
-                        encryptedData: Array.from(encryptedData) // Store as array
+                        encryptedData: Array.from(encryptedData)
                     };
                     
-                    // Save to DB (only encrypted data)
+                    // Save to DB
                     const tx = db.transaction('files', 'readwrite');
                     tx.objectStore('files').add(fileRec);
                     
-                    // Add to memory (keep original data for quick download)
+                    // Add to memory (keep original for download)
                     files.push({
                         id: fileRec.id,
                         name: fileRec.name,
+                        path: fileRec.path,
                         type: fileRec.type,
                         originalSize: fileRec.originalSize,
                         compressedSize: fileRec.compressedSize,
-                        data: originalData // Store ORIGINAL data in memory for fast download
+                        data: originalData
                     });
                     
                 } catch(e) {
@@ -369,16 +380,23 @@
             render();
         }
         
+        // Helper to read large files
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsArrayBuffer(file);
+            });
+        }
+        
         // ============ DOWNLOAD ============
         
         function downloadFile(id) {
             const f = files.find(x => x.id === id);
             if (!f || !f.data) return;
             
-            // Create blob from ORIGINAL data (not compressed)
             const blob = new Blob([f.data], { type: f.type });
-            
-            // Create download link
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -389,10 +407,66 @@
             URL.revokeObjectURL(url);
         }
         
+        // Download ALL as ZIP (preserves folder structure)
+        async function downloadAllAsZip() {
+            if (files.length === 0) {
+                alert('No files to download!');
+                return;
+            }
+            
+            const prog = document.getElementById('progress');
+            const progFill = document.getElementById('progFill');
+            const progText = document.getElementById('progText');
+            
+            prog.classList.add('show');
+            progText.innerText = 'Creating ZIP archive...';
+            
+            try {
+                const zip = new JSZip();
+                
+                // Add each file to ZIP (preserves folder structure)
+                for (let i = 0; i < files.length; i++) {
+                    const f = files[i];
+                    progFill.style.width = ((i / files.length) * 100) + '%';
+                    progText.innerText = `Adding to ZIP: ${f.name}`;
+                    
+                    // Use path for folder structure, fallback to name
+                    zip.file(f.path || f.name, f.data);
+                }
+                
+                progText.innerText = 'Generating ZIP file...';
+                
+                // Generate ZIP blob
+                const zipBlob = await zip.generateAsync({
+                    type: 'blob',
+                    compression: 'DEFLATE',
+                    compressionOptions: { level: 6 }
+                });
+                
+                // Download
+                const url = URL.createObjectURL(zipBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'vault-backup-' + Date.now() + '.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                progFill.style.width = '100%';
+                progText.innerText = '✅ ZIP downloaded!';
+                
+            } catch(e) {
+                console.log(e);
+                progText.innerText = 'Error creating ZIP';
+            }
+            
+            setTimeout(() => prog.classList.remove('show'), 2000);
+        }
+        
         // ============ RENDER ============
         
         function render() {
-            // Stats
             document.getElementById('fileCount').innerText = files.length;
             
             const orig = files.reduce((s, f) => s + (f.originalSize || 0), 0);
@@ -404,7 +478,6 @@
             const saved = orig > 0 ? ((orig - comp) / orig * 100).toFixed(1) : 0;
             document.getElementById('savedPct').innerText = saved + '%';
             
-            // File list
             const list = document.getElementById('fileList');
             
             if (files.length === 0) {
@@ -412,14 +485,18 @@
                 return;
             }
             
-            // Sort by newest
             const sorted = [...files].reverse();
             
             list.innerHTML = sorted.map(f => {
                 const savedPct = f.originalSize > 0 ? ((f.originalSize - f.compressedSize) / f.originalSize * 100).toFixed(0) : 0;
+                const isFolder = f.path && f.path !== f.name;
+                
                 return '<div class="file-item">' +
                     '<div class="file-info">' +
-                        '<div class="file-name" title="' + f.name + '">' + f.name + '</div>' +
+                        '<div class="file-name" title="' + f.path + '">' + 
+                            (isFolder ? '<span class="folder-badge">📂</span> ' : '') + 
+                            f.name + 
+                        '</div>' +
                         '<div class="file-sizes">' +
                             '<span class="original">' + fmtSize(f.originalSize) + '</span> → ' +
                             '<span class="compressed">' + fmtSize(f.compressedSize) + '</span> ' +
@@ -446,7 +523,6 @@
         document.getElementById('fd').onchange = (e) => upload(e.target.files);
         document.getElementById('pass').onkeypress = (e) => { if (e.key === 'Enter') unlock(); };
         
-        // Drag and drop
         const zone = document.querySelector('.upload-zone');
         zone.ondragover = (e) => { e.preventDefault(); zone.style.borderColor = '#00d4ff'; };
         zone.ondragleave = () => { zone.style.borderColor = '#333'; };
