@@ -29,6 +29,7 @@
         button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3); }
         
         .error { color: #ff4444; margin-top: 10px; text-align: center; }
+        .success { color: #00ff88; margin-top: 10px; text-align: center; }
         
         #app { display: none; }
         
@@ -41,7 +42,6 @@
         .toolbar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
         .btn-secondary { background: #222; color: #fff; }
         .btn-danger { background: #ff4444; }
-        .btn-big { padding: 18px 35px; font-size: 1.1rem; }
         
         .upload-zone { border: 2px dashed #333; border-radius: 12px; padding: 25px;
             text-align: center; margin-bottom: 15px; cursor: pointer; transition: all 0.3s; }
@@ -54,7 +54,6 @@
         .progress-bar { height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, #00d4ff, #a855f7); width: 0%; transition: width 0.2s; }
         .progress-text { text-align: center; margin-top: 8px; color: #888; font-size: 0.85rem; }
-        .progress-detail { text-align: center; color: #666; font-size: 0.8rem; margin-top: 4px; }
         
         .files-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .files-header h2 { font-size: 1.1rem; color: #888; }
@@ -77,11 +76,10 @@
         #lock-screen h1 { margin-bottom: 8px; }
         #lock-screen .subtitle { color: #666; margin-bottom: 25px; }
         
-        .info-box { margin-top: 25px; padding: 15px; background: #111; border-radius: 10px; text-align: left; }
+        .info-box { margin-top: 25px; padding: 15px; background: #111; border-radius: 10px; }
         .info-box p { color: #888; font-size: 0.85rem; margin-bottom: 8px; }
         
-        /* Delete mode */
-        .delete-mode .file-item { border-color: #ff4444; background: rgba(255, 68, 68, 0.1); }
+        .reset-link { color: #666; font-size: 0.8rem; margin-top: 15px; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -97,10 +95,11 @@
         <div class="info-box">
             <p>🔐 <strong>How it works:</strong></p>
             <p>• Files encrypted client-side before storage</p>
-            <p>• Without password = random noise (impossible to crack)</p>
-            <p>• <strong>Unlimited files</strong> - upload 10,000+ at once</p>
-            <p>• Upload entire folder or device storage at once</p>
+            <p>• Without password = random noise</p>
+            <p>• Upload 10,000+ files at once!</p>
         </div>
+        
+        <p class="reset-link" onclick="resetVault()">Reset / Clear Vault</p>
     </div>
     
     <div class="container" id="app">
@@ -122,21 +121,18 @@
         
         <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
             <div class="icon">📁</div>
-            <p><strong>Click to upload</strong> - or drag & drop files here</p>
-            <p style="font-size: 0.75rem; margin-top: 5px;">Upload 10,000+ files at once! 📦</p>
+            <p><strong>Click to upload</strong> - or drag & drop files</p>
+            <p style="font-size: 0.75rem; margin-top: 5px;">Upload 10,000+ files at once!</p>
         </div>
         
         <div class="progress-container" id="progressContainer">
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
             <p class="progress-text" id="progressText">Preparing...</p>
-            <p class="progress-detail" id="progressDetail"></p>
         </div>
         
         <div class="files-header">
             <h2>📄 Files</h2>
-            <div>
-                <button class="btn-danger" onclick="toggleDeleteMode()" id="deleteModeBtn" style="padding: 8px 15px;">🗑️ Delete Mode</button>
-            </div>
+            <button class="btn-danger" onclick="toggleDeleteMode()" id="deleteModeBtn" style="padding: 8px 15px;">🗑️ Delete Mode</button>
         </div>
         <div class="file-list" id="fileList"></div>
     </div>
@@ -152,73 +148,128 @@
     let currentPassword = '';
     let deleteMode = false;
     
-    function hasVault() { return localStorage.getItem('vaultData') !== null; }
+    // STORAGE KEY
+    const STORAGE_KEY = 'infiniteVault_v2';
     
+    function hasVault() { return localStorage.getItem(STORAGE_KEY) !== null; }
+    
+    // Simple AES-GCM encryption
     async function encrypt(data, password) {
         const encoder = new TextEncoder();
-        const salt = encoder.encode('InfiniteVault2024');
+        const salt = encoder.encode('vault_salt_2024');
         
+        // Derive key from password
         const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
-        const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+        const key = await crypto.subtle.deriveKey(
+            { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+            keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt']
+        );
         
+        // Encrypt
         const iv = crypto.getRandomValues(new Uint8Array(12));
-        const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoder.encode(data));
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            encoder.encode(data)
+        );
         
-        const combined = new Uint8Array(iv.length + encrypted.byteLength);
-        combined.set(iv);
-        combined.set(new Uint8Array(encrypted), iv.length);
+        // Combine IV + encrypted
+        const result = new Uint8Array(iv.length + encrypted.byteLength);
+        result.set(iv, 0);
+        result.set(new Uint8Array(encrypted), iv.length);
         
-        return btoa(String.fromCharCode(...combined));
+        return btoa(String.fromCharCode(...result));
     }
     
-    async function decrypt(data, password) {
+    // Decrypt
+    async function decrypt(encryptedB64, password) {
         try {
             const encoder = new TextEncoder();
-            const salt = encoder.encode('InfiniteVault2024');
+            const salt = encoder.encode('vault_salt_2024');
             
-            const combined = Uint8Array.from(atob(data), c => c.charCodeAt(0));
-            const iv = combined.slice(0, 12);
-            const encryptedData = combined.slice(12);
+            // Decode base64
+            const encrypted = Uint8Array.from(atob(encryptedB64), c => c.charCodeAt(0));
             
+            // Extract IV and data
+            const iv = encrypted.slice(0, 12);
+            const data = encrypted.slice(12);
+            
+            // Derive key
             const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
-            const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 50000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+            const key = await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+            );
             
-            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, encryptedData);
+            // Decrypt
+            const decrypted = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                data
+            );
+            
             return new TextDecoder().decode(decrypted);
-        } catch (e) { console.error(e); return null; }
+        } catch (e) {
+            console.log('Decrypt error:', e.message);
+            return null;
+        }
     }
     
     async function unlockVault() {
         const password = passwordEl.value;
-        if (!password) { errorEl.textContent = 'Please enter a password'; return; }
+        if (!password) {
+            errorEl.textContent = 'Please enter a password';
+            return;
+        }
         
         currentPassword = password;
         errorEl.textContent = '';
         
         try {
             if (hasVault()) {
-                const stored = localStorage.getItem('vaultData');
+                const stored = localStorage.getItem(STORAGE_KEY);
                 const decrypted = await decrypt(stored, password);
-                if (decrypted === null) { errorEl.textContent = '❌ Wrong password!'; return; }
+                
+                if (decrypted === null) {
+                    errorEl.textContent = '❌ Wrong password!';
+                    return;
+                }
+                
                 files = JSON.parse(decrypted);
             } else {
+                // Create new vault
                 files = [];
                 const encrypted = await encrypt(JSON.stringify(files), password);
-                localStorage.setItem('vaultData', encrypted);
+                localStorage.setItem(STORAGE_KEY, encrypted);
             }
             
             document.getElementById('lock-screen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
             renderFiles();
             
-        } catch (e) { errorEl.textContent = 'Error: ' + e.message; }
+        } catch (e) {
+            console.error('Error:', e);
+            errorEl.textContent = 'Error: ' + e.message;
+        }
     }
     
     function lockVault() {
-        files = []; currentPassword = ''; deleteMode = false;
+        files = [];
+        currentPassword = '';
+        deleteMode = false;
         document.getElementById('app').style.display = 'none';
         document.getElementById('lock-screen').style.display = 'block';
-        passwordEl.value = ''; errorEl.textContent = '';
+        passwordEl.value = '';
+        errorEl.textContent = '';
+    }
+    
+    function resetVault() {
+        if (confirm('⚠️ This will DELETE ALL FILES permanently! Continue?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            alert('Vault cleared! Create a new password to start fresh.');
+            passwordEl.value = '';
+            errorEl.textContent = '';
+        }
     }
     
     async function uploadFiles(fileList) {
@@ -227,13 +278,10 @@
         const progressContainer = document.getElementById('progressContainer');
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
-        const progressDetail = document.getElementById('progressDetail');
         
         progressContainer.classList.add('show');
         
         const total = fileList.length;
-        let uploaded = 0;
-        let failed = 0;
         
         progressText.textContent = `🚀 Uploading ${total} files...`;
         
@@ -241,45 +289,42 @@
             const file = fileList[i];
             
             progressFill.style.width = ((i / total) * 100) + '%';
-            progressDetail.textContent = `📤 ${i + 1}/${total}: ${file.name}`;
+            progressText.textContent = `📤 ${i + 1}/${total}: ${file.name}`;
             
             await new Promise((resolve) => {
                 const reader = new FileReader();
-                reader.onload = async function(e) {
+                reader.onload = function(e) {
                     try {
                         const data = e.target.result;
-                        const fileData = {
+                        files.push({
                             id: Date.now() + Math.random(),
                             name: file.name,
                             path: file.webkitRelativePath || file.name,
                             type: file.type || 'application/octet-stream',
                             size: file.size,
                             data: btoa(String.fromCharCode(...new Uint8Array(data)))
-                        };
-                        files.push(fileData);
-                        uploaded++;
-                    } catch (err) { failed++; }
+                        });
+                    } catch (err) { console.log('Error reading file:', err); }
                     resolve();
                 };
-                reader.onerror = () => { failed++; resolve(); };
+                reader.onerror = () => resolve();
                 reader.readAsArrayBuffer(file);
             });
             
-            // Save every 100 files to prevent memory issues
-            if ((i + 1) % 100 === 0 || i === total - 1) {
-                progressText.textContent = `💾 Saving batch ${Math.floor(i/100)+1}...`;
+            // Save every 50 files
+            if ((i + 1) % 50 === 0 || i === total - 1) {
+                progressText.textContent = `💾 Saving batch...`;
                 const encrypted = await encrypt(JSON.stringify(files), currentPassword);
-                localStorage.setItem('vaultData', encrypted);
+                localStorage.setItem(STORAGE_KEY, encrypted);
             }
         }
         
         updateVaultSize();
         
         progressFill.style.width = '100%';
-        progressText.textContent = `✅ Complete! Uploaded: ${uploaded}`;
-        progressDetail.textContent = `Total: ${total} files | Failed: ${failed}`;
+        progressText.textContent = `✅ Complete! ${total} files uploaded.`;
         
-        setTimeout(() => { progressContainer.classList.remove('show'); progressFill.style.width = '0%'; }, 3000);
+        setTimeout(() => { progressContainer.classList.remove('show'); progressFill.style.width = '0%'; }, 2000);
         
         document.getElementById('fileInput').value = '';
         document.getElementById('folderInput').value = '';
@@ -296,11 +341,11 @@
         totalSizeEl.textContent = formatSize(totalSize);
         
         if (deleteMode) {
-            document.getElementById('app').classList.add('delete-mode');
             document.getElementById('deleteModeBtn').textContent = '✅ Done';
+            document.getElementById('deleteModeBtn').onclick = () => { deleteMode = false; renderFiles(); };
         } else {
-            document.getElementById('app').classList.remove('delete-mode');
             document.getElementById('deleteModeBtn').textContent = '🗑️ Delete Mode';
+            document.getElementById('deleteModeBtn').onclick = toggleDeleteMode;
         }
         
         if (files.length === 0) {
@@ -308,7 +353,6 @@
             return;
         }
         
-        // Sort by newest first
         const sortedFiles = [...files].reverse();
         
         list.innerHTML = sortedFiles.map(f => `
@@ -334,7 +378,7 @@
     }
     
     function updateVaultSize() {
-        const vaultData = localStorage.getItem('vaultData');
+        const vaultData = localStorage.getItem(STORAGE_KEY);
         if (vaultData) {
             const size = new Blob([vaultData]).size;
             document.getElementById('vaultSize').textContent = formatSize(size);
@@ -359,7 +403,7 @@
         
         files = files.filter(f => f.id !== id);
         const encrypted = await encrypt(JSON.stringify(files), currentPassword);
-        localStorage.setItem('vaultData', encrypted);
+        localStorage.setItem(STORAGE_KEY, encrypted);
         updateVaultSize();
         renderFiles();
     }
@@ -378,7 +422,7 @@
         if (type.startsWith('video/')) return '🎬';
         if (type.startsWith('audio/')) return '🎵';
         if (type.includes('pdf')) return '📕';
-        if (type.includes('zip') || type.includes('rar') || type.includes('tar')) return '📦';
+        if (type.includes('zip') || type.includes('rar')) return '📦';
         return '📄';
     }
     
@@ -392,7 +436,6 @@
     unlockBtn.addEventListener('click', unlockVault);
     passwordEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') unlockVault(); });
     
-    // File inputs
     document.getElementById('fileInput').addEventListener('change', (e) => uploadFiles(e.target.files));
     document.getElementById('folderInput').addEventListener('change', (e) => uploadFiles(e.target.files));
     
