@@ -15,7 +15,6 @@
             overflow-x: hidden;
         }
         
-        /* Animated background */
         .bg {
             position: fixed;
             inset: 0;
@@ -24,23 +23,6 @@
                 radial-gradient(ellipse at 20% 80%, rgba(120, 0, 255, 0.15) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 20%, rgba(0, 150, 255, 0.1) 0%, transparent 50%),
                 linear-gradient(180deg, #0a0a0f 0%, #000 100%);
-        }
-        
-        .bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-            animation: noise 0.5s steps(5) infinite;
-        }
-        
-        @keyframes noise {
-            0% { transform: translate(0, 0); }
-            20% { transform: translate(-5%, -5%); }
-            40% { transform: translate(5%, 5%); }
-            60% { transform: translate(-5%, 5%); }
-            80% { transform: translate(5%, -5%); }
-            100% { transform: translate(0, 0); }
         }
         
         .container {
@@ -66,7 +48,6 @@
             font-size: 0.95rem;
         }
         
-        /* Lock Screen */
         #lock-screen {
             background: linear-gradient(145deg, #0d0d15, #0a0a0f);
             border: 1px solid #1a1a25;
@@ -106,11 +87,6 @@
         .password-input:focus {
             border-color: #00d4ff;
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-        }
-        
-        .password-input::placeholder {
-            color: #444;
-            letter-spacing: normal;
         }
         
         .btn {
@@ -153,14 +129,7 @@
             color: #fff;
         }
         
-        .btn-danger:hover {
-            background: #ff6666;
-        }
-        
-        /* Main App */
-        #main-app {
-            display: none;
-        }
+        #main-app { display: none; }
         
         .toolbar {
             display: flex;
@@ -181,9 +150,7 @@
             gap: 20px;
         }
         
-        .storage-stat {
-            text-align: center;
-        }
+        .storage-stat { text-align: center; }
         
         .storage-stat .value {
             font-size: 1.5rem;
@@ -197,12 +164,8 @@
             text-transform: uppercase;
         }
         
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
+        .actions { display: flex; gap: 10px; }
         
-        /* Upload Zone */
         .upload-zone {
             border: 2px dashed #1a1a25;
             border-radius: 16px;
@@ -224,12 +187,8 @@
             margin-bottom: 15px;
         }
         
-        .upload-zone p {
-            color: #666;
-            margin-bottom: 10px;
-        }
+        .upload-zone p { color: #666; margin-bottom: 10px; }
         
-        /* File List */
         .files-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -242,19 +201,14 @@
             border-radius: 14px;
             padding: 20px;
             transition: all 0.2s;
-            cursor: pointer;
         }
         
         .file-card:hover {
             border-color: #00d4ff;
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
         
-        .file-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-        }
+        .file-icon { font-size: 40px; margin-bottom: 12px; }
         
         .file-name {
             font-weight: 600;
@@ -263,10 +217,7 @@
             font-size: 0.9rem;
         }
         
-        .file-meta {
-            font-size: 0.75rem;
-            color: #666;
-        }
+        .file-meta { font-size: 0.75rem; color: #666; }
         
         .file-actions {
             display: flex;
@@ -274,13 +225,8 @@
             margin-top: 12px;
         }
         
-        .file-actions button {
-            flex: 1;
-            padding: 8px;
-            font-size: 0.75rem;
-        }
+        .file-actions button { flex: 1; padding: 8px; font-size: 0.75rem; }
         
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -292,9 +238,7 @@
             padding: 20px;
         }
         
-        .modal.show {
-            display: flex;
-        }
+        .modal.show { display: flex; }
         
         .modal-content {
             background: #0d0d15;
@@ -303,18 +247,9 @@
             padding: 30px;
             max-width: 500px;
             width: 100%;
-            animation: modalIn 0.3s ease-out;
         }
         
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        .modal h2 {
-            margin-bottom: 20px;
-            color: #fff;
-        }
+        .modal h2 { margin-bottom: 20px; }
         
         .modal-buttons {
             display: flex;
@@ -322,48 +257,24 @@
             margin-top: 20px;
         }
         
-        .modal-buttons .btn {
-            flex: 1;
-        }
+        .modal-buttons .btn { flex: 1; }
         
-        /* Progress */
         .progress-bar {
             width: 100%;
             height: 6px;
             background: #1a1a25;
             border-radius: 3px;
             margin-top: 15px;
-            overflow: hidden;
             display: none;
         }
         
-        .progress-bar.show {
-            display: block;
-        }
+        .progress-bar.show { display: block; }
         
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #00d4ff, #a855f7);
             width: 0%;
             transition: width 0.3s;
-        }
-        
-        /* Binary rain effect */
-        .binary-rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.03;
-            font-family: monospace;
-            font-size: 10px;
-            color: #0f0;
-            overflow: hidden;
-            white-space: pre-wrap;
-            word-break: break-all;
         }
         
         .security-notice {
@@ -376,30 +287,32 @@
             color: #888;
         }
         
-        .security-notice strong {
+        .security-notice strong { color: #ff4444; }
+        
+        .error-msg {
             color: #ff4444;
+            margin-top: 10px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <div class="bg"></div>
-    <div class="binary-rain" id="binary-rain"></div>
     
     <div class="container">
         <h1>∞ Infinite Vault</h1>
-        <p class="subtitle">True Unlimited Encrypted Storage - Without password, it's just random numbers</p>
+        <p class="subtitle">True Unlimited Encrypted Storage</p>
         
         <!-- Lock Screen -->
         <div id="lock-screen">
             <div class="lock-icon">🔐</div>
             <h2 style="margin-bottom: 25px;">Enter Your Master Password</h2>
             <input type="password" id="password" class="password-input" placeholder="Master Password" autocomplete="off">
-            <button class="btn btn-primary" onclick="unlockVault()">Unlock / Create Vault</button>
+            <button class="btn btn-primary" id="unlock-btn">Unlock / Create Vault</button>
+            <div class="error-msg" id="error-msg"></div>
             
             <div class="security-notice">
-                <strong>⚠️ CRITICAL:</strong> Without your password, your files are 
-                <strong>impossible to recover</strong>. The encrypted data looks 
-                identical to random noise. There is no backup, no reset, no recovery.
+                <strong>⚠️ CRITICAL:</strong> Without your password, your files are impossible to recover.
             </div>
         </div>
         
@@ -415,10 +328,6 @@
                         <div class="value" id="total-size">0 KB</div>
                         <div class="label">Total Size</div>
                     </div>
-                    <div class="storage-stat">
-                        <div class="value" id="vault-size">0 KB</div>
-                        <div class="label">Vault Size</div>
-                    </div>
                 </div>
                 <div class="actions">
                     <button class="btn btn-secondary" onclick="lockVault()">🔒 Lock</button>
@@ -429,7 +338,7 @@
             <div class="upload-zone" id="upload-zone">
                 <div class="icon">📁</div>
                 <p>Drag & drop files here or click to upload</p>
-                <p style="font-size: 0.8rem; color: #444;">Files are encrypted client-side before storage</p>
+                <p style="font-size: 0.8rem; color: #444;">Files are encrypted client-side</p>
                 <input type="file" id="file-input" multiple hidden>
                 <div class="progress-bar" id="progress-bar">
                     <div class="progress-fill" id="progress-fill"></div>
@@ -437,17 +346,14 @@
             </div>
             
             <h3 style="margin-bottom: 15px; color: #888;">Your Encrypted Files</h3>
-            <div class="files-grid" id="files-grid">
-                <!-- Files will be listed here -->
-            </div>
+            <div class="files-grid" id="files-grid"></div>
         </div>
     </div>
     
     <!-- Download Modal -->
     <div class="modal" id="download-modal">
         <div class="modal-content">
-            <h2>⬇️ Download File</h2>
-            <p style="color: #888; margin-bottom: 15px;">This will decrypt and download your file.</p>
+            <h2 id="download-title">⬇️ Download File</h2>
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeModal('download-modal')">Cancel</button>
                 <button class="btn btn-primary" onclick="confirmDownload()">Download</button>
@@ -459,7 +365,7 @@
     <div class="modal" id="delete-modal">
         <div class="modal-content">
             <h2>🗑️ Delete File</h2>
-            <p style="color: #888; margin-bottom: 15px;">This action cannot be undone. The file will be permanently destroyed.</p>
+            <p style="color: #888; margin-bottom: 15px;">This cannot be undone.</p>
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeModal('delete-modal')">Cancel</button>
                 <button class="btn btn-danger" onclick="confirmDelete()">Delete Forever</button>
@@ -468,488 +374,336 @@
     </div>
 
     <script>
-        /**
-         * INFINITE VAULT - Revolutionary Encrypted Storage Algorithm
-         * 
-         * Concept: Instead of storing encrypted files, we generate an INFINITE 
-         * stream of pseudo-random bytes derived from the master password.
-         * Each file is stored as metadata (encrypted) + random-looking offset pointers.
-         * 
-         * Without password: The entire vault is indistinguishable from random noise.
-         * With password: The derivation key allows regenerating the stream to locate
-         *                and decrypt file metadata and content.
-         * 
-         * This is NOT traditional encryption. It's steganography + procedural generation.
-         */
+    // ============== INFINITE VAULT ==============
+    
+    const vault = {
+        masterKey: null,
+        salt: null,
+        files: [],
+        vaultData: null,
         
-        // ============== CORE ALGORITHM ==============
+        async deriveKey(password, salt) {
+            const encoder = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']
+            );
+            return await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+            );
+        },
         
-        class InfiniteVault {
-            constructor() {
-                this.masterKey = null;
-                this.salt = null;
+        async getFileKey(fileId) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(this.masterKeyStr + '-' + fileId);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return new Uint8Array(hash);
+        },
+        
+        async encrypt(data, key) {
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv },
+                await crypto.subtle.importKey('raw', key, 'AES-GCM', false, ['encrypt']),
+                data
+            );
+            const result = new Uint8Array(iv.length + encrypted.byteLength);
+            result.set(iv);
+            result.set(new Uint8Array(encrypted), iv.length);
+            return result;
+        },
+        
+        async decrypt(encryptedData, key) {
+            const iv = encryptedData.slice(0, 12);
+            const data = encryptedData.slice(12);
+            return await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                await crypto.subtle.importKey('raw', key, 'AES-GCM', false, ['decrypt']),
+                data
+            );
+        },
+        
+        async initialize(password, existingSalt) {
+            this.salt = existingSalt || crypto.getRandomValues(new Uint8Array(32));
+            this.masterKey = await this.deriveKey(password, this.salt);
+            this.masterKeyStr = password;
+            
+            if (existingSalt) {
+                await this.loadVault();
+            } else {
                 this.files = [];
-                this.vaultData = null;
-                this.vaultSize = 0;
-                this.initialized = false;
-            }
-            
-            /**
-             * NEW ALGORITHM: Infinite Deterministic Random Stream (IDRS)
-             * 
-             * Given a password and a position, we can generate the "expected" byte
-             * at that position. This creates an INFINITE tape of predictable random data.
-             * 
-             * File storage works like this:
-             * 1. Derive master key from password + salt using Argon2
-             *2. Generate a unique file ID and encryption key for each file
-             *3. Store file metadata (encrypted) at position X in the stream
-             *4. Store file content (encrypted) at position Y in the stream
-             *5. The positions X, Y are stored as "seeds" that can only be derived
-             *   with the master key
-             * 
-             * Without the password:
-             * - You see: infinite random bytes
-             * - You can't find where files start/end
-             * - You can't distinguish metadata from content
-             * - It's mathematically impossible to recover anything
-             */
-            
-            // Generate deterministic random bytes from seed
-            async function generateStreamBytes(seed, position, length) {
-                const bytes = new Uint8Array(length);
-                let state = BigInt(seed);
-                
-                for (let i = 0; i < length; i++) {
-                    // Xoshiro256** variant - extremely fast and high quality
-                    state = (state * BigInt(1103515245) + BigInt(12345)) & BigInt(0xFFFFFFFFFFFFFFFF);
-                    const hi = Number((state >> 32) & BigInt(0xFFFFFFFF));
-                    const lo = Number(state & BigInt(0xFFFFFFFF));
-                    bytes[i] = (hi ^ lo) % 256;
-                }
-                
-                return bytes;
-            }
-            
-            // Derive encryption key from master key + file id
-            async function deriveKey(masterKey, fileId) {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(masterKey + '-' + fileId);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                return new Uint8Array(hashBuffer);
-            }
-            
-            // AES-GCM Encryption
-            async function encrypt(data, key) {
-                const iv = crypto.getRandomValues(new Uint8Array(12));
-                const encrypted = await crypto.subtle.encrypt(
-                    { name: 'AES-GCM', iv: iv },
-                    await crypto.subtle.importKey('raw', key, 'AES-GCM', false, ['encrypt', 'decrypt']),
-                    data
-                );
-                
-                const result = new Uint8Array(iv.length + encrypted.byteLength);
-                result.set(iv);
-                result.set(new Uint8Array(encrypted), iv.length);
-                return result;
-            }
-            
-            // AES-GCM Decryption
-            async function decrypt(encryptedData, key) {
-                const iv = encryptedData.slice(0, 12);
-                const data = encryptedData.slice(12);
-                
-                return await crypto.subtle.decrypt(
-                    { name: 'AES-GCM', iv: iv },
-                    await crypto.subtle.importKey('raw', key, 'AES-GCM', false, ['encrypt', 'decrypt']),
-                    data
-                );
-            }
-            
-            // PBKDF2 key derivation from password
-            async function deriveMasterKey(password, salt) {
-                const encoder = new TextEncoder();
-                const keyMaterial = await crypto.subtle.importKey(
-                    'raw',
-                    encoder.encode(password),
-                    'PBKDF2',
-                    false,
-                    ['deriveKey']
-                );
-                
-                return await crypto.subtle.deriveKey(
-                    {
-                        name: 'PBKDF2',
-                        salt: salt,
-                        iterations: 100000,
-                        hash: 'SHA-256'
-                    },
-                    keyMaterial,
-                    { name: 'AES-GCM', length: 256 },
-                    false,
-                    ['encrypt', 'decrypt']
-                );
-            }
-            
-            // Initialize vault
-            async function initialize(password, existingSalt = null) {
-                this.salt = existingSalt || crypto.getRandomValues(new Uint8Array(32));
-                this.masterKey = await deriveMasterKey(password, this.salt);
-                
-                if (existingSalt) {
-                    // Load existing vault
-                    await this.loadVault();
-                } else {
-                    // Create new vault
-                    this.files = [];
-                    await this.saveVault();
-                    this.initialized = true;
-                }
-            }
-            
-            // Save vault to localStorage
-            async function saveVault() {
-                const encoder = new TextEncoder();
-                const metadata = JSON.stringify({
-                    files: this.files,
-                    version: '1.0'
-                });
-                
-                const encryptedMetadata = await encrypt(
-                    encoder.encode(metadata),
-                    await deriveKey(await exportKey(this.masterKey), 'metadata')
-                );
-                
-                // Generate "infinite" vault data representation
-                // In a real implementation, this would be stored on a server
-                // For browser, we simulate with localStorage
-                this.vaultData = {
-                    salt: Array.from(this.salt),
-                    metadata: Array.from(encryptedMetadata),
-                    // The "infinite" stream is generated on-the-fly
-                    // We only store what's needed to regenerate it
-                };
-                
-                // Calculate vault size
-                this.vaultSize = JSON.stringify(this.vaultData).length * 1024; // Approximate
-                
-                localStorage.setItem('infiniteVault', JSON.stringify(this.vaultData));
-            }
-            
-            // Load vault from localStorage
-            async function loadVault() {
-                const stored = localStorage.getItem('infiniteVault');
-                if (!stored) {
-                    throw new Error('No vault found');
-                }
-                
-                this.vaultData = JSON.parse(stored);
-                this.salt = new Uint8Array(this.vaultData.salt);
-                this.masterKey = await deriveMasterKey(document.getElementById('password').value, this.salt);
-                
-                const encryptedMetadata = new Uint8Array(this.vaultData.metadata);
-                const key = await deriveKey(await exportKey(this.masterKey), 'metadata');
-                const decrypted = await decrypt(encryptedMetadata, key);
-                
-                const decoder = new TextDecoder();
-                const metadata = JSON.parse(decoder.decode(decrypted));
-                this.files = metadata.files || [];
-                this.vaultSize = stored.length * 1024;
-                this.initialized = true;
-            }
-            
-            // Export key for storage
-            async function exportKey(key) {
-                const exported = await crypto.subtle.exportKey('raw', key);
-                return Array.from(new Uint8Array(exported)).join('-');
-            }
-            
-            // Add file to vault
-            async function addFile(file) {
-                const fileId = crypto.randomUUID();
-                const fileKey = await deriveKey(await exportKey(this.masterKey), fileId);
-                
-                // Generate deterministic "position" in the infinite stream
-                const position = BigInt(Date.now()) * BigInt(1000000) + BigInt(Math.floor(Math.random() * 1000000));
-                
-                // Read file as array buffer
-                const arrayBuffer = await file.arrayBuffer();
-                const fileData = new Uint8Array(arrayBuffer);
-                
-                // Encrypt file content
-                const encryptedContent = await encrypt(fileData, fileKey);
-                
-                // Create file metadata
-                const fileMeta = {
-                    id: fileId,
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    position: position.toString(),
-                    encryptedSize: encryptedContent.length,
-                    created: Date.now()
-                };
-                
-                // Store encrypted file separately (simulating infinite storage)
-                localStorage.setItem('vault_file_' + fileId, JSON.stringify(Array.from(encryptedContent)));
-                
-                this.files.push(fileMeta);
-                await this.saveVault();
-                
-                return fileMeta;
-            }
-            
-            // Get file
-            async function getFile(fileId) {
-                const fileMeta = this.files.find(f => f.id === fileId);
-                if (!fileMeta) return null;
-                
-                const stored = localStorage.getItem('vault_file_' + fileId);
-                if (!stored) return null;
-                
-                const encryptedContent = new Uint8Array(JSON.parse(stored));
-                const fileKey = await deriveKey(await exportKey(this.masterKey), fileId);
-                
-                try {
-                    const decrypted = await decrypt(encryptedContent, fileKey);
-                    return {
-                        meta: fileMeta,
-                        data: new Blob([decrypted], { type: fileMeta.type })
-                    };
-                } catch (e) {
-                    console.error('Decryption failed:', e);
-                    return null;
-                }
-            }
-            
-            // Delete file
-            async function deleteFile(fileId) {
-                localStorage.removeItem('vault_file_' + fileId);
-                this.files = this.files.filter(f => f.id !== fileId);
                 await this.saveVault();
             }
+            return true;
+        },
+        
+        async saveVault() {
+            const encoder = new TextEncoder();
+            const metadata = JSON.stringify({ files: this.files });
             
-            // Wipe everything
-            async function wipe() {
-                this.files.forEach(f => {
-                    localStorage.removeItem('vault_file_' + f.id);
-                });
-                this.files = [];
-                localStorage.removeItem('infiniteVault');
-                this.vaultData = null;
-                this.vaultSize = 0;
-            }
-        }
-        
-        // ============== UI FUNCTIONS ==============
-        
-        const vault = new InfiniteVault();
-        let currentFileId = null;
-        
-        // Binary rain effect
-        function initBinaryRain() {
-            const container = document.getElementById('binary-rain');
-            let rain = '';
-            for (let i = 0; i < 5000; i++) {
-                rain += Math.random() > 0.5 ? '1' : '0';
-            }
-            container.textContent = rain;
-        }
-        
-        // Unlock vault
-        async function unlockVault() {
-            const password = document.getElementById('password').value;
-            if (!password) {
-                alert('Please enter a password');
-                return;
-            }
+            const keyBytes = await this.getFileKey('metadata');
+            const encryptedMetadata = await this.encrypt(encoder.encode(metadata), keyBytes);
             
-            const existingVault = localStorage.getItem('infiniteVault');
+            this.vaultData = {
+                salt: Array.from(this.salt),
+                metadata: Array.from(encryptedMetadata)
+            };
+            
+            localStorage.setItem('infiniteVault', JSON.stringify(this.vaultData));
+        },
+        
+        async loadVault() {
+            const stored = localStorage.getItem('infiniteVault');
+            if (!stored) throw new Error('No vault found');
+            
+            this.vaultData = JSON.parse(stored);
+            this.salt = new Uint8Array(this.vaultData.salt);
+            this.masterKey = await this.deriveKey(document.getElementById('password').value, this.salt);
+            this.masterKeyStr = document.getElementById('password').value;
+            
+            const encryptedMetadata = new Uint8Array(this.vaultData.metadata);
+            const keyBytes = await this.getFileKey('metadata');
+            const decrypted = await this.decrypt(encryptedMetadata, keyBytes);
+            
+            const decoder = new TextDecoder();
+            const metadata = JSON.parse(decoder.decode(decrypted));
+            this.files = metadata.files || [];
+        },
+        
+        async addFile(file) {
+            const fileId = crypto.randomUUID();
+            const arrayBuffer = await file.arrayBuffer();
+            const fileData = new Uint8Array(arrayBuffer);
+            
+            const fileKey = await this.getFileKey(fileId);
+            const encryptedContent = await this.encrypt(fileData, fileKey);
+            
+            const fileMeta = {
+                id: fileId,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                created: Date.now()
+            };
+            
+            localStorage.setItem('vault_file_' + fileId, JSON.stringify(Array.from(encryptedContent)));
+            this.files.push(fileMeta);
+            await this.saveVault();
+            
+            return fileMeta;
+        },
+        
+        async getFile(fileId) {
+            const fileMeta = this.files.find(f => f.id === fileId);
+            if (!fileMeta) return null;
+            
+            const stored = localStorage.getItem('vault_file_' + fileId);
+            if (!stored) return null;
+            
+            const encryptedContent = new Uint8Array(JSON.parse(stored));
+            const fileKey = await this.getFileKey(fileId);
             
             try {
-                if (existingVault) {
-                    const vaultData = JSON.parse(existingVault);
-                    await vault.initialize(password, new Uint8Array(vaultData.salt));
-                } else {
-                    await vault.initialize(password);
-                }
-                
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                updateUI();
+                const decrypted = await this.decrypt(encryptedContent, fileKey);
+                return {
+                    meta: fileMeta,
+                    data: new Blob([decrypted], { type: fileMeta.type })
+                };
             } catch (e) {
-                alert('Invalid password or corrupted vault');
-                console.error(e);
+                return null;
             }
+        },
+        
+        async deleteFile(fileId) {
+            localStorage.removeItem('vault_file_' + fileId);
+            this.files = this.files.filter(f => f.id !== fileId);
+            await this.saveVault();
+        },
+        
+        async wipe() {
+            this.files.forEach(f => localStorage.removeItem('vault_file_' + f.id));
+            this.files = [];
+            localStorage.removeItem('infiniteVault');
+        }
+    };
+    
+    // ============== UI ==============
+    
+    let currentFileId = null;
+    
+    function showError(msg) {
+        document.getElementById('error-msg').textContent = msg;
+    }
+    
+    async function unlockVault() {
+        const password = document.getElementById('password').value;
+        if (!password) {
+            showError('Please enter a password');
+            return;
         }
         
-        // Lock vault
-        function lockVault() {
-            vault.masterKey = null;
-            vault.files = [];
-            document.getElementById('main-app').style.display = 'none';
-            document.getElementById('lock-screen').style.display = 'block';
-            document.getElementById('password').value = '';
-        }
-        
-        // Wipe vault
-        async function wipeVault() {
-            if (!confirm('⚠️ This will PERMANENTLY DELETE all files. There is no recovery. Continue?')) {
-                return;
-            }
-            if (!confirm('Are you absolutely sure? Type "DELETE" to confirm.')) {
-                return;
+        try {
+            const existingVault = localStorage.getItem('infiniteVault');
+            
+            if (existingVault) {
+                const vaultData = JSON.parse(existingVault);
+                await vault.initialize(password, new Uint8Array(vaultData.salt));
+            } else {
+                await vault.initialize(password);
             }
             
-            await vault.wipe();
+            document.getElementById('lock-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
             updateUI();
-            alert('Vault wiped. All data destroyed.');
+        } catch (e) {
+            console.error(e);
+            showError('Invalid password or corrupted vault');
         }
+    }
+    
+    function lockVault() {
+        vault.masterKey = null;
+        vault.files = [];
+        document.getElementById('main-app').style.display = 'none';
+        document.getElementById('lock-screen').style.display = 'block';
+        document.getElementById('password').value = '';
+        document.getElementById('error-msg').textContent = '';
+    }
+    
+    async function wipeVault() {
+        if (!confirm('⚠️ This will PERMANENTLY DELETE all files. Continue?')) return;
+        if (!confirm('Type "DELETE" to confirm.')) return;
         
-        // Update UI
-        function updateUI() {
-            document.getElementById('file-count').textContent = vault.files.length;
-            
-            const totalSize = vault.files.reduce((sum, f) => sum + f.size, 0);
-            document.getElementById('total-size').textContent = formatSize(totalSize);
-            document.getElementById('vault-size').textContent = formatSize(vault.vaultSize);
-            
-            // Render files
-            const grid = document.getElementById('files-grid');
-            grid.innerHTML = '';
-            
-            vault.files.forEach(file => {
-                const card = document.createElement('div');
-                card.className = 'file-card';
-                card.innerHTML = `
-                    <div class="file-icon">${getFileIcon(file.type)}</div>
-                    <div class="file-name">${file.name}</div>
-                    <div class="file-meta">${formatSize(file.size)} • ${formatDate(file.created)}</div>
-                    <div class="file-meta" style="margin-top: 5px; color: #444;">Encrypted: ${formatSize(file.encryptedSize)}</div>
-                    <div class="file-actions">
-                        <button class="btn btn-secondary" onclick="downloadFile('${file.id}')">⬇️</button>
-                        <button class="btn btn-danger" onclick="promptDelete('${file.id}')">🗑️</button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-            
-            if (vault.files.length === 0) {
-                grid.innerHTML = '<p style="color: #444; grid-column: 1/-1; text-align: center; padding: 40px;">No files yet. Upload something to get started.</p>';
-            }
-        }
+        await vault.wipe();
+        updateUI();
+        alert('Vault wiped.');
+    }
+    
+    function updateUI() {
+        document.getElementById('file-count').textContent = vault.files.length;
         
-        // Upload handling
-        const uploadZone = document.getElementById('upload-zone');
-        const fileInput = document.getElementById('file-input');
+        const totalSize = vault.files.reduce((sum, f) => sum + f.size, 0);
+        document.getElementById('total-size').textContent = formatSize(totalSize);
         
-        uploadZone.addEventListener('click', () => fileInput.click());
+        const grid = document.getElementById('files-grid');
+        grid.innerHTML = '';
         
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.classList.add('dragover');
+        vault.files.forEach(file => {
+            const card = document.createElement('div');
+            card.className = 'file-card';
+            card.innerHTML = `
+                <div class="file-icon">${getFileIcon(file.type)}</div>
+                <div class="file-name">${file.name}</div>
+                <div class="file-meta">${formatSize(file.size)} • ${formatDate(file.created)}</div>
+                <div class="file-actions">
+                    <button class="btn btn-secondary" onclick="downloadFile('${file.id}')">⬇️</button>
+                    <button class="btn btn-danger" onclick="promptDelete('${file.id}')">🗑️</button>
+                </div>
+            `;
+            grid.appendChild(card);
         });
         
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.classList.remove('dragover');
-        });
+        if (vault.files.length === 0) {
+            grid.innerHTML = '<p style="color: #444; grid-column: 1/-1; text-align: center; padding: 40px;">No files yet.</p>';
+        }
+    }
+    
+    const uploadZone = document.getElementById('upload-zone');
+    const fileInput = document.getElementById('file-input');
+    
+    uploadZone.addEventListener('click', () => fileInput.click());
+    
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+    
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+    
+    async function handleFiles(files) {
+        const progressBar = document.getElementById('progress-bar');
+        const progressFill = document.getElementById('progress-fill');
+        progressBar.classList.add('show');
         
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-        
-        fileInput.addEventListener('change', () => {
-            handleFiles(fileInput.files);
-        });
-        
-        async function handleFiles(files) {
-            const progressBar = document.getElementById('progress-bar');
-            const progressFill = document.getElementById('progress-fill');
-            progressBar.classList.add('show');
-            
-            for (let i = 0; i < files.length; i++) {
-                progressFill.style.width = ((i / files.length) * 100) + '%';
-                await vault.addFile(files[i]);
-            }
-            
-            progressFill.style.width = '100%';
-            setTimeout(() => {
-                progressBar.classList.remove('show');
-                progressFill.style.width = '0%';
-            }, 500);
-            
-            updateUI();
+        for (let i = 0; i < files.length; i++) {
+            progressFill.style.width = ((i / files.length) * 100) + '%';
+            await vault.addFile(files[i]);
         }
         
-        // Download file
-        async function downloadFile(fileId) {
-            currentFileId = fileId;
-            const file = vault.files.find(f => f.id === fileId);
-            document.querySelector('#download-modal h2').textContent = '⬇️ ' + file.name;
-            document.getElementById('download-modal').classList.add('show');
+        progressFill.style.width = '100%';
+        setTimeout(() => progressBar.classList.remove('show'), 500);
+        updateUI();
+    }
+    
+    function downloadFile(fileId) {
+        currentFileId = fileId;
+        const file = vault.files.find(f => f.id === fileId);
+        document.getElementById('download-title').textContent = '⬇️ ' + file.name;
+        document.getElementById('download-modal').classList.add('show');
+    }
+    
+    async function confirmDownload() {
+        const fileData = await vault.getFile(currentFileId);
+        if (fileData) {
+            const url = URL.createObjectURL(fileData.data);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileData.meta.name;
+            a.click();
+            URL.revokeObjectURL(url);
         }
-        
-        async function confirmDownload() {
-            const fileData = await vault.getFile(currentFileId);
-            if (fileData) {
-                const url = URL.createObjectURL(fileData.data);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileData.meta.name;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-            closeModal('download-modal');
-        }
-        
-        // Delete file
-        function promptDelete(fileId) {
-            currentFileId = fileId;
-            document.getElementById('delete-modal').classList.add('show');
-        }
-        
-        async function confirmDelete() {
-            await vault.deleteFile(currentFileId);
-            updateUI();
-            closeModal('delete-modal');
-        }
-        
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('show');
-        }
-        
-        // Utility functions
-        function formatSize(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        function formatDate(timestamp) {
-            return new Date(timestamp).toLocaleDateString();
-        }
-        
-        function getFileIcon(type) {
-            if (type.startsWith('image/')) return '🖼️';
-            if (type.startsWith('video/')) return '🎬';
-            if (type.startsWith('audio/')) return '🎵';
-            if (type.includes('pdf')) return '📕';
-            if (type.includes('zip') || type.includes('rar')) return '📦';
-            if (type.includes('text')) return '📝';
-            return '📄';
-        }
-        
-        // Initialize
-        initBinaryRain();
-        
-        // Handle Enter key on password
-        document.getElementById('password').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') unlockVault();
-        });
+        closeModal('download-modal');
+    }
+    
+    function promptDelete(fileId) {
+        currentFileId = fileId;
+        document.getElementById('delete-modal').classList.add('show');
+    }
+    
+    async function confirmDelete() {
+        await vault.deleteFile(currentFileId);
+        updateUI();
+        closeModal('delete-modal');
+    }
+    
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('show');
+    }
+    
+    function formatSize(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    function formatDate(timestamp) {
+        return new Date(timestamp).toLocaleDateString();
+    }
+    
+    function getFileIcon(type) {
+        if (type.startsWith('image/')) return '🖼️';
+        if (type.startsWith('video/')) return '🎬';
+        if (type.startsWith('audio/')) return '🎵';
+        if (type.includes('pdf')) return '📕';
+        if (type.includes('zip') || type.includes('rar')) return '📦';
+        return '📄';
+    }
+    
+    // Event listeners
+    document.getElementById('unlock-btn').addEventListener('click', unlockVault);
+    document.getElementById('password').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') unlockVault();
+    });
     </script>
 </body>
 </html>
